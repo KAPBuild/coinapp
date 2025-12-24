@@ -1,6 +1,19 @@
 import { TrendingUp, Zap, Award } from 'lucide-react'
+import { useState } from 'react'
 
 export function Home() {
+  const [activeTab, setActiveTab] = useState<'gold' | 'silver' | 'platinum'>('gold')
+
+  const tabs = [
+    { id: 'gold', label: 'Gold (XAU/USD)', symbol: 'OANDA:XAUUSD' },
+    { id: 'silver', label: 'Silver (XAG/USD)', symbol: 'OANDA:XAGUSD' },
+    { id: 'platinum', label: 'Platinum (XPT/USD)', symbol: 'OANDA:XPTUSD' },
+  ]
+
+  const getSymbol = () => {
+    const tab = tabs.find(t => t.id === activeTab)
+    return tab?.symbol || 'OANDA:XAUUSD'
+  }
 
   return (
     <div className="space-y-12">
@@ -13,46 +26,36 @@ export function Home() {
         </p>
       </div>
 
-      {/* Spot Price Widgets */}
+      {/* Interactive Spot Price Chart */}
       <div>
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Live Spot Prices</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Gold */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Gold (XAU/USD)</h3>
-            <iframe
-              src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XAUUSD&utm_source=&utm_medium=widget_new&utm_campaign=mini-symbol-overview&utm_content=en"
-              width="100%"
-              height="220"
-              style={{ border: 'none', borderRadius: '8px' }}
-              title="Gold Price Widget"
-              allowFullScreen
-            />
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          {/* Tabs */}
+          <div className="flex border-b border-gray-200 bg-gray-50">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`px-6 py-4 font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? 'text-blue-600 border-b-2 border-blue-600 bg-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
 
-          {/* Silver */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Silver (XAG/USD)</h3>
+          {/* Chart Container */}
+          <div className="p-4">
             <iframe
-              src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XAGUSD&utm_source=&utm_medium=widget_new&utm_campaign=mini-symbol-overview&utm_content=en"
-              width="100%"
-              height="220"
-              style={{ border: 'none', borderRadius: '8px' }}
-              title="Silver Price Widget"
+              key={activeTab}
+              src={`https://www.tradingview.com/embed-widget/advanced-chart/?symbol=${getSymbol()}&interval=D&timezone=Etc%2FUTC&theme=light&style=1&locale=en&allow_symbol_change=false&details=true&hotlist=false&calendar=false&show_popup_button=true&popup_width=400&popup_height=600&utm_source=&utm_medium=widget_new&utm_campaign=advanced-chart`}
+              style={{ width: '100%', height: '600px', border: 'none' }}
+              title="Advanced Chart"
               allowFullScreen
-            />
-          </div>
-
-          {/* Platinum */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Platinum (XPT/USD)</h3>
-            <iframe
-              src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XPTUSD&utm_source=&utm_medium=widget_new&utm_campaign=mini-symbol-overview&utm_content=en"
-              width="100%"
-              height="220"
-              style={{ border: 'none', borderRadius: '8px' }}
-              title="Platinum Price Widget"
-              allowFullScreen
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture"
             />
           </div>
         </div>
