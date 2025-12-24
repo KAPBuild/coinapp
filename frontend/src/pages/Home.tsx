@@ -1,21 +1,6 @@
-import { useEffect } from 'react'
 import { TrendingUp, Zap, Award } from 'lucide-react'
 
 export function Home() {
-  useEffect(() => {
-    // Load TradingView widget script
-    const script = document.createElement('script')
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js'
-    script.async = true
-    document.body.appendChild(script)
-
-    return () => {
-      // Cleanup
-      if (script.parentNode) {
-        script.parentNode.removeChild(script)
-      }
-    }
-  }, [])
 
   return (
     <div className="space-y-12">
@@ -32,118 +17,43 @@ export function Home() {
       <div>
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Live Spot Prices</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Gold Widget */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="tradingview-widget-container" style={{ height: '400px' }}>
-              <div
-                className="tradingview-widget-container__widget"
-                style={{
-                  height: 'calc(100% - 32px)',
-                  margin: '0',
-                }}
-              >
-                <script
-                  type="text/plain"
-                  dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                      symbols: [
-                        {
-                          description: 'Gold Spot Price',
-                          proName: 'OANDA:XAUUSD',
-                        },
-                      ],
-                      showChart: true,
-                      width: '100%',
-                      height: '100%',
-                      locale: 'en',
-                      colorTheme: 'light',
-                      isTransparent: false,
-                    }),
-                  }}
-                />
-              </div>
-              <div className="tradingview-widget-copyright" style={{ fontSize: '12px', lineHeight: '14px' }}>
-                <a href="https://www.tradingview.com/" rel="noopener noreferrer" target="_blank" style={{ color: '#6a7175' }}>
-                  TradingView
-                </a>
-              </div>
-            </div>
+          {/* Gold */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Gold (XAU/USD)</h3>
+            <iframe
+              src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XAUUSD&utm_source=&utm_medium=widget_new&utm_campaign=mini-symbol-overview&utm_content=en"
+              width="100%"
+              height="220"
+              style={{ border: 'none', borderRadius: '8px' }}
+              title="Gold Price Widget"
+              allowFullScreen
+            />
           </div>
 
-          {/* Silver Widget */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="tradingview-widget-container" style={{ height: '400px' }}>
-              <div
-                className="tradingview-widget-container__widget"
-                style={{
-                  height: 'calc(100% - 32px)',
-                  margin: '0',
-                }}
-              >
-                <script
-                  type="text/plain"
-                  dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                      symbols: [
-                        {
-                          description: 'Silver Spot Price',
-                          proName: 'OANDA:XAGUSD',
-                        },
-                      ],
-                      showChart: true,
-                      width: '100%',
-                      height: '100%',
-                      locale: 'en',
-                      colorTheme: 'light',
-                      isTransparent: false,
-                    }),
-                  }}
-                />
-              </div>
-              <div className="tradingview-widget-copyright" style={{ fontSize: '12px', lineHeight: '14px' }}>
-                <a href="https://www.tradingview.com/" rel="noopener noreferrer" target="_blank" style={{ color: '#6a7175' }}>
-                  TradingView
-                </a>
-              </div>
-            </div>
+          {/* Silver */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Silver (XAG/USD)</h3>
+            <iframe
+              src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XAGUSD&utm_source=&utm_medium=widget_new&utm_campaign=mini-symbol-overview&utm_content=en"
+              width="100%"
+              height="220"
+              style={{ border: 'none', borderRadius: '8px' }}
+              title="Silver Price Widget"
+              allowFullScreen
+            />
           </div>
 
-          {/* Platinum Widget */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="tradingview-widget-container" style={{ height: '400px' }}>
-              <div
-                className="tradingview-widget-container__widget"
-                style={{
-                  height: 'calc(100% - 32px)',
-                  margin: '0',
-                }}
-              >
-                <script
-                  type="text/plain"
-                  dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                      symbols: [
-                        {
-                          description: 'Platinum Spot Price',
-                          proName: 'OANDA:XPTUSD',
-                        },
-                      ],
-                      showChart: true,
-                      width: '100%',
-                      height: '100%',
-                      locale: 'en',
-                      colorTheme: 'light',
-                      isTransparent: false,
-                    }),
-                  }}
-                />
-              </div>
-              <div className="tradingview-widget-copyright" style={{ fontSize: '12px', lineHeight: '14px' }}>
-                <a href="https://www.tradingview.com/" rel="noopener noreferrer" target="_blank" style={{ color: '#6a7175' }}>
-                  TradingView
-                </a>
-              </div>
-            </div>
+          {/* Platinum */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Platinum (XPT/USD)</h3>
+            <iframe
+              src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XPTUSD&utm_source=&utm_medium=widget_new&utm_campaign=mini-symbol-overview&utm_content=en"
+              width="100%"
+              height="220"
+              style={{ border: 'none', borderRadius: '8px' }}
+              title="Platinum Price Widget"
+              allowFullScreen
+            />
           </div>
         </div>
       </div>
@@ -184,48 +94,6 @@ export function Home() {
           <p className="text-gray-700">
             Search Morgan dollars and other coins by year and mint mark with current PCGS/NGC valuations.
           </p>
-        </div>
-      </div>
-
-      {/* Simple HTML TradingView Widget Alternative */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Gold */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Gold (XAU/USD)</h3>
-          <iframe
-            src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XAUUSD&utm_source=&utm_medium=widget_new&utm_campaign=mini-symbol-overview&utm_content=en"
-            width="100%"
-            height="220"
-            style={{ border: 'none', borderRadius: '8px' }}
-            title="Gold Price Widget"
-            allowFullScreen
-          />
-        </div>
-
-        {/* Silver */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Silver (XAG/USD)</h3>
-          <iframe
-            src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XAGUSD&utm_source=&utm_medium=widget_new&utm_campaign=mini-symbol-overview&utm_content=en"
-            width="100%"
-            height="220"
-            style={{ border: 'none', borderRadius: '8px' }}
-            title="Silver Price Widget"
-            allowFullScreen
-          />
-        </div>
-
-        {/* Platinum */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Platinum (XPT/USD)</h3>
-          <iframe
-            src="https://www.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XPTUSD&utm_source=&utm_medium=widget_new&utm_campaign=mini-symbol-overview&utm_content=en"
-            width="100%"
-            height="220"
-            style={{ border: 'none', borderRadius: '8px' }}
-            title="Platinum Price Widget"
-            allowFullScreen
-          />
         </div>
       </div>
 
