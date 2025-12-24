@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useState } from 'react'
+import { Search } from 'lucide-react'
 
 const coinSchema = z.object({
   name: z.string().min(1, 'Coin name is required'),
@@ -20,13 +22,55 @@ interface AddCoinFormProps {
 }
 
 export function AddCoinForm({ onAdd, onCancel }: AddCoinFormProps) {
+  const [loading, setLoading] = useState(false)
+  const [priceData, setPriceData] = useState<any>(null)
+  const [priceError, setPriceError] = useState('')
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<CoinFormData>({
     resolver: zodResolver(coinSchema),
   })
+
+  const coinName = watch('name')
+  const grading = watch('grading')
+
+  const handleFetchPrice = async () => {
+    if (!coinName || !grading) {
+      setPriceError('Enter coin name and grading first')
+      return
+    }
+
+    setLoading(true)
+    setPriceError('')
+    setPriceData(null)
+
+    try {
+      const response = await fetch(
+        `/api/prices?coin=${encodeURIComponent(coinName)}&grade=${encodeURIComponent(grading)}`
+      )
+
+      if (!response.ok) {
+        setPriceError('Price not found for this coin/grade combination')
+        return
+      }
+
+      const data = await response.json()
+      setPriceData(data)
+
+      if (data.average) {
+        setValue('purchasePrice', parseFloat(data.average.toFixed(2)))
+      }
+    } catch (err) {
+      setPriceError('Failed to fetch prices')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit(onAdd)} className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -80,13 +124,54 @@ export function AddCoinForm({ onAdd, onCancel }: AddCoinFormProps) {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Grading</label>
-          <input
-            {...register('grading')}
-            type="text"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="e.g., MS-70"
-          />
+          <div className="flex gap-2">
+            <input
+              {...register('grading')}
+              type="text"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="e.g., MS-70"
+            />
+            <button
+              type="button"
+              onClick={handleFetchPrice}
+              disabled={loading}
+              className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+            >
+              <Search className="w-4 h-4" />
+              {loading ? 'Loading...' : 'Fetch Price'}
+            </button>
+          </div>
         </div>
+
+        {priceError && (
+          <div className="md:col-span-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            {priceError}
+          </div>
+        )}
+
+        {priceData && (
+          <div className="md:col-span-2 p-4 bg-green-50 border border-green-200 rounded-lg space-y-2">
+            <p className="font-semibold text-gray-900">Market Prices Found:</p>
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <div>
+                <p className="text-gray-600">Average</p>
+                <p className="font-bold text-green-700">${priceData.average?.toFixed(2)}</p>
+              </div>
+              {priceData.pcgsPrice && (
+                <div>
+                  <p className="text-gray-600">PCGS</p>
+                  <p className="font-bold text-green-700">${priceData.pcgsPrice.toFixed(2)}</p>
+                </div>
+              )}
+              {priceData.ngcPrice && (
+                <div>
+                  <p className="text-gray-600">NGC</p>
+                  <p className="font-bold text-green-700">${priceData.ngcPrice.toFixed(2)}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
