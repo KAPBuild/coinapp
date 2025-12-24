@@ -18,12 +18,9 @@ export function Home() {
   return (
     <div className="space-y-12">
       {/* Hero Section */}
-      <div className="text-center space-y-4 py-12">
+      <div className="text-center space-y-4 py-6">
         <h1 className="text-5xl font-bold text-gray-900">CoinApp</h1>
         <p className="text-2xl text-gray-600">Your Premier Coin Investment Portfolio Tracker</p>
-        <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-          Track your numismatic investments, monitor spot prices, and manage your coin collection with professional-grade tools.
-        </p>
       </div>
 
       {/* Interactive Spot Price Chart */}
