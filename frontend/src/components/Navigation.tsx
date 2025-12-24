@@ -1,6 +1,6 @@
-import { BarChart3, Package, DollarSign, Compass, BookOpen, ShoppingBag, Star } from 'lucide-react'
+import { BarChart3, Package, DollarSign, Search, BookOpen, ShoppingBag, Star } from 'lucide-react'
 
-type Page = 'dashboard' | 'inventory' | 'forSale' | 'explore' | 'series' | 'shop' | 'showcase'
+type Page = 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'series' | 'shop' | 'showcase'
 
 interface NavigationProps {
   currentPage: Page
@@ -11,7 +11,7 @@ const navItems = [
   { id: 'dashboard', label: 'Portfolio', icon: BarChart3 },
   { id: 'inventory', label: 'Inventory', icon: Package },
   { id: 'forSale', label: 'For Sale', icon: DollarSign },
-  { id: 'explore', label: 'Explore', icon: Compass },
+  { id: 'lookup', label: 'Lookup', icon: Search },
   { id: 'series', label: 'Series', icon: BookOpen },
   { id: 'shop', label: 'Shop', icon: ShoppingBag },
   { id: 'showcase', label: 'Showcase', icon: Star },

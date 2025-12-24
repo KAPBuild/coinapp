@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { Dashboard } from './pages/Dashboard'
 import { Inventory } from './pages/Inventory'
 import { ForSale } from './pages/ForSale'
-import { Explore } from './pages/Explore'
+import { Lookup } from './pages/Lookup'
 import { Series } from './pages/Series'
 import { Shop } from './pages/Shop'
 import { Showcase } from './pages/Showcase'
 import { Navigation } from './components/Navigation'
 
-type Page = 'dashboard' | 'inventory' | 'forSale' | 'explore' | 'series' | 'shop' | 'showcase'
+type Page = 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'series' | 'shop' | 'showcase'
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard')
@@ -20,7 +20,7 @@ export default function App() {
         {currentPage === 'dashboard' && <Dashboard />}
         {currentPage === 'inventory' && <Inventory />}
         {currentPage === 'forSale' && <ForSale />}
-        {currentPage === 'explore' && <Explore />}
+        {currentPage === 'lookup' && <Lookup />}
         {currentPage === 'series' && <Series />}
         {currentPage === 'shop' && <Shop />}
         {currentPage === 'showcase' && <Showcase />}

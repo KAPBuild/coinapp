@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { getCoinPrice } from '../scrapers/priceScrapers'
+import { getCoinPrice, getAllMorganPrices } from '../scrapers/priceScrapers'
 
 const app = new Hono()
 
@@ -23,6 +23,28 @@ app.get('/', async (c) => {
   } catch (error) {
     console.error('Price API error:', error)
     return c.json({ error: 'Failed to fetch prices' }, 500)
+  }
+})
+
+// GET /api/prices/morgans?refresh=true (optional refresh param)
+app.get('/morgans', async (c) => {
+  try {
+    const refresh = c.req.query('refresh') === 'true'
+    const morgans = await getAllMorganPrices(refresh)
+
+    if (!morgans || morgans.length === 0) {
+      return c.json({ error: 'No Morgan prices found' }, 404)
+    }
+
+    return c.json({
+      coin: 'Morgan Dollar',
+      count: morgans.length,
+      lastUpdated: new Date().toISOString(),
+      data: morgans,
+    })
+  } catch (error) {
+    console.error('Morgan prices error:', error)
+    return c.json({ error: 'Failed to fetch Morgan prices' }, 500)
   }
 })
 
