@@ -1,0 +1,41 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1766804034747,
+      "tag": "0000_soft_star_brand",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1766979600000,
+      "tag": "0001_add_inventory_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766980000000,
+      "tag": "0002_add_status_field",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1766981000000,
+      "tag": "0003_make_optional_fields_nullable",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1766982000000,
+      "tag": "0004_create_coin_prices_table",
+      "breakpoints": true
+    }
+  ]
+}

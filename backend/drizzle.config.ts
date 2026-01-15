@@ -3,8 +3,9 @@ import type { Config } from 'drizzle-kit'
 export default {
   schema: './src/db/schema.ts',
   out: './src/db/migrations',
-  driver: 'sqlite',
+  driver: 'd1',
   dbCredentials: {
-    url: './coinapp.db',
+    wranglerConfigPath: './wrangler.toml',
+    dbName: 'coinapp-db',
   },
 } satisfies Config

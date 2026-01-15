@@ -1,4 +1,57 @@
 name = "coinapp-api"
 main = "src/index.ts"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
+
+# ============================================
+# Development Environment (default)
+# ============================================
+[vars]
+ENVIRONMENT = "development"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "coinapp-db"
+database_id = "5375135b-f39f-4d57-a8b1-626a6efda1db"
+migrations_dir = "src/db/migrations"
+
+# ============================================
+# Production Environment
+# Deploy with: wrangler deploy --env production
+# ============================================
+[env.production]
+name = "coinapp-api-prod"
+
+[env.production.vars]
+ENVIRONMENT = "production"
+# Set ALLOWED_ORIGINS via wrangler secret or dashboard for production domains
+# Example: "https://coinapp.com,https://www.coinapp.com"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "coinapp-db"
+database_id = "5375135b-f39f-4d57-a8b1-626a6efda1db"
+migrations_dir = "src/db/migrations"
+
+# Scheduled tasks for production
+[env.production.triggers]
+crons = [
+  "0 0 * * *",   # Daily at midnight UTC - cleanup expired sessions
+  "0 */6 * * *"  # Every 6 hours - price data refresh (optional)
+]
+
+# ============================================
+# Staging Environment (optional)
+# Deploy with: wrangler deploy --env staging
+# ============================================
+[env.staging]
+name = "coinapp-api-staging"
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "coinapp-db"
+database_id = "5375135b-f39f-4d57-a8b1-626a6efda1db"
+migrations_dir = "src/db/migrations"
