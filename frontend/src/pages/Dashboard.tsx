@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
   TrendingUp, DollarSign, Coins, TrendingDown,
-  Award, Target, BarChart3, PieChart, Package,
+  Award, Target, BarChart3, PieChart,
   CircleDollarSign, Gem, Scale, CheckCircle2
 } from 'lucide-react'
 import { useCoins } from '../hooks/useCoins'
@@ -39,15 +39,15 @@ const SERIES_TOTALS: Record<string, number> = {
 
 // Sample data for demo when not logged in
 const SAMPLE_COINS: Coin[] = [
-  { id: '1', userId: 'demo', quantity: 5, purchasePrice: 35, currentPrice: 42, year: 1921, mint: 'S', series: 'Morgan Dollar', denomination: '$1.00', isGraded: 'N', estimatedGrade: 'VF-30' },
-  { id: '2', userId: 'demo', quantity: 3, purchasePrice: 38, currentPrice: 45, year: 1921, mint: 'D', series: 'Morgan Dollar', denomination: '$1.00', isGraded: 'Y', gradingCompany: 'PCGS', actualGrade: 'MS-63' },
-  { id: '3', userId: 'demo', quantity: 1, purchasePrice: 450, currentPrice: 520, year: 1878, mint: 'CC', series: 'Morgan Dollar', denomination: '$1.00', isGraded: 'Y', gradingCompany: 'NGC', actualGrade: 'AU-55' },
-  { id: '4', userId: 'demo', quantity: 10, purchasePrice: 32, currentPrice: 35, year: 2023, series: 'American Silver Eagle', denomination: '$1.00', isGraded: 'N' },
-  { id: '5', userId: 'demo', quantity: 2, purchasePrice: 28, currentPrice: 32, year: 1923, series: 'Peace Dollar', denomination: '$1.00', isGraded: 'N', estimatedGrade: 'AU-50' },
-  { id: '6', userId: 'demo', quantity: 8, purchasePrice: 15, currentPrice: 18, year: 1964, series: 'Kennedy Half Dollar', denomination: '$0.50', isGraded: 'N' },
-  { id: '7', userId: 'demo', quantity: 1, purchasePrice: 2100, currentPrice: 2250, year: 2024, series: 'American Gold Eagle', denomination: '$50', isGraded: 'N' },
-  { id: '8', userId: 'demo', quantity: 4, purchasePrice: 22, currentPrice: 25, year: 1943, series: 'Walking Liberty Half Dollar', denomination: '$0.50', isGraded: 'N' },
-  { id: '9', userId: 'demo', quantity: 15, purchasePrice: 3, currentPrice: 3.50, year: 1944, series: 'Mercury Dime', denomination: '$0.10', isGraded: 'N' },
+  { id: '1', userId: 'demo', quantity: 5, purchasePrice: 35, purchaseDate: '2024-01-15', currentPrice: 42, year: 1921, mint: 'S', series: 'Morgan Dollar', denomination: '$1.00', isGraded: 'N', estimatedGrade: 'VF-30' },
+  { id: '2', userId: 'demo', quantity: 3, purchasePrice: 38, purchaseDate: '2024-02-20', currentPrice: 45, year: 1921, mint: 'D', series: 'Morgan Dollar', denomination: '$1.00', isGraded: 'Y', gradingCompany: 'PCGS', actualGrade: 'MS-63' },
+  { id: '3', userId: 'demo', quantity: 1, purchasePrice: 450, purchaseDate: '2023-11-10', currentPrice: 520, year: 1878, mint: 'CC', series: 'Morgan Dollar', denomination: '$1.00', isGraded: 'Y', gradingCompany: 'NGC', actualGrade: 'AU-55' },
+  { id: '4', userId: 'demo', quantity: 10, purchasePrice: 32, purchaseDate: '2024-03-05', currentPrice: 35, year: 2023, series: 'American Silver Eagle', denomination: '$1.00', isGraded: 'N' },
+  { id: '5', userId: 'demo', quantity: 2, purchasePrice: 28, purchaseDate: '2024-01-22', currentPrice: 32, year: 1923, series: 'Peace Dollar', denomination: '$1.00', isGraded: 'N', estimatedGrade: 'AU-50' },
+  { id: '6', userId: 'demo', quantity: 8, purchasePrice: 15, purchaseDate: '2024-04-12', currentPrice: 18, year: 1964, series: 'Kennedy Half Dollar', denomination: '$0.50', isGraded: 'N' },
+  { id: '7', userId: 'demo', quantity: 1, purchasePrice: 2100, purchaseDate: '2024-05-01', currentPrice: 2250, year: 2024, series: 'American Gold Eagle', denomination: '$50', isGraded: 'N' },
+  { id: '8', userId: 'demo', quantity: 4, purchasePrice: 22, purchaseDate: '2024-02-28', currentPrice: 25, year: 1943, series: 'Walking Liberty Half Dollar', denomination: '$0.50', isGraded: 'N' },
+  { id: '9', userId: 'demo', quantity: 15, purchasePrice: 3, purchaseDate: '2024-03-18', currentPrice: 3.50, year: 1944, series: 'Mercury Dime', denomination: '$0.10', isGraded: 'N' },
 ]
 
 export function Dashboard() {

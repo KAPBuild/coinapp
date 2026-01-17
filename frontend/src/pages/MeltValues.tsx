@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { RefreshCw, TrendingUp, Coins, DollarSign } from 'lucide-react'
+import { RefreshCw, TrendingUp, Coins } from 'lucide-react'
 
 interface CoinMeltData {
   id: string
@@ -120,7 +120,7 @@ export function MeltValues() {
   }, [])
 
   const coins = activeTab === 'silver' ? data?.silverCoins : data?.goldCoins
-  const spotPrice = activeTab === 'silver' ? data?.spotPrices.silver : data?.spotPrices.gold
+  const _spotPrice = activeTab === 'silver' ? data?.spotPrices.silver : data?.spotPrices.gold // Reserved for future use
 
   return (
     <div className="space-y-6">
