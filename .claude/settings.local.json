@@ -15,7 +15,12 @@
       "Bash(ls:*)",
       "Bash(dir:*)",
       "WebFetch(domain:www.ngccoin.com)",
-      "WebFetch(domain:www.pcgs.com)"
+      "WebFetch(domain:www.pcgs.com)",
+      "WebSearch",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "WebFetch(domain:api.metals.live)",
+      "WebFetch(domain:www.goldapi.io)",
+      "WebFetch(domain:metalpriceapi.com)"
     ]
   }
 }
