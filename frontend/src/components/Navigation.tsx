@@ -22,12 +22,11 @@ interface NavItem {
 
 // Primary navigation items (visible on desktop center)
 const primaryNavItems: NavItem[] = [
-  { id: 'lookup', label: 'Coin Lookup', icon: Search },
+  { id: 'inventory', label: 'Inventory', icon: Package },
+  { id: 'dashboard', label: 'Portfolio', icon: BarChart3 },
   { id: 'meltValues', label: 'Melt Values', icon: TrendingUp },
   { id: 'explore', label: 'Explore', icon: Filter },
-  { id: 'inventory', label: 'Inventory', icon: Package },
   { id: 'shop', label: 'Shop', icon: ShoppingBag },
-  { id: 'dashboard', label: 'Portfolio', icon: BarChart3 },
 ]
 
 // Utility navigation items (in hamburger menu)

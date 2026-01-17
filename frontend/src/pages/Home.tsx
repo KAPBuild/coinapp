@@ -42,9 +42,9 @@ export function Home({ onNavigate }: HomeProps) {
     }
   }
 
-  const handleViewLookup = () => {
+  const handleViewMeltValues = () => {
     if (onNavigate) {
-      onNavigate('lookup')
+      onNavigate('meltValues')
     }
   }
 
@@ -75,10 +75,10 @@ export function Home({ onNavigate }: HomeProps) {
             <ChevronRight className="w-5 h-5" />
           </button>
           <button
-            onClick={handleViewLookup}
+            onClick={handleViewMeltValues}
             className="px-8 py-4 bg-white text-gray-700 text-lg font-semibold rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center gap-2"
           >
-            Browse Coin Prices
+            Melt Values
           </button>
         </div>
       </div>
