@@ -120,7 +120,6 @@ export function MeltValues() {
   }, [])
 
   const coins = activeTab === 'silver' ? data?.silverCoins : data?.goldCoins
-  const _spotPrice = activeTab === 'silver' ? data?.spotPrices.silver : data?.spotPrices.gold // Reserved for future use
 
   return (
     <div className="space-y-6">

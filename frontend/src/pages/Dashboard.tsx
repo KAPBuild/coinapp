@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
-  TrendingUp, DollarSign, Coins, TrendingDown,
+  TrendingUp, Coins, TrendingDown,
   Award, Target, BarChart3, PieChart,
   CircleDollarSign, Gem, Scale, CheckCircle2
 } from 'lucide-react'

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Coins, Search, ShoppingBag, BarChart3, Star, Menu, X, LogIn, Info, Package, DollarSign, Gamepad2, LogOut, Filter, User, TrendingUp, HelpCircle } from 'lucide-react'
+import { Coins, Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Gamepad2, LogOut, Filter, User, TrendingUp, HelpCircle } from 'lucide-react'
 import { DarkModeToggle } from './DarkModeToggle'
 import { CurrencySelector } from './CurrencySelector'
 import { SearchModal } from './SearchModal'
