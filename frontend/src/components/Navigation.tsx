@@ -5,6 +5,7 @@ import { CurrencySelector } from './CurrencySelector'
 import { SearchModal } from './SearchModal'
 import { CoinFlipGame } from './CoinFlipGame'
 import { GradingChartModal } from './GradingChartModal'
+import { QuickPhotogradeModal } from './QuickPhotogradeModal'
 import { useAuth } from '../contexts/AuthContext'
 
 type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues'
@@ -44,6 +45,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [gameOpen, setGameOpen] = useState(false)
   const [gradingChartOpen, setGradingChartOpen] = useState(false)
+  const [quickPhotogradeOpen, setQuickPhotogradeOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
   const [currency, setCurrency] = useState('USD')
   const { isAuthenticated, user, logout } = useAuth()
@@ -128,6 +130,16 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 aria-label="Open search"
               >
                 <Search className="w-5 h-5" />
+              </button>
+
+              {/* Quick Photograde Button */}
+              <button
+                onClick={() => setQuickPhotogradeOpen(true)}
+                className="p-2 text-gray-600 hover:bg-blue-100 hover:text-blue-600 rounded-lg transition-colors"
+                aria-label="Quick PCGS Photograde access"
+                title="Quick PCGS Photograde"
+              >
+                <HelpCircle className="w-5 h-5" />
               </button>
 
               {/* Dark Mode Toggle */}
@@ -351,6 +363,9 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
 
       {/* Grading Chart Modal */}
       <GradingChartModal isOpen={gradingChartOpen} onClose={() => setGradingChartOpen(false)} />
+
+      {/* Quick Photograde Modal */}
+      <QuickPhotogradeModal isOpen={quickPhotogradeOpen} onClose={() => setQuickPhotogradeOpen(false)} />
     </>
   )
 }
