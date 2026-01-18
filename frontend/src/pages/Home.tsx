@@ -1,5 +1,5 @@
-import { TrendingUp, Coins, ChevronRight } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { TrendingUp, Coins, ChevronRight, ExternalLink } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues'
 
@@ -7,8 +7,26 @@ interface HomeProps {
   onNavigate?: (page: Page) => void
 }
 
+const COIN_TYPES = [
+  { id: 'morgan', label: 'Morgan Dollar' },
+  { id: 'peace', label: 'Peace Dollar' },
+  { id: 'walker', label: 'Walking Liberty Half' },
+  { id: 'franklin', label: 'Franklin Half' },
+  { id: 'kennedy', label: 'Kennedy Half' },
+  { id: 'standing-liberty', label: 'Standing Liberty Quarter' },
+  { id: 'washington', label: 'Washington Quarter' },
+  { id: 'mercury', label: 'Mercury Dime' },
+  { id: 'roosevelt', label: 'Roosevelt Dime' },
+  { id: 'buffalo', label: 'Buffalo Nickel' },
+  { id: 'lincoln', label: 'Lincoln Cent' },
+  { id: 'indian', label: 'Indian Head Cent' },
+  { id: 'saint-gaudens', label: 'Saint-Gaudens $20' },
+  { id: 'liberty-eagle', label: 'Liberty Head Eagle' },
+]
+
 export function Home({ onNavigate }: HomeProps) {
   const tickerRef = useRef<HTMLDivElement>(null)
+  const [selectedCoin, setSelectedCoin] = useState('morgan')
 
   // Load TradingView Ticker Tape widget for live spot prices
   useEffect(() => {
@@ -95,6 +113,43 @@ export function Home({ onNavigate }: HomeProps) {
           style={{ height: '46px' }}
         >
           <div className="tradingview-widget-container__widget"></div>
+        </div>
+      </div>
+
+      {/* PCGS Photograde Quick Access */}
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-4xl mx-auto">
+        <h3 className="text-2xl font-bold text-gray-900 mb-6">Quick PCGS Photograde Access</h3>
+
+        {/* Coin Type Tabs */}
+        <div className="overflow-x-auto mb-6">
+          <div className="flex gap-2 pb-2">
+            {COIN_TYPES.map(coin => (
+              <button
+                key={coin.id}
+                onClick={() => setSelectedCoin(coin.id)}
+                className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors ${
+                  selectedCoin === coin.id
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {coin.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Link Button */}
+        <div className="flex justify-center">
+          <a
+            href={`https://www.pcgs.com/photograde/#/${selectedCoin}/grades`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors shadow-lg"
+          >
+            View {COIN_TYPES.find(c => c.id === selectedCoin)?.label} Grades
+            <ExternalLink className="w-5 h-5" />
+          </a>
         </div>
       </div>
 
