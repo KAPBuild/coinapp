@@ -8,22 +8,23 @@ interface Props {
   initialCoinType?: string
 }
 
-// Coin types available on PCGS Photograde
+// Coin types with verified PCGS Photograde URL slugs
+// URL format: https://www.pcgs.com/photograde/#/{slug}/grades
 const COIN_TYPES = [
   { id: 'morgan', label: 'Morgan Dollar', years: '1878-1921' },
   { id: 'peace', label: 'Peace Dollar', years: '1921-1935' },
-  { id: 'walking-liberty-half', label: 'Walking Liberty Half', years: '1916-1947' },
-  { id: 'franklin-half', label: 'Franklin Half', years: '1948-1963' },
-  { id: 'kennedy-half', label: 'Kennedy Half', years: '1964-present' },
-  { id: 'standing-liberty-quarter', label: 'Standing Liberty Quarter', years: '1916-1930' },
-  { id: 'washington-quarter', label: 'Washington Quarter', years: '1932-present' },
-  { id: 'mercury-dime', label: 'Mercury Dime', years: '1916-1945' },
-  { id: 'roosevelt-dime', label: 'Roosevelt Dime', years: '1946-present' },
-  { id: 'buffalo-nickel', label: 'Buffalo Nickel', years: '1913-1938' },
-  { id: 'lincoln-cent', label: 'Lincoln Cent', years: '1909-present' },
-  { id: 'indian-head-cent', label: 'Indian Head Cent', years: '1859-1909' },
+  { id: 'walker', label: 'Walking Liberty Half', years: '1916-1947' },
+  { id: 'franklin', label: 'Franklin Half', years: '1948-1963' },
+  { id: 'kennedy', label: 'Kennedy Half', years: '1964-present' },
+  { id: 'standing-liberty', label: 'Standing Liberty Quarter', years: '1916-1930' },
+  { id: 'washington', label: 'Washington Quarter', years: '1932-present' },
+  { id: 'mercury', label: 'Mercury Dime', years: '1916-1945' },
+  { id: 'roosevelt', label: 'Roosevelt Dime', years: '1946-present' },
+  { id: 'buffalo', label: 'Buffalo Nickel', years: '1913-1938' },
+  { id: 'lincoln', label: 'Lincoln Cent', years: '1909-present' },
+  { id: 'indian', label: 'Indian Head Cent', years: '1859-1909' },
   { id: 'saint-gaudens', label: 'Saint-Gaudens $20', years: '1907-1933' },
-  { id: 'liberty-head-eagle', label: 'Liberty Head Eagle', years: '1838-1907' },
+  { id: 'liberty-eagle', label: 'Liberty Head Eagle', years: '1838-1907' },
 ]
 
 // Grade categories with descriptions
