@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Coins, Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Gamepad2, LogOut, Filter, User, TrendingUp, HelpCircle } from 'lucide-react'
+import { Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Gamepad2, LogOut, Filter, User, TrendingUp, HelpCircle } from 'lucide-react'
 import { DarkModeToggle } from './DarkModeToggle'
 import { CurrencySelector } from './CurrencySelector'
 import { SearchModal } from './SearchModal'
@@ -96,7 +96,9 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0"
               aria-label="Go to home"
             >
-              <Coins className="w-6 h-6 text-blue-600" />
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">A+</span>
+              </div>
               <h1 className="text-xl font-bold text-gray-900 hidden sm:block">CoinApp</h1>
             </button>
 
@@ -132,18 +134,19 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 <Search className="w-5 h-5" />
               </button>
 
-              {/* Quick Photograde Button */}
+              {/* PCGS Grading Guide Button */}
               <button
-                onClick={() => setQuickPhotogradeOpen(true)}
-                className="p-2 text-gray-600 hover:bg-blue-100 hover:text-blue-600 rounded-lg transition-colors"
-                aria-label="Quick PCGS Photograde access"
-                title="Quick PCGS Photograde"
+                onClick={() => handleNavClick('pcgsGrading')}
+                className={`p-2 rounded-lg transition-colors ${
+                  currentPage === 'pcgsGrading'
+                    ? 'bg-blue-100 text-blue-600'
+                    : 'text-gray-600 hover:bg-blue-100 hover:text-blue-600'
+                }`}
+                aria-label="PCGS Grading Guide"
+                title="PCGS Grading Guide"
               >
                 <HelpCircle className="w-5 h-5" />
               </button>
-
-              {/* Dark Mode Toggle */}
-              <DarkModeToggle isDark={darkMode} onToggle={handleDarkModeToggle} />
 
               {/* Currency Selector */}
               <CurrencySelector selectedCurrency={currency} onCurrencyChange={handleCurrencyChange} />
@@ -351,6 +354,17 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                   </button>
                 )
               })}
+
+              {/* Divider */}
+              <div className="border-t border-gray-200 my-2" />
+
+              {/* Dark Mode Toggle */}
+              <div className="px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700">Dark Mode</span>
+                  <DarkModeToggle isDark={darkMode} onToggle={handleDarkModeToggle} />
+                </div>
+              </div>
             </div>
           )}
         </div>
