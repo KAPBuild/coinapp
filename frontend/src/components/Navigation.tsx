@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Gamepad2, LogOut, Filter, User, TrendingUp, HelpCircle } from 'lucide-react'
+import { Coins, Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Gamepad2, LogOut, Filter, User, TrendingUp, Award } from 'lucide-react'
 import { DarkModeToggle } from './DarkModeToggle'
 import { SearchModal } from './SearchModal'
 import { CoinFlipGame } from './CoinFlipGame'
@@ -87,9 +87,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0"
               aria-label="Go to home"
             >
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">A+</span>
-              </div>
+              <Coins className="w-6 h-6 text-blue-600" />
               <h1 className="text-xl font-bold text-gray-900 hidden sm:block">CoinApp</h1>
             </button>
 
@@ -128,15 +126,17 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               {/* PCGS Grading Guide Button */}
               <button
                 onClick={() => handleNavClick('pcgsGrading')}
-                className={`p-2 rounded-lg transition-colors ${
+                className={`rounded-lg transition-colors ${
                   currentPage === 'pcgsGrading'
-                    ? 'bg-blue-100 text-blue-600'
-                    : 'text-gray-600 hover:bg-blue-100 hover:text-blue-600'
+                    ? 'bg-blue-100'
+                    : 'hover:bg-blue-100'
                 }`}
                 aria-label="PCGS Grading Guide"
                 title="PCGS Grading Guide"
               >
-                <HelpCircle className="w-5 h-5" />
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-xs">A+</span>
+                </div>
               </button>
 
               {/* Auth Section */}
@@ -290,7 +290,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                <HelpCircle className="w-5 h-5" />
+                <Award className="w-5 h-5" />
                 PCGS Grading Guide
               </button>
 
