@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Gamepad2, LogOut, Filter, User, TrendingUp, HelpCircle } from 'lucide-react'
 import { DarkModeToggle } from './DarkModeToggle'
-import { CurrencySelector } from './CurrencySelector'
 import { SearchModal } from './SearchModal'
 import { CoinFlipGame } from './CoinFlipGame'
 import { GradingChartModal } from './GradingChartModal'
@@ -47,15 +46,12 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
   const [gradingChartOpen, setGradingChartOpen] = useState(false)
   const [quickPhotogradeOpen, setQuickPhotogradeOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
-  const [currency, setCurrency] = useState('USD')
   const { isAuthenticated, user, logout } = useAuth()
 
   // Load preferences from localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('darkMode') === 'true'
-    const savedCurrency = localStorage.getItem('currency') || 'USD'
     setDarkMode(savedDarkMode)
-    setCurrency(savedCurrency)
 
     // Update document class for dark mode
     if (savedDarkMode) {
@@ -78,11 +74,6 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
     } else {
       document.documentElement.classList.remove('dark')
     }
-  }
-
-  const handleCurrencyChange = (newCurrency: string) => {
-    setCurrency(newCurrency)
-    localStorage.setItem('currency', newCurrency)
   }
 
   return (
@@ -147,9 +138,6 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               >
                 <HelpCircle className="w-5 h-5" />
               </button>
-
-              {/* Currency Selector */}
-              <CurrencySelector selectedCurrency={currency} onCurrencyChange={handleCurrencyChange} />
 
               {/* Auth Section */}
               {isAuthenticated ? (
