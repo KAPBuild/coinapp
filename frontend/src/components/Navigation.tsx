@@ -8,7 +8,7 @@ import { GradingChartModal } from './GradingChartModal'
 import { QuickPhotogradeModal } from './QuickPhotogradeModal'
 import { useAuth } from '../contexts/AuthContext'
 
-type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues'
+type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading'
 
 interface NavigationProps {
   currentPage: Page
@@ -290,13 +290,14 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 )
               })}
 
-              {/* Grading Chart Button */}
+              {/* PCGS Grading Guide Page Button */}
               <button
-                onClick={() => {
-                  setGradingChartOpen(true)
-                  setMobileMenuOpen(false)
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                onClick={() => handleNavClick('pcgsGrading')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
+                  currentPage === 'pcgsGrading'
+                    ? 'bg-blue-100 text-blue-700'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
               >
                 <HelpCircle className="w-5 h-5" />
                 PCGS Grading Guide

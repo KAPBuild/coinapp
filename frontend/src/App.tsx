@@ -19,9 +19,10 @@ import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { PriceAdmin } from './pages/PriceAdmin'
 import { MeltValues } from './pages/MeltValues'
+import { PCGSGrading } from './pages/PCGSGrading'
 import { Navigation } from './components/Navigation'
 
-type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues'
+type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading'
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('home')
@@ -70,6 +71,7 @@ function AppContent() {
         {currentPage === 'settings' && <Settings />}
         {currentPage === 'priceAdmin' && <PriceAdmin />}
         {currentPage === 'meltValues' && <MeltValues />}
+        {currentPage === 'pcgsGrading' && <PCGSGrading />}
       </main>
     </div>
   )
