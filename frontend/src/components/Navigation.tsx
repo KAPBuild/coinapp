@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Coins, Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Gamepad2, LogOut, Filter, User, TrendingUp, Award } from 'lucide-react'
+import { Coins, Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Target, LogOut, Filter, User, TrendingUp, Award } from 'lucide-react'
 import { DarkModeToggle } from './DarkModeToggle'
 import { SearchModal } from './SearchModal'
-import { CoinFlipGame } from './CoinFlipGame'
+import { GradeGuessingGame } from './GradeGuessingGame'
 import { GradingChartModal } from './GradingChartModal'
 import { QuickPhotogradeModal } from './QuickPhotogradeModal'
 import { useAuth } from '../contexts/AuthContext'
@@ -294,7 +294,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 PCGS Grading Guide
               </button>
 
-              {/* Coin Flip Game Button */}
+              {/* Grade Guessing Game Button */}
               <button
                 onClick={() => {
                   setGameOpen(true)
@@ -302,8 +302,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-100 transition-colors"
               >
-                <Gamepad2 className="w-5 h-5" />
-                Play Coin Flip Game
+                <Target className="w-5 h-5" />
+                Guess the Grade Game
               </button>
 
               {/* Admin Links (Only for authenticated users) */}
@@ -361,8 +361,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
       {/* Search Modal */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      {/* Coin Flip Game Modal */}
-      <CoinFlipGame isOpen={gameOpen} onClose={() => setGameOpen(false)} />
+      {/* Grade Guessing Game Modal */}
+      <GradeGuessingGame isOpen={gameOpen} onClose={() => setGameOpen(false)} />
 
       {/* Grading Chart Modal */}
       <GradingChartModal isOpen={gradingChartOpen} onClose={() => setGradingChartOpen(false)} />
