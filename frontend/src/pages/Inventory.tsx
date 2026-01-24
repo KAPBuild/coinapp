@@ -288,10 +288,6 @@ export function Inventory() {
   const soldCoins = filteredAndSortedCoins.filter((coin) => coin.status === 'Sold')
 
   // Calculate sold totals
-  const totalSold = soldCoins.reduce((sum, coin) => {
-    return sum + (coin.afterFees || coin.soldPrice || 0)
-  }, 0)
-
   const totalProfit = soldCoins.reduce((sum, coin) => {
     const proceeds = coin.afterFees || coin.soldPrice || 0
     const cost = coin.purchasePrice * coin.quantity
@@ -395,82 +391,64 @@ export function Inventory() {
         </div>
       ) : (
         <>
-          {/* Dashboard Summary - 3 Primary Cards */}
-          <div className="space-y-6">
-            {/* Card 1: Collection Overview */}
-            <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg shadow-lg p-8 text-white">
-              <p className="text-blue-100 text-sm font-medium mb-4">Total Collection Value</p>
-              <p className="text-5xl font-bold mb-6">${(totalValue + totalSold).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <p className="text-blue-100 text-xs mb-1">Total Coins</p>
-                  <p className="text-2xl font-semibold">{totalCoins}</p>
-                </div>
-                <div>
-                  <p className="text-blue-100 text-xs mb-1">Current Value</p>
-                  <p className="text-2xl font-semibold">${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                </div>
-                <div>
-                  <p className="text-blue-100 text-xs mb-1">Sold Proceeds</p>
-                  <p className="text-2xl font-semibold">${totalSold.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                </div>
+          {/* Compact Dashboard Summary */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+              {/* Total Value */}
+              <div className="col-span-2 md:col-span-1 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-4 text-white">
+                <p className="text-blue-100 text-xs mb-1">Total Value</p>
+                <p className="text-2xl font-bold">${totalValue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
               </div>
-              {(totalSilverOz > 0 || totalGoldOz > 0) && (
-                <div className="flex gap-3 mt-6 text-blue-100">
-                  {totalSilverOz > 0 && <span className="text-xs">🥈 {totalSilverOz.toFixed(2)} oz silver</span>}
-                  {totalGoldOz > 0 && <span className="text-xs">🥇 {totalGoldOz.toFixed(4)} oz gold</span>}
-                </div>
-              )}
-            </div>
 
-            {/* Card 2: Financial Performance */}
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <p className="text-gray-600 text-sm font-medium mb-6">Financial Performance</p>
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <p className="text-xs text-gray-500 mb-1">Total Invested</p>
-                  <p className="text-3xl font-bold text-blue-600">${totalInvested.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 mb-1">Current Value</p>
-                  <p className="text-3xl font-bold text-green-600">${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                </div>
-                <div className={`p-4 rounded-lg ${(totalValue - totalInvested) >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
-                  <p className={`text-xs mb-2 ${(totalValue - totalInvested) >= 0 ? 'text-green-700' : 'text-red-700'}`}>Unrealized Gain/Loss</p>
-                  <p className={`text-2xl font-bold ${(totalValue - totalInvested) >= 0 ? 'text-green-900' : 'text-red-900'}`}>
-                    {(totalValue - totalInvested) >= 0 ? '+' : ''}{(totalValue - totalInvested).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {/* Invested */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <p className="text-gray-500 text-xs mb-1">Invested</p>
+                <p className="text-xl font-bold text-gray-900">${totalInvested.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+              </div>
+
+              {/* Gain/Loss */}
+              <div className={`rounded-lg p-4 ${(totalValue - totalInvested) >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
+                <p className={`text-xs mb-1 ${(totalValue - totalInvested) >= 0 ? 'text-green-600' : 'text-red-600'}`}>Gain/Loss</p>
+                <p className={`text-xl font-bold ${(totalValue - totalInvested) >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                  {(totalValue - totalInvested) >= 0 ? '+' : ''}${Math.abs(totalValue - totalInvested).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </p>
+              </div>
+
+              {/* Total Coins */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <p className="text-gray-500 text-xs mb-1">Total Coins</p>
+                <p className="text-xl font-bold text-gray-900">{totalCoins}</p>
+              </div>
+
+              {/* Status Breakdown */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <p className="text-gray-500 text-xs mb-1">Collection</p>
+                <p className="text-xl font-bold text-gray-700">{privateCollectionCoins.reduce((sum, coin) => sum + coin.quantity, 0)}</p>
+              </div>
+
+              <div className="bg-orange-50 rounded-lg p-4">
+                <p className="text-orange-600 text-xs mb-1">For Sale</p>
+                <p className="text-xl font-bold text-orange-700">{forSaleCoins.reduce((sum, coin) => sum + coin.quantity, 0)}</p>
+              </div>
+
+              <div className="bg-green-50 rounded-lg p-4">
+                <p className="text-green-600 text-xs mb-1">Sold</p>
+                <p className="text-xl font-bold text-green-700">{soldCoins.reduce((sum, coin) => sum + coin.quantity, 0)}</p>
+                {totalProfit !== 0 && (
+                  <p className={`text-xs mt-1 ${totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {totalProfit >= 0 ? '+' : ''}${totalProfit.toFixed(0)} profit
                   </p>
-                </div>
-                <div className={`p-4 rounded-lg ${totalProfit >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
-                  <p className={`text-xs mb-2 ${totalProfit >= 0 ? 'text-green-700' : 'text-red-700'}`}>Realized Profit/Loss</p>
-                  <p className={`text-2xl font-bold ${totalProfit >= 0 ? 'text-green-900' : 'text-red-900'}`}>
-                    {totalProfit >= 0 ? '+' : ''}{totalProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </p>
-                </div>
+                )}
               </div>
             </div>
 
-            {/* Card 3: Inventory Status */}
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <p className="text-gray-600 text-sm font-medium mb-6">Inventory Status</p>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="border-l-4 border-gray-400 pl-4">
-                  <p className="text-xs text-gray-500 mb-1">Private Collection</p>
-                  <p className="text-4xl font-bold text-gray-900">{privateCollectionCoins.length}</p>
-                  <p className="text-xs text-gray-500 mt-2">{privateCollectionCoins.reduce((sum, coin) => sum + coin.quantity, 0)} coins</p>
-                </div>
-                <div className="border-l-4 border-orange-400 pl-4">
-                  <p className="text-xs text-gray-500 mb-1">For Sale</p>
-                  <p className="text-4xl font-bold text-orange-600">{forSaleCoins.length}</p>
-                  <p className="text-xs text-gray-500 mt-2">{forSaleCoins.reduce((sum, coin) => sum + coin.quantity, 0)} coins</p>
-                </div>
-                <div className="border-l-4 border-green-400 pl-4">
-                  <p className="text-xs text-gray-500 mb-1">Sold</p>
-                  <p className="text-4xl font-bold text-green-600">{soldCoins.length}</p>
-                  <p className="text-xs text-gray-500 mt-2">{soldCoins.reduce((sum, coin) => sum + coin.quantity, 0)} coins</p>
-                </div>
+            {/* Metal Content (if any) */}
+            {(totalSilverOz > 0 || totalGoldOz > 0) && (
+              <div className="flex gap-4 mt-4 pt-4 border-t border-gray-200 text-sm text-gray-600">
+                {totalSilverOz > 0 && <span>{totalSilverOz.toFixed(2)} oz silver</span>}
+                {totalGoldOz > 0 && <span>{totalGoldOz.toFixed(4)} oz gold</span>}
               </div>
-            </div>
+            )}
           </div>
 
           {/* View Selector - Preset Buttons */}

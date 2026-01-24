@@ -29,6 +29,7 @@ export function MeltValues() {
   const [error, setError] = useState('')
   const [activeTab, setActiveTab] = useState<'silver' | 'gold'>('silver')
   const [refreshing, setRefreshing] = useState(false)
+  const [usingFallback, setUsingFallback] = useState(false)
 
   const fetchMeltValues = async () => {
     try {
@@ -56,47 +57,59 @@ export function MeltValues() {
 
   const fetchLocalMeltValues = async () => {
     try {
-      // Fetch spot prices
-      let spotPrices = { gold: 2050, silver: 24.50, platinum: 950 }
+      // Updated fallback prices (Jan 2026 approximate values)
+      let spotPrices = { gold: 2680, silver: 30.50, platinum: 980 }
+
+      // Try multiple APIs for live spot prices
+      let usedLiveApi = false
       try {
-        const priceResponse = await fetch('https://api.metals.live/v1/spot/metals?currencies=usd')
-        const priceData = await priceResponse.json()
-        spotPrices = {
-          gold: priceData.metals?.gold || 2050,
-          silver: priceData.metals?.silver || 24.50,
-          platinum: priceData.metals?.platinum || 950,
+        // Try api.metals.live first (free API)
+        const priceResponse = await fetch('https://api.metals.live/v1/spot')
+        if (priceResponse.ok) {
+          const priceData = await priceResponse.json()
+          // API returns array like [{ gold: 2680, silver: 30.5, ... }]
+          if (Array.isArray(priceData) && priceData.length > 0) {
+            spotPrices = {
+              gold: priceData[0].gold || spotPrices.gold,
+              silver: priceData[0].silver || spotPrices.silver,
+              platinum: priceData[0].platinum || spotPrices.platinum,
+            }
+            usedLiveApi = true
+          } else if (priceData.gold || priceData.silver) {
+            // Handle direct object response
+            spotPrices = {
+              gold: priceData.gold || spotPrices.gold,
+              silver: priceData.silver || spotPrices.silver,
+              platinum: priceData.platinum || spotPrices.platinum,
+            }
+            usedLiveApi = true
+          }
         }
       } catch {
-        // Use fallback prices
+        // Use fallback prices - API may be unavailable
+        console.log('Using fallback spot prices')
       }
+      setUsingFallback(!usedLiveApi)
 
-      // Hardcoded coin data (matches backend)
+      // Hardcoded coin data (matches NGC melt values page)
       const silverCoins: CoinMeltData[] = [
         // Nickels
         { id: 'jefferson-wartime', name: 'Jefferson Nickel (Wartime)', series: 'Jefferson Nickel', years: '1942-1945', denomination: '$0.05', composition: '35% Silver', weightGrams: 5.0, asw: 0.05626, metalType: 'silver', meltValue: 0.05626 * spotPrices.silver, spotPrice: spotPrices.silver },
         // Dimes
-        { id: 'capped-bust-dime', name: 'Capped Bust Dime', series: 'Capped Bust Dime', years: '1809-1837', denomination: '$0.10', composition: '89.24% Silver', weightGrams: 2.7, asw: 0.07742, metalType: 'silver', meltValue: 0.07742 * spotPrices.silver, spotPrice: spotPrices.silver },
-        { id: 'seated-liberty-dime', name: 'Seated Liberty Dime', series: 'Seated Liberty Dime', years: '1837-1891', denomination: '$0.10', composition: '90% Silver', weightGrams: 2.5, asw: 0.07234, metalType: 'silver', meltValue: 0.07234 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'barber-dime', name: 'Barber Dime', series: 'Barber Dime', years: '1892-1916', denomination: '$0.10', composition: '90% Silver', weightGrams: 2.5, asw: 0.07234, metalType: 'silver', meltValue: 0.07234 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'mercury-dime', name: 'Mercury Dime', series: 'Mercury Dime', years: '1916-1945', denomination: '$0.10', composition: '90% Silver', weightGrams: 2.5, asw: 0.07234, metalType: 'silver', meltValue: 0.07234 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'roosevelt-dime-silver', name: 'Roosevelt Dime (Silver)', series: 'Roosevelt Dime', years: '1946-1964', denomination: '$0.10', composition: '90% Silver', weightGrams: 2.5, asw: 0.07234, metalType: 'silver', meltValue: 0.07234 * spotPrices.silver, spotPrice: spotPrices.silver },
         // Quarters
-        { id: 'capped-bust-quarter', name: 'Capped Bust Quarter', series: 'Capped Bust Quarter', years: '1815-1838', denomination: '$0.25', composition: '89.24% Silver', weightGrams: 6.74, asw: 0.19336, metalType: 'silver', meltValue: 0.19336 * spotPrices.silver, spotPrice: spotPrices.silver },
-        { id: 'seated-liberty-quarter', name: 'Seated Liberty Quarter', series: 'Seated Liberty Quarter', years: '1838-1891', denomination: '$0.25', composition: '90% Silver', weightGrams: 6.25, asw: 0.18084, metalType: 'silver', meltValue: 0.18084 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'barber-quarter', name: 'Barber Quarter', series: 'Barber Quarter', years: '1892-1916', denomination: '$0.25', composition: '90% Silver', weightGrams: 6.25, asw: 0.18084, metalType: 'silver', meltValue: 0.18084 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'standing-liberty-quarter', name: 'Standing Liberty Quarter', series: 'Standing Liberty Quarter', years: '1916-1930', denomination: '$0.25', composition: '90% Silver', weightGrams: 6.25, asw: 0.18084, metalType: 'silver', meltValue: 0.18084 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'washington-quarter-silver', name: 'Washington Quarter (Silver)', series: 'Washington Quarter', years: '1932-1964', denomination: '$0.25', composition: '90% Silver', weightGrams: 6.25, asw: 0.18084, metalType: 'silver', meltValue: 0.18084 * spotPrices.silver, spotPrice: spotPrices.silver },
         // Half Dollars
-        { id: 'capped-bust-half', name: 'Capped Bust Half Dollar', series: 'Capped Bust Half Dollar', years: '1807-1839', denomination: '$0.50', composition: '89.24% Silver', weightGrams: 13.48, asw: 0.38671, metalType: 'silver', meltValue: 0.38671 * spotPrices.silver, spotPrice: spotPrices.silver },
-        { id: 'seated-liberty-half', name: 'Seated Liberty Half Dollar', series: 'Seated Liberty Half Dollar', years: '1839-1891', denomination: '$0.50', composition: '90% Silver', weightGrams: 12.5, asw: 0.36169, metalType: 'silver', meltValue: 0.36169 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'barber-half', name: 'Barber Half Dollar', series: 'Barber Half Dollar', years: '1892-1915', denomination: '$0.50', composition: '90% Silver', weightGrams: 12.5, asw: 0.36169, metalType: 'silver', meltValue: 0.36169 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'walking-liberty-half', name: 'Walking Liberty Half Dollar', series: 'Walking Liberty Half Dollar', years: '1916-1947', denomination: '$0.50', composition: '90% Silver', weightGrams: 12.5, asw: 0.36169, metalType: 'silver', meltValue: 0.36169 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'franklin-half', name: 'Franklin Half Dollar', series: 'Franklin Half Dollar', years: '1948-1963', denomination: '$0.50', composition: '90% Silver', weightGrams: 12.5, asw: 0.36169, metalType: 'silver', meltValue: 0.36169 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'kennedy-half-1964', name: 'Kennedy Half Dollar (1964)', series: 'Kennedy Half Dollar', years: '1964', denomination: '$0.50', composition: '90% Silver', weightGrams: 12.5, asw: 0.36169, metalType: 'silver', meltValue: 0.36169 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'kennedy-half-40', name: 'Kennedy Half Dollar (40%)', series: 'Kennedy Half Dollar', years: '1965-1970', denomination: '$0.50', composition: '40% Silver', weightGrams: 11.5, asw: 0.1479, metalType: 'silver', meltValue: 0.1479 * spotPrices.silver, spotPrice: spotPrices.silver },
         // Dollars
-        { id: 'seated-liberty-dollar', name: 'Seated Liberty Dollar', series: 'Seated Liberty Dollar', years: '1840-1873', denomination: '$1.00', composition: '90% Silver', weightGrams: 26.73, asw: 0.77344, metalType: 'silver', meltValue: 0.77344 * spotPrices.silver, spotPrice: spotPrices.silver },
-        { id: 'trade-dollar', name: 'Trade Dollar', series: 'Trade Dollar', years: '1873-1885', denomination: '$1.00', composition: '90% Silver', weightGrams: 27.22, asw: 0.7874, metalType: 'silver', meltValue: 0.7874 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'morgan-dollar', name: 'Morgan Dollar', series: 'Morgan Dollar', years: '1878-1921', denomination: '$1.00', composition: '90% Silver', weightGrams: 26.73, asw: 0.77344, metalType: 'silver', meltValue: 0.77344 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'peace-dollar', name: 'Peace Dollar', series: 'Peace Dollar', years: '1921-1935', denomination: '$1.00', composition: '90% Silver', weightGrams: 26.73, asw: 0.77344, metalType: 'silver', meltValue: 0.77344 * spotPrices.silver, spotPrice: spotPrices.silver },
         { id: 'eisenhower-silver', name: 'Eisenhower Dollar (Silver)', series: 'Eisenhower Dollar', years: '1971-1976', denomination: '$1.00', composition: '40% Silver', weightGrams: 24.59, asw: 0.3161, metalType: 'silver', meltValue: 0.3161 * spotPrices.silver, spotPrice: spotPrices.silver },
@@ -106,22 +119,6 @@ export function MeltValues() {
       ]
 
       const goldCoins: CoinMeltData[] = [
-        // Classic $20 Double Eagles
-        { id: 'liberty-double-eagle', name: 'Liberty Head $20 Double Eagle', series: 'Liberty Double Eagle', years: '1850-1907', denomination: '$20', composition: '90% Gold', weightGrams: 33.436, asw: 0, agw: 0.9675, metalType: 'gold', meltValue: 0.9675 * spotPrices.gold, spotPrice: spotPrices.gold },
-        { id: 'saint-gaudens-double-eagle', name: 'Saint-Gaudens $20 Double Eagle', series: 'Saint-Gaudens', years: '1907-1933', denomination: '$20', composition: '90% Gold', weightGrams: 33.436, asw: 0, agw: 0.9675, metalType: 'gold', meltValue: 0.9675 * spotPrices.gold, spotPrice: spotPrices.gold },
-        // Classic $10 Eagles
-        { id: 'liberty-eagle', name: 'Liberty Head $10 Eagle', series: 'Liberty Eagle', years: '1838-1907', denomination: '$10', composition: '90% Gold', weightGrams: 16.718, asw: 0, agw: 0.48375, metalType: 'gold', meltValue: 0.48375 * spotPrices.gold, spotPrice: spotPrices.gold },
-        { id: 'indian-eagle', name: 'Indian Head $10 Eagle', series: 'Indian Eagle', years: '1907-1933', denomination: '$10', composition: '90% Gold', weightGrams: 16.718, asw: 0, agw: 0.48375, metalType: 'gold', meltValue: 0.48375 * spotPrices.gold, spotPrice: spotPrices.gold },
-        // Classic $5 Half Eagles
-        { id: 'liberty-half-eagle', name: 'Liberty Head $5 Half Eagle', series: 'Liberty Half Eagle', years: '1839-1908', denomination: '$5', composition: '90% Gold', weightGrams: 8.359, asw: 0, agw: 0.24187, metalType: 'gold', meltValue: 0.24187 * spotPrices.gold, spotPrice: spotPrices.gold },
-        { id: 'indian-half-eagle', name: 'Indian Head $5 Half Eagle', series: 'Indian Half Eagle', years: '1908-1929', denomination: '$5', composition: '90% Gold', weightGrams: 8.359, asw: 0, agw: 0.24187, metalType: 'gold', meltValue: 0.24187 * spotPrices.gold, spotPrice: spotPrices.gold },
-        // Classic $2.50 Quarter Eagles
-        { id: 'liberty-quarter-eagle', name: 'Liberty Head $2.50 Quarter Eagle', series: 'Liberty Quarter Eagle', years: '1840-1907', denomination: '$2.50', composition: '90% Gold', weightGrams: 4.18, asw: 0, agw: 0.12094, metalType: 'gold', meltValue: 0.12094 * spotPrices.gold, spotPrice: spotPrices.gold },
-        { id: 'indian-quarter-eagle', name: 'Indian Head $2.50 Quarter Eagle', series: 'Indian Quarter Eagle', years: '1908-1929', denomination: '$2.50', composition: '90% Gold', weightGrams: 4.18, asw: 0, agw: 0.12094, metalType: 'gold', meltValue: 0.12094 * spotPrices.gold, spotPrice: spotPrices.gold },
-        // Classic $1 Gold Dollars
-        { id: 'gold-dollar-type1', name: 'Gold Dollar (Type 1)', series: 'Gold Dollar', years: '1849-1854', denomination: '$1', composition: '90% Gold', weightGrams: 1.672, asw: 0, agw: 0.04837, metalType: 'gold', meltValue: 0.04837 * spotPrices.gold, spotPrice: spotPrices.gold },
-        { id: 'gold-dollar-type2', name: 'Gold Dollar (Type 2)', series: 'Gold Dollar', years: '1854-1856', denomination: '$1', composition: '90% Gold', weightGrams: 1.672, asw: 0, agw: 0.04837, metalType: 'gold', meltValue: 0.04837 * spotPrices.gold, spotPrice: spotPrices.gold },
-        { id: 'gold-dollar-type3', name: 'Gold Dollar (Type 3)', series: 'Gold Dollar', years: '1856-1889', denomination: '$1', composition: '90% Gold', weightGrams: 1.672, asw: 0, agw: 0.04837, metalType: 'gold', meltValue: 0.04837 * spotPrices.gold, spotPrice: spotPrices.gold },
         // Modern Gold Bullion
         { id: 'gold-eagle-1oz', name: 'American Gold Eagle (1 oz)', series: 'American Gold Eagle', years: '1986-Present', denomination: '$50', composition: '91.67% Gold', weightGrams: 33.931, asw: 0, agw: 1.0, metalType: 'gold', meltValue: 1.0 * spotPrices.gold, spotPrice: spotPrices.gold },
         { id: 'gold-eagle-half', name: 'American Gold Eagle (1/2 oz)', series: 'American Gold Eagle', years: '1986-Present', denomination: '$25', composition: '91.67% Gold', weightGrams: 16.966, asw: 0, agw: 0.5, metalType: 'gold', meltValue: 0.5 * spotPrices.gold, spotPrice: spotPrices.gold },
@@ -195,17 +192,21 @@ export function MeltValues() {
             <p className="text-xs text-yellow-600 mt-1">per troy oz</p>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg p-6">
+          <div className={`bg-gradient-to-br ${usingFallback ? 'from-orange-100 to-orange-200' : 'from-green-100 to-green-200'} rounded-lg p-6`}>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+              <div className={`w-10 h-10 ${usingFallback ? 'bg-orange-500' : 'bg-green-500'} rounded-full flex items-center justify-center`}>
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
-              <span className="text-sm text-blue-700">Last Updated</span>
+              <span className={`text-sm ${usingFallback ? 'text-orange-700' : 'text-green-700'}`}>
+                {usingFallback ? 'Estimated Prices' : 'Live Prices'}
+              </span>
             </div>
-            <p className="text-lg font-semibold text-blue-900">
+            <p className={`text-lg font-semibold ${usingFallback ? 'text-orange-900' : 'text-green-900'}`}>
               {new Date(data.lastUpdated).toLocaleTimeString()}
             </p>
-            <p className="text-xs text-blue-600 mt-1">Auto-refreshes every 5 min</p>
+            <p className={`text-xs ${usingFallback ? 'text-orange-600' : 'text-green-600'} mt-1`}>
+              {usingFallback ? 'Using estimated spot prices' : 'Auto-refreshes every 5 min'}
+            </p>
           </div>
         </div>
       )}

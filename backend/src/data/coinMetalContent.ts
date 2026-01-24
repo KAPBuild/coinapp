@@ -42,32 +42,6 @@ export const US_SILVER_COINS: CoinMetalContent[] = [
 
   // Dimes
   {
-    id: 'capped-bust-dime',
-    name: 'Capped Bust Dime',
-    series: 'Capped Bust Dime',
-    years: '1809-1837',
-    denomination: '$0.10',
-    composition: '89.24% Silver, 10.76% Copper',
-    weightGrams: 2.7,
-    diameter: 18.8,
-    fineness: 0.8924,
-    asw: 0.07742,
-    metalType: 'silver'
-  },
-  {
-    id: 'seated-liberty-dime',
-    name: 'Seated Liberty Dime',
-    series: 'Seated Liberty Dime',
-    years: '1837-1891',
-    denomination: '$0.10',
-    composition: '90% Silver, 10% Copper',
-    weightGrams: 2.5,
-    diameter: 17.9,
-    fineness: 0.9,
-    asw: 0.07234,
-    metalType: 'silver'
-  },
-  {
     id: 'barber-dime',
     name: 'Barber Dime',
     series: 'Barber Dime',
@@ -109,32 +83,6 @@ export const US_SILVER_COINS: CoinMetalContent[] = [
 
   // Quarters
   {
-    id: 'capped-bust-quarter',
-    name: 'Capped Bust Quarter',
-    series: 'Capped Bust Quarter',
-    years: '1815-1838',
-    denomination: '$0.25',
-    composition: '89.24% Silver, 10.76% Copper',
-    weightGrams: 6.74,
-    diameter: 27.0,
-    fineness: 0.8924,
-    asw: 0.19336,
-    metalType: 'silver'
-  },
-  {
-    id: 'seated-liberty-quarter',
-    name: 'Seated Liberty Quarter',
-    series: 'Seated Liberty Quarter',
-    years: '1838-1891',
-    denomination: '$0.25',
-    composition: '90% Silver, 10% Copper',
-    weightGrams: 6.25,
-    diameter: 24.3,
-    fineness: 0.9,
-    asw: 0.18084,
-    metalType: 'silver'
-  },
-  {
     id: 'barber-quarter',
     name: 'Barber Quarter',
     series: 'Barber Quarter',
@@ -175,32 +123,6 @@ export const US_SILVER_COINS: CoinMetalContent[] = [
   },
 
   // Half Dollars
-  {
-    id: 'capped-bust-half',
-    name: 'Capped Bust Half Dollar',
-    series: 'Capped Bust Half Dollar',
-    years: '1807-1839',
-    denomination: '$0.50',
-    composition: '89.24% Silver, 10.76% Copper',
-    weightGrams: 13.48,
-    diameter: 32.5,
-    fineness: 0.8924,
-    asw: 0.38671,
-    metalType: 'silver'
-  },
-  {
-    id: 'seated-liberty-half',
-    name: 'Seated Liberty Half Dollar',
-    series: 'Seated Liberty Half Dollar',
-    years: '1839-1891',
-    denomination: '$0.50',
-    composition: '90% Silver, 10% Copper',
-    weightGrams: 12.5,
-    diameter: 30.6,
-    fineness: 0.9,
-    asw: 0.36169,
-    metalType: 'silver'
-  },
   {
     id: 'barber-half',
     name: 'Barber Half Dollar',
@@ -268,33 +190,6 @@ export const US_SILVER_COINS: CoinMetalContent[] = [
   },
 
   // Dollars
-  {
-    id: 'seated-liberty-dollar',
-    name: 'Seated Liberty Dollar',
-    series: 'Seated Liberty Dollar',
-    years: '1840-1873',
-    denomination: '$1.00',
-    composition: '90% Silver, 10% Copper',
-    weightGrams: 26.73,
-    diameter: 38.1,
-    fineness: 0.9,
-    asw: 0.77344,
-    metalType: 'silver'
-  },
-  {
-    id: 'trade-dollar',
-    name: 'Trade Dollar',
-    series: 'Trade Dollar',
-    years: '1873-1885',
-    denomination: '$1.00',
-    composition: '90% Silver, 10% Copper',
-    weightGrams: 27.22,
-    diameter: 38.1,
-    fineness: 0.9,
-    asw: 0.7874,
-    metalType: 'silver',
-    notes: 'Slightly heavier than standard dollar'
-  },
   {
     id: 'morgan-dollar',
     name: 'Morgan Dollar',
@@ -365,173 +260,8 @@ export const US_SILVER_COINS: CoinMetalContent[] = [
   },
 ]
 
-// US Gold Coins
+// US Gold Coins - Modern Bullion (from NGC melt values)
 export const US_GOLD_COINS: CoinMetalContent[] = [
-  // Classic Gold - $20 Double Eagles
-  {
-    id: 'liberty-double-eagle',
-    name: 'Liberty Head $20 Double Eagle',
-    series: 'Liberty Double Eagle',
-    years: '1850-1907',
-    denomination: '$20',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 33.436,
-    diameter: 34.0,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.9675,
-    metalType: 'gold'
-  },
-  {
-    id: 'saint-gaudens-double-eagle',
-    name: 'Saint-Gaudens $20 Double Eagle',
-    series: 'Saint-Gaudens Double Eagle',
-    years: '1907-1933',
-    denomination: '$20',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 33.436,
-    diameter: 34.0,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.9675,
-    metalType: 'gold'
-  },
-
-  // Classic Gold - $10 Eagles
-  {
-    id: 'liberty-eagle',
-    name: 'Liberty Head $10 Eagle',
-    series: 'Liberty Eagle',
-    years: '1838-1907',
-    denomination: '$10',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 16.718,
-    diameter: 27.0,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.48375,
-    metalType: 'gold'
-  },
-  {
-    id: 'indian-eagle',
-    name: 'Indian Head $10 Eagle',
-    series: 'Indian Eagle',
-    years: '1907-1933',
-    denomination: '$10',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 16.718,
-    diameter: 27.0,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.48375,
-    metalType: 'gold'
-  },
-
-  // Classic Gold - $5 Half Eagles
-  {
-    id: 'liberty-half-eagle',
-    name: 'Liberty Head $5 Half Eagle',
-    series: 'Liberty Half Eagle',
-    years: '1839-1908',
-    denomination: '$5',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 8.359,
-    diameter: 21.6,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.24187,
-    metalType: 'gold'
-  },
-  {
-    id: 'indian-half-eagle',
-    name: 'Indian Head $5 Half Eagle',
-    series: 'Indian Half Eagle',
-    years: '1908-1929',
-    denomination: '$5',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 8.359,
-    diameter: 21.6,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.24187,
-    metalType: 'gold'
-  },
-
-  // Classic Gold - $2.50 Quarter Eagles
-  {
-    id: 'liberty-quarter-eagle',
-    name: 'Liberty Head $2.50 Quarter Eagle',
-    series: 'Liberty Quarter Eagle',
-    years: '1840-1907',
-    denomination: '$2.50',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 4.18,
-    diameter: 18.0,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.12094,
-    metalType: 'gold'
-  },
-  {
-    id: 'indian-quarter-eagle',
-    name: 'Indian Head $2.50 Quarter Eagle',
-    series: 'Indian Quarter Eagle',
-    years: '1908-1929',
-    denomination: '$2.50',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 4.18,
-    diameter: 18.0,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.12094,
-    metalType: 'gold'
-  },
-
-  // Classic Gold - $1 Gold Dollars
-  {
-    id: 'gold-dollar-type1',
-    name: 'Gold Dollar (Type 1 - Liberty Head)',
-    series: 'Gold Dollar',
-    years: '1849-1854',
-    denomination: '$1',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 1.672,
-    diameter: 13.0,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.04837,
-    metalType: 'gold'
-  },
-  {
-    id: 'gold-dollar-type2',
-    name: 'Gold Dollar (Type 2 - Indian Princess)',
-    series: 'Gold Dollar',
-    years: '1854-1856',
-    denomination: '$1',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 1.672,
-    diameter: 15.0,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.04837,
-    metalType: 'gold'
-  },
-  {
-    id: 'gold-dollar-type3',
-    name: 'Gold Dollar (Type 3 - Large Indian Head)',
-    series: 'Gold Dollar',
-    years: '1856-1889',
-    denomination: '$1',
-    composition: '90% Gold, 10% Copper',
-    weightGrams: 1.672,
-    diameter: 15.0,
-    fineness: 0.9,
-    asw: 0,
-    agw: 0.04837,
-    metalType: 'gold'
-  },
-
-  // Modern Gold Bullion
   {
     id: 'gold-eagle-1oz',
     name: 'American Gold Eagle (1 oz)',

@@ -52,7 +52,7 @@ const SAMPLE_COINS: Coin[] = [
 
 export function Dashboard() {
   const { data: apiCoins = [], isLoading, error } = useCoins()
-  const [spotPrices, setSpotPrices] = useState({ gold: 2050, silver: 24.50 })
+  const [spotPrices, setSpotPrices] = useState({ gold: 2680, silver: 30.50 })
 
   // Use sample data if error or empty
   const coins = error || apiCoins.length === 0 ? SAMPLE_COINS : apiCoins
@@ -61,14 +61,25 @@ export function Dashboard() {
   useEffect(() => {
     const fetchSpot = async () => {
       try {
-        const response = await fetch('https://api.metals.live/v1/spot/metals?currencies=usd')
-        const data = await response.json()
-        setSpotPrices({
-          gold: data.metals?.gold || 2050,
-          silver: data.metals?.silver || 24.50,
-        })
+        const response = await fetch('https://api.metals.live/v1/spot')
+        if (response.ok) {
+          const data = await response.json()
+          // API returns array like [{ gold: 2680, silver: 30.5, ... }]
+          if (Array.isArray(data) && data.length > 0) {
+            setSpotPrices({
+              gold: data[0].gold || 2680,
+              silver: data[0].silver || 30.50,
+            })
+          } else if (data.gold || data.silver) {
+            setSpotPrices({
+              gold: data.gold || 2680,
+              silver: data.silver || 30.50,
+            })
+          }
+        }
       } catch {
-        // Use defaults
+        // Use updated fallback prices
+        setSpotPrices({ gold: 2680, silver: 30.50 })
       }
     }
     fetchSpot()
@@ -369,92 +380,66 @@ export function Dashboard() {
         </div>
       </div>
 
-      {/* Metal Allocation */}
+      {/* Metal Allocation - Compact */}
       <div className="bg-white rounded-xl shadow-md p-6">
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-yellow-100 rounded-lg">
             <BarChart3 className="w-5 h-5 text-yellow-600" />
           </div>
           <h3 className="text-lg font-bold text-gray-900">Metal Allocation</h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Silver */}
-          <div className="text-center">
-            <div className="relative inline-flex items-center justify-center w-32 h-32 mb-4">
-              <svg className="w-32 h-32 transform -rotate-90">
-                <circle
-                  cx="64" cy="64" r="56"
-                  stroke="#e5e7eb" strokeWidth="12" fill="none"
+        <div className="flex gap-2 mb-4">
+          {/* Stacked bar */}
+          <div className="flex-1 h-8 bg-gray-100 rounded-full overflow-hidden flex">
+            {stats.totalValue > 0 && (
+              <>
+                <div
+                  className="h-full bg-gray-400 transition-all"
+                  style={{ width: `${(stats.metalBreakdown.silver / stats.totalValue) * 100}%` }}
+                  title={`Silver: ${((stats.metalBreakdown.silver / stats.totalValue) * 100).toFixed(0)}%`}
                 />
-                <circle
-                  cx="64" cy="64" r="56"
-                  stroke="#9ca3af" strokeWidth="12" fill="none"
-                  strokeDasharray={`${(stats.metalBreakdown.silver / stats.totalValue) * 352} 352`}
-                  className="transition-all duration-500"
+                <div
+                  className="h-full bg-yellow-500 transition-all"
+                  style={{ width: `${(stats.metalBreakdown.gold / stats.totalValue) * 100}%` }}
+                  title={`Gold: ${((stats.metalBreakdown.gold / stats.totalValue) * 100).toFixed(0)}%`}
                 />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-gray-700">
-                  {stats.totalValue > 0 ? ((stats.metalBreakdown.silver / stats.totalValue) * 100).toFixed(0) : 0}%
-                </span>
-              </div>
-            </div>
-            <p className="font-semibold text-gray-900">Silver</p>
-            <p className="text-sm text-gray-500">${stats.metalBreakdown.silver.toFixed(2)}</p>
-            <p className="text-xs text-gray-400">{stats.totalSilverOz.toFixed(2)} oz</p>
+                <div
+                  className="h-full bg-purple-500 transition-all"
+                  style={{ width: `${(stats.metalBreakdown.other / stats.totalValue) * 100}%` }}
+                  title={`Other: ${((stats.metalBreakdown.other / stats.totalValue) * 100).toFixed(0)}%`}
+                />
+              </>
+            )}
           </div>
+        </div>
 
-          {/* Gold */}
-          <div className="text-center">
-            <div className="relative inline-flex items-center justify-center w-32 h-32 mb-4">
-              <svg className="w-32 h-32 transform -rotate-90">
-                <circle
-                  cx="64" cy="64" r="56"
-                  stroke="#e5e7eb" strokeWidth="12" fill="none"
-                />
-                <circle
-                  cx="64" cy="64" r="56"
-                  stroke="#eab308" strokeWidth="12" fill="none"
-                  strokeDasharray={`${(stats.metalBreakdown.gold / stats.totalValue) * 352} 352`}
-                  className="transition-all duration-500"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-yellow-600">
-                  {stats.totalValue > 0 ? ((stats.metalBreakdown.gold / stats.totalValue) * 100).toFixed(0) : 0}%
-                </span>
-              </div>
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <div className="w-3 h-3 bg-gray-400 rounded-full" />
+              <span className="text-sm font-medium text-gray-700">Silver</span>
             </div>
-            <p className="font-semibold text-gray-900">Gold</p>
-            <p className="text-sm text-gray-500">${stats.metalBreakdown.gold.toFixed(2)}</p>
-            <p className="text-xs text-gray-400">{stats.totalGoldOz.toFixed(4)} oz</p>
+            <p className="text-lg font-bold text-gray-900">{stats.totalSilverOz.toFixed(1)} oz</p>
+            <p className="text-xs text-gray-500">${stats.metalBreakdown.silver.toFixed(0)}</p>
           </div>
-
-          {/* Other/Numismatic */}
-          <div className="text-center">
-            <div className="relative inline-flex items-center justify-center w-32 h-32 mb-4">
-              <svg className="w-32 h-32 transform -rotate-90">
-                <circle
-                  cx="64" cy="64" r="56"
-                  stroke="#e5e7eb" strokeWidth="12" fill="none"
-                />
-                <circle
-                  cx="64" cy="64" r="56"
-                  stroke="#8b5cf6" strokeWidth="12" fill="none"
-                  strokeDasharray={`${(stats.metalBreakdown.other / stats.totalValue) * 352} 352`}
-                  className="transition-all duration-500"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-purple-600">
-                  {stats.totalValue > 0 ? ((stats.metalBreakdown.other / stats.totalValue) * 100).toFixed(0) : 0}%
-                </span>
-              </div>
+          <div className="p-3 bg-yellow-50 rounded-lg">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+              <span className="text-sm font-medium text-yellow-700">Gold</span>
             </div>
-            <p className="font-semibold text-gray-900">Other</p>
-            <p className="text-sm text-gray-500">${stats.metalBreakdown.other.toFixed(2)}</p>
-            <p className="text-xs text-gray-400">Copper, Clad, etc.</p>
+            <p className="text-lg font-bold text-yellow-900">{stats.totalGoldOz.toFixed(2)} oz</p>
+            <p className="text-xs text-yellow-600">${stats.metalBreakdown.gold.toFixed(0)}</p>
+          </div>
+          <div className="p-3 bg-purple-50 rounded-lg">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <div className="w-3 h-3 bg-purple-500 rounded-full" />
+              <span className="text-sm font-medium text-purple-700">Other</span>
+            </div>
+            <p className="text-lg font-bold text-purple-900">
+              {stats.totalValue > 0 ? ((stats.metalBreakdown.other / stats.totalValue) * 100).toFixed(0) : 0}%
+            </p>
+            <p className="text-xs text-purple-600">${stats.metalBreakdown.other.toFixed(0)}</p>
           </div>
         </div>
       </div>
@@ -527,7 +512,7 @@ export function Dashboard() {
           </div>
           <div>
             <p className="text-2xl font-bold text-gray-900">
-              ${(stats.totalValue / stats.totalCoins).toFixed(2)}
+              ${stats.totalCoins > 0 ? (stats.totalValue / stats.totalCoins).toFixed(0) : 0}
             </p>
             <p className="text-sm text-gray-600">Avg. Coin Value</p>
           </div>
@@ -539,9 +524,9 @@ export function Dashboard() {
           </div>
           <div>
             <p className="text-2xl font-bold text-gray-900">
-              {stats.totalSilverOz > 0 ? (stats.metalBreakdown.silver / stats.totalSilverOz / spotPrices.silver * 100).toFixed(0) : 0}%
+              {stats.meltValue > 0 ? ((stats.numismaticPremium / stats.meltValue) * 100).toFixed(0) : 0}%
             </p>
-            <p className="text-sm text-gray-600">Premium Over Spot</p>
+            <p className="text-sm text-gray-600">Premium Over Melt</p>
           </div>
         </div>
       </div>

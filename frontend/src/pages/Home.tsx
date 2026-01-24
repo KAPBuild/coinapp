@@ -1,5 +1,118 @@
-import { TrendingUp, Coins, ChevronRight, ExternalLink, HelpCircle } from 'lucide-react'
+import { TrendingUp, Coins, ChevronRight, ExternalLink, HelpCircle, Search, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+
+// Morgan Dollar data for quick lookup
+const MORGAN_DOLLARS = [
+  { year: 1878, mintMark: 'P', date: '1878', basePrice: 55 },
+  { year: 1878, mintMark: 'O', date: '1878-O', basePrice: 65 },
+  { year: 1878, mintMark: 'S', date: '1878-S', basePrice: 75 },
+  { year: 1878, mintMark: 'CC', date: '1878-CC', basePrice: 250 },
+  { year: 1879, mintMark: 'P', date: '1879', basePrice: 45 },
+  { year: 1879, mintMark: 'O', date: '1879-O', basePrice: 48 },
+  { year: 1879, mintMark: 'S', date: '1879-S', basePrice: 50 },
+  { year: 1879, mintMark: 'CC', date: '1879-CC', basePrice: 180 },
+  { year: 1880, mintMark: 'P', date: '1880', basePrice: 42 },
+  { year: 1880, mintMark: 'O', date: '1880-O', basePrice: 45 },
+  { year: 1880, mintMark: 'S', date: '1880-S', basePrice: 48 },
+  { year: 1880, mintMark: 'CC', date: '1880-CC', basePrice: 160 },
+  { year: 1881, mintMark: 'P', date: '1881', basePrice: 43 },
+  { year: 1881, mintMark: 'O', date: '1881-O', basePrice: 46 },
+  { year: 1881, mintMark: 'S', date: '1881-S', basePrice: 49 },
+  { year: 1881, mintMark: 'CC', date: '1881-CC', basePrice: 175 },
+  { year: 1882, mintMark: 'P', date: '1882', basePrice: 42 },
+  { year: 1882, mintMark: 'O', date: '1882-O', basePrice: 44 },
+  { year: 1882, mintMark: 'S', date: '1882-S', basePrice: 47 },
+  { year: 1882, mintMark: 'CC', date: '1882-CC', basePrice: 155 },
+  { year: 1883, mintMark: 'P', date: '1883', basePrice: 41 },
+  { year: 1883, mintMark: 'O', date: '1883-O', basePrice: 43 },
+  { year: 1883, mintMark: 'S', date: '1883-S', basePrice: 46 },
+  { year: 1883, mintMark: 'CC', date: '1883-CC', basePrice: 350 },
+  { year: 1884, mintMark: 'P', date: '1884', basePrice: 42 },
+  { year: 1884, mintMark: 'O', date: '1884-O', basePrice: 44 },
+  { year: 1884, mintMark: 'S', date: '1884-S', basePrice: 48 },
+  { year: 1884, mintMark: 'CC', date: '1884-CC', basePrice: 280 },
+  { year: 1885, mintMark: 'P', date: '1885', basePrice: 41 },
+  { year: 1885, mintMark: 'O', date: '1885-O', basePrice: 43 },
+  { year: 1885, mintMark: 'S', date: '1885-S', basePrice: 47 },
+  { year: 1885, mintMark: 'CC', date: '1885-CC', basePrice: 320 },
+  { year: 1886, mintMark: 'P', date: '1886', basePrice: 42 },
+  { year: 1886, mintMark: 'O', date: '1886-O', basePrice: 45 },
+  { year: 1886, mintMark: 'S', date: '1886-S', basePrice: 49 },
+  { year: 1887, mintMark: 'P', date: '1887', basePrice: 43 },
+  { year: 1887, mintMark: 'O', date: '1887-O', basePrice: 46 },
+  { year: 1887, mintMark: 'S', date: '1887-S', basePrice: 50 },
+  { year: 1888, mintMark: 'P', date: '1888', basePrice: 45 },
+  { year: 1888, mintMark: 'O', date: '1888-O', basePrice: 48 },
+  { year: 1888, mintMark: 'S', date: '1888-S', basePrice: 52 },
+  { year: 1889, mintMark: 'P', date: '1889', basePrice: 48 },
+  { year: 1889, mintMark: 'O', date: '1889-O', basePrice: 51 },
+  { year: 1889, mintMark: 'S', date: '1889-S', basePrice: 55 },
+  { year: 1889, mintMark: 'CC', date: '1889-CC', basePrice: 550 },
+  { year: 1890, mintMark: 'P', date: '1890', basePrice: 48 },
+  { year: 1890, mintMark: 'O', date: '1890-O', basePrice: 50 },
+  { year: 1890, mintMark: 'S', date: '1890-S', basePrice: 53 },
+  { year: 1890, mintMark: 'CC', date: '1890-CC', basePrice: 480 },
+  { year: 1891, mintMark: 'P', date: '1891', basePrice: 52 },
+  { year: 1891, mintMark: 'O', date: '1891-O', basePrice: 55 },
+  { year: 1891, mintMark: 'S', date: '1891-S', basePrice: 58 },
+  { year: 1891, mintMark: 'CC', date: '1891-CC', basePrice: 425 },
+  { year: 1892, mintMark: 'P', date: '1892', basePrice: 56 },
+  { year: 1892, mintMark: 'O', date: '1892-O', basePrice: 60 },
+  { year: 1892, mintMark: 'S', date: '1892-S', basePrice: 65 },
+  { year: 1892, mintMark: 'CC', date: '1892-CC', basePrice: 380 },
+  { year: 1893, mintMark: 'P', date: '1893', basePrice: 85 },
+  { year: 1893, mintMark: 'O', date: '1893-O', basePrice: 95 },
+  { year: 1893, mintMark: 'S', date: '1893-S', basePrice: 110 },
+  { year: 1893, mintMark: 'CC', date: '1893-CC', basePrice: 950 },
+  { year: 1894, mintMark: 'P', date: '1894', basePrice: 120 },
+  { year: 1894, mintMark: 'O', date: '1894-O', basePrice: 130 },
+  { year: 1894, mintMark: 'S', date: '1894-S', basePrice: 145 },
+  { year: 1895, mintMark: 'P', date: '1895', basePrice: 140 },
+  { year: 1895, mintMark: 'O', date: '1895-O', basePrice: 155 },
+  { year: 1895, mintMark: 'S', date: '1895-S', basePrice: 170 },
+  { year: 1896, mintMark: 'P', date: '1896', basePrice: 50 },
+  { year: 1896, mintMark: 'O', date: '1896-O', basePrice: 53 },
+  { year: 1896, mintMark: 'S', date: '1896-S', basePrice: 57 },
+  { year: 1897, mintMark: 'P', date: '1897', basePrice: 45 },
+  { year: 1897, mintMark: 'O', date: '1897-O', basePrice: 48 },
+  { year: 1897, mintMark: 'S', date: '1897-S', basePrice: 52 },
+  { year: 1898, mintMark: 'P', date: '1898', basePrice: 42 },
+  { year: 1898, mintMark: 'O', date: '1898-O', basePrice: 45 },
+  { year: 1898, mintMark: 'S', date: '1898-S', basePrice: 49 },
+  { year: 1899, mintMark: 'P', date: '1899', basePrice: 44 },
+  { year: 1899, mintMark: 'O', date: '1899-O', basePrice: 47 },
+  { year: 1899, mintMark: 'S', date: '1899-S', basePrice: 51 },
+  { year: 1900, mintMark: 'P', date: '1900', basePrice: 42 },
+  { year: 1900, mintMark: 'O', date: '1900-O', basePrice: 45 },
+  { year: 1900, mintMark: 'S', date: '1900-S', basePrice: 49 },
+  { year: 1901, mintMark: 'P', date: '1901', basePrice: 50 },
+  { year: 1901, mintMark: 'O', date: '1901-O', basePrice: 53 },
+  { year: 1901, mintMark: 'S', date: '1901-S', basePrice: 58 },
+  { year: 1902, mintMark: 'P', date: '1902', basePrice: 44 },
+  { year: 1902, mintMark: 'O', date: '1902-O', basePrice: 47 },
+  { year: 1902, mintMark: 'S', date: '1902-S', basePrice: 51 },
+  { year: 1903, mintMark: 'P', date: '1903', basePrice: 48 },
+  { year: 1903, mintMark: 'O', date: '1903-O', basePrice: 51 },
+  { year: 1903, mintMark: 'S', date: '1903-S', basePrice: 55 },
+  { year: 1904, mintMark: 'P', date: '1904', basePrice: 46 },
+  { year: 1904, mintMark: 'O', date: '1904-O', basePrice: 49 },
+  { year: 1904, mintMark: 'S', date: '1904-S', basePrice: 53 },
+  { year: 1921, mintMark: 'P', date: '1921', basePrice: 38 },
+  { year: 1921, mintMark: 'O', date: '1921-O', basePrice: 40 },
+  { year: 1921, mintMark: 'S', date: '1921-S', basePrice: 42 },
+]
+
+// Generate prices by grade
+function getPricesByGrade(basePrice: number) {
+  return {
+    'VF-20': Math.round(basePrice * 0.4),
+    'XF-45': Math.round(basePrice * 0.8),
+    'AU-50': Math.round(basePrice),
+    'MS-60': Math.round(basePrice * 2),
+    'MS-63': Math.round(basePrice * 3),
+    'MS-65': Math.round(basePrice * 4),
+  }
+}
 
 type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading'
 
@@ -102,8 +215,13 @@ const COIN_CATEGORIES = [
 
 export function Home({ onNavigate }: HomeProps) {
   const tickerRef = useRef<HTMLDivElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const [selectedCategory, setSelectedCategory] = useState('dollars')
   const [selectedCoin, setSelectedCoin] = useState('morgan')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<typeof MORGAN_DOLLARS>([])
+  const [showResults, setShowResults] = useState(false)
+  const [selectedResult, setSelectedResult] = useState<typeof MORGAN_DOLLARS[0] | null>(null)
 
   // Get current category and its coins
   const currentCategory = COIN_CATEGORIES.find(c => c.id === selectedCategory)
@@ -115,6 +233,40 @@ export function Home({ onNavigate }: HomeProps) {
     if (category && category.coins.length > 0) {
       setSelectedCoin(category.coins[0].id)
     }
+  }
+
+  // Search for Morgan dollars
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+    if (query.length === 0) {
+      setSearchResults([])
+      setShowResults(false)
+      return
+    }
+
+    const q = query.toLowerCase().replace('-', '').replace(' ', '')
+    const results = MORGAN_DOLLARS.filter(coin => {
+      const dateNormalized = coin.date.toLowerCase().replace('-', '')
+      const yearStr = coin.year.toString()
+      return dateNormalized.includes(q) || yearStr.includes(q) || coin.mintMark.toLowerCase() === q
+    }).slice(0, 10)
+
+    setSearchResults(results)
+    setShowResults(results.length > 0)
+  }
+
+  const handleSelectResult = (coin: typeof MORGAN_DOLLARS[0]) => {
+    setSelectedResult(coin)
+    setSearchQuery(coin.date)
+    setShowResults(false)
+  }
+
+  const clearSearch = () => {
+    setSearchQuery('')
+    setSearchResults([])
+    setShowResults(false)
+    setSelectedResult(null)
+    searchInputRef.current?.focus()
   }
 
   // Load TradingView Ticker Tape widget for live spot prices
@@ -209,6 +361,119 @@ export function Home({ onNavigate }: HomeProps) {
         >
           <div className="tradingview-widget-container__widget"></div>
         </div>
+      </div>
+
+      {/* Quick Coin Lookup */}
+      <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-4xl mx-auto">
+        <div className="text-center mb-6">
+          <h3 className="text-2xl md:text-3xl font-bold text-gray-900">Quick Coin Lookup</h3>
+          <p className="text-gray-600 mt-1">Search for Morgan Dollars by year and mint mark</p>
+        </div>
+
+        {/* Search Input */}
+        <div className="relative max-w-xl mx-auto mb-6">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              onFocus={() => searchResults.length > 0 && setShowResults(true)}
+              placeholder="Type year or date (e.g., 1921, 1889-CC, 1878-S)"
+              className="w-full pl-12 pr-12 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={clearSearch}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+
+          {/* Search Results Dropdown */}
+          {showResults && searchResults.length > 0 && (
+            <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+              {searchResults.map((coin, idx) => (
+                <button
+                  key={`${coin.date}-${idx}`}
+                  onClick={() => handleSelectResult(coin)}
+                  className="w-full px-4 py-3 text-left hover:bg-blue-50 flex items-center justify-between border-b border-gray-100 last:border-b-0"
+                >
+                  <div>
+                    <span className="font-bold text-gray-900">{coin.date}</span>
+                    <span className="text-gray-500 ml-2">Morgan Dollar</span>
+                  </div>
+                  <span className="text-blue-600 font-semibold">${coin.basePrice}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Selected Coin Details */}
+        {selectedResult && (
+          <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl p-6 border border-amber-200">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-amber-200 to-amber-400 rounded-full flex items-center justify-center">
+                  <Coins className="w-8 h-8 text-amber-700" />
+                </div>
+                <div>
+                  <h4 className="text-2xl font-bold text-gray-900">{selectedResult.date} Morgan Dollar</h4>
+                  <p className="text-gray-600">
+                    {selectedResult.mintMark === 'P' ? 'Philadelphia' :
+                     selectedResult.mintMark === 'O' ? 'New Orleans' :
+                     selectedResult.mintMark === 'S' ? 'San Francisco' : 'Carson City'} Mint
+                    {selectedResult.mintMark === 'CC' && <span className="ml-2 text-amber-600 font-medium">(Rare)</span>}
+                  </p>
+                </div>
+              </div>
+              <a
+                href={`https://www.pcgs.com/coinfacts/coin/${selectedResult.year}-morgan-dollar/7${selectedResult.year < 1900 ? '0' : '1'}${selectedResult.year % 100}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+              >
+                View on PCGS
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+
+            {/* Price Grid by Grade */}
+            <div className="mt-6">
+              <h5 className="text-sm font-semibold text-gray-700 mb-3">Estimated Values by Grade</h5>
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                {Object.entries(getPricesByGrade(selectedResult.basePrice)).map(([grade, price]) => (
+                  <div key={grade} className="bg-white rounded-lg p-3 text-center border border-amber-200">
+                    <p className="text-xs font-medium text-gray-500">{grade}</p>
+                    <p className="text-lg font-bold text-gray-900">${price}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Quick Examples */}
+        {!selectedResult && (
+          <div className="text-center">
+            <p className="text-sm text-gray-500 mb-3">Try searching:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {['1921', '1889-CC', '1878-S', '1893-O', '1884-CC'].map(example => (
+                <button
+                  key={example}
+                  onClick={() => handleSearch(example)}
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium text-sm transition-colors"
+                >
+                  {example}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* PCGS Photograde Quick Access */}
