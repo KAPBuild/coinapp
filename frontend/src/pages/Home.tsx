@@ -128,10 +128,10 @@ const COIN_CATEGORIES = [
     label: 'Dollars',
     icon: '$1',
     coins: [
-      { id: 'morgan', label: 'Morgan Dollar', years: '1878-1921' },
-      { id: 'peace', label: 'Peace Dollar', years: '1921-1935' },
       { id: 'seated-dollar', label: 'Seated Liberty Dollar', years: '1840-1873' },
       { id: 'trade', label: 'Trade Dollar', years: '1873-1885' },
+      { id: 'morgan', label: 'Morgan Dollar', years: '1878-1921' },
+      { id: 'peace', label: 'Peace Dollar', years: '1921-1935' },
     ]
   },
   {
@@ -139,12 +139,12 @@ const COIN_CATEGORIES = [
     label: 'Half Dollars',
     icon: '50¢',
     coins: [
+      { id: 'capped-bust-half', label: 'Capped Bust Half', years: '1807-1839' },
+      { id: 'seated-half', label: 'Seated Liberty Half', years: '1839-1891' },
+      { id: 'barber-half', label: 'Barber Half Dollar', years: '1892-1915' },
       { id: 'walker', label: 'Walking Liberty Half', years: '1916-1947' },
       { id: 'franklin', label: 'Franklin Half', years: '1948-1963' },
       { id: 'kennedy', label: 'Kennedy Half', years: '1964-present' },
-      { id: 'barber-half', label: 'Barber Half Dollar', years: '1892-1915' },
-      { id: 'seated-half', label: 'Seated Liberty Half', years: '1839-1891' },
-      { id: 'capped-bust-half', label: 'Capped Bust Half', years: '1807-1839' },
     ]
   },
   {
@@ -152,11 +152,11 @@ const COIN_CATEGORIES = [
     label: 'Quarters',
     icon: '25¢',
     coins: [
+      { id: 'capped-bust-quarter', label: 'Capped Bust Quarter', years: '1815-1838' },
+      { id: 'seated-quarter', label: 'Seated Liberty Quarter', years: '1838-1891' },
+      { id: 'barber-quarter', label: 'Barber Quarter', years: '1892-1916' },
       { id: 'standing-liberty', label: 'Standing Liberty Quarter', years: '1916-1930' },
       { id: 'washington', label: 'Washington Quarter', years: '1932-present' },
-      { id: 'barber-quarter', label: 'Barber Quarter', years: '1892-1916' },
-      { id: 'seated-quarter', label: 'Seated Liberty Quarter', years: '1838-1891' },
-      { id: 'capped-bust-quarter', label: 'Capped Bust Quarter', years: '1815-1838' },
     ]
   },
   {
@@ -164,11 +164,11 @@ const COIN_CATEGORIES = [
     label: 'Dimes',
     icon: '10¢',
     coins: [
+      { id: 'capped-bust-dime', label: 'Capped Bust Dime', years: '1809-1837' },
+      { id: 'seated-dime', label: 'Seated Liberty Dime', years: '1837-1891' },
+      { id: 'barber-dime', label: 'Barber Dime', years: '1892-1916' },
       { id: 'mercury', label: 'Mercury Dime', years: '1916-1945' },
       { id: 'roosevelt', label: 'Roosevelt Dime', years: '1946-present' },
-      { id: 'barber-dime', label: 'Barber Dime', years: '1892-1916' },
-      { id: 'seated-dime', label: 'Seated Liberty Dime', years: '1837-1891' },
-      { id: 'capped-bust-dime', label: 'Capped Bust Dime', years: '1809-1837' },
     ]
   },
   {
@@ -176,10 +176,10 @@ const COIN_CATEGORIES = [
     label: 'Nickels',
     icon: '5¢',
     coins: [
+      { id: 'shield-nickel', label: 'Shield Nickel', years: '1866-1883' },
+      { id: 'liberty-nickel', label: 'Liberty (V) Nickel', years: '1883-1913' },
       { id: 'buffalo', label: 'Buffalo Nickel', years: '1913-1938' },
       { id: 'jefferson', label: 'Jefferson Nickel', years: '1938-present' },
-      { id: 'liberty-nickel', label: 'Liberty (V) Nickel', years: '1883-1913' },
-      { id: 'shield-nickel', label: 'Shield Nickel', years: '1866-1883' },
     ]
   },
   {
@@ -187,12 +187,12 @@ const COIN_CATEGORIES = [
     label: 'Cents',
     icon: '1¢',
     coins: [
-      { id: 'lincoln', label: 'Lincoln Cent', years: '1909-present' },
-      { id: 'indian', label: 'Indian Head Cent', years: '1859-1909' },
-      { id: 'flying-eagle', label: 'Flying Eagle Cent', years: '1856-1858' },
-      { id: 'braided-hair', label: 'Braided Hair Large Cent', years: '1839-1857' },
-      { id: 'coronet', label: 'Coronet Head Large Cent', years: '1816-1839' },
       { id: 'classic-head', label: 'Classic Head Large Cent', years: '1808-1814' },
+      { id: 'coronet', label: 'Coronet Head Large Cent', years: '1816-1839' },
+      { id: 'braided-hair', label: 'Braided Hair Large Cent', years: '1839-1857' },
+      { id: 'flying-eagle', label: 'Flying Eagle Cent', years: '1856-1858' },
+      { id: 'indian', label: 'Indian Head Cent', years: '1859-1909' },
+      { id: 'lincoln', label: 'Lincoln Cent', years: '1909-present' },
     ]
   },
   {
@@ -200,15 +200,15 @@ const COIN_CATEGORIES = [
     label: 'Gold',
     icon: 'Au',
     coins: [
-      { id: 'saint-gaudens', label: 'Saint-Gaudens $20', years: '1907-1933' },
-      { id: 'liberty-double-eagle', label: 'Liberty $20', years: '1850-1907' },
       { id: 'liberty-eagle', label: 'Liberty $10 Eagle', years: '1838-1907' },
-      { id: 'indian-eagle', label: 'Indian $10 Eagle', years: '1907-1933' },
       { id: 'liberty-half-eagle', label: 'Liberty $5 Half Eagle', years: '1839-1908' },
-      { id: 'indian-half-eagle', label: 'Indian $5 Half Eagle', years: '1908-1929' },
       { id: 'liberty-quarter-eagle', label: 'Liberty $2.50', years: '1840-1907' },
-      { id: 'indian-quarter-eagle', label: 'Indian $2.50', years: '1908-1929' },
       { id: 'gold-dollar', label: 'Gold Dollar', years: '1849-1889' },
+      { id: 'liberty-double-eagle', label: 'Liberty $20', years: '1850-1907' },
+      { id: 'saint-gaudens', label: 'Saint-Gaudens $20', years: '1907-1933' },
+      { id: 'indian-eagle', label: 'Indian $10 Eagle', years: '1907-1933' },
+      { id: 'indian-half-eagle', label: 'Indian $5 Half Eagle', years: '1908-1929' },
+      { id: 'indian-quarter-eagle', label: 'Indian $2.50', years: '1908-1929' },
     ]
   },
 ]
