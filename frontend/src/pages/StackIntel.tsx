@@ -1,5 +1,11 @@
-import { useState } from 'react'
-import { TrendingUp, Search, BarChart2, Database, Clock, Star, ChevronRight, Lock } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { TrendingUp, Search, BarChart2, Database, Clock, Star, ChevronRight, Lock, Layers } from 'lucide-react'
+import { ScatterPlot3D } from '../components/stackintel/ScatterPlot3D'
+import { AxisControls } from '../components/stackintel/AxisControls'
+import { ViewModeToggle } from '../components/stackintel/ViewModeToggle'
+import { FilterControls } from '../components/stackintel/FilterControls'
+import { MORGAN_DATA_WITH_COMPUTED } from '../data/morganScatterData'
+import { AxisConfig, FilterConfig } from '../types/morganScatterData'
 
 // Morgan Dollar series data (placeholder - will be expanded)
 const SERIES_DATA = [
@@ -22,6 +28,38 @@ const SAMPLE_MORGANS = [
 export function StackIntel() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSeries, setSelectedSeries] = useState('morgan')
+
+  // Scatter plot state
+  const [axisConfig, setAxisConfig] = useState<AxisConfig>({
+    x: 'survival',
+    y: 'value65',
+    z: 'pop65'
+  })
+  const [filters, setFilters] = useState<FilterConfig>({
+    keyDatesOnly: false,
+    mints: ['P', 'S', 'O', 'CC'],
+    yearRange: [1878, 1921]
+  })
+  const [showTrendPlane, setShowTrendPlane] = useState(false)
+
+  const is3D = axisConfig.z !== null
+
+  const handleViewModeChange = (newIs3D: boolean) => {
+    setAxisConfig(prev => ({
+      ...prev,
+      z: newIs3D ? 'pop65' : null
+    }))
+  }
+
+  // Filter data based on current filters
+  const filteredData = useMemo(() => {
+    return MORGAN_DATA_WITH_COMPUTED.filter(coin => {
+      if (filters.keyDatesOnly && !coin.keyDate) return false
+      if (!filters.mints.includes(coin.mint)) return false
+      if (coin.year < filters.yearRange[0] || coin.year > filters.yearRange[1]) return false
+      return true
+    })
+  }, [filters])
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -82,6 +120,63 @@ export function StackIntel() {
             </p>
           </button>
         ))}
+      </div>
+
+      {/* 3D Scatter Plot Section */}
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-700 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Layers className="w-6 h-6 text-white" />
+              <div>
+                <h2 className="text-xl font-bold text-white">Outlier Explorer</h2>
+                <p className="text-indigo-200 text-sm">Find undervalued coins in 2D/3D space</p>
+              </div>
+            </div>
+            <ViewModeToggle is3D={is3D} onChange={handleViewModeChange} />
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <AxisControls axisConfig={axisConfig} onChange={setAxisConfig} />
+            <label className="flex items-center gap-2 text-sm text-gray-600">
+              <input
+                type="checkbox"
+                checked={showTrendPlane}
+                onChange={(e) => setShowTrendPlane(e.target.checked)}
+                disabled={!is3D}
+                className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 disabled:opacity-50"
+              />
+              Show Trend Plane
+            </label>
+          </div>
+          <FilterControls filters={filters} onChange={setFilters} />
+        </div>
+
+        {/* Scatter Plot */}
+        <div className="p-4">
+          <ScatterPlot3D
+            data={filteredData}
+            axisConfig={axisConfig}
+            showTrendPlane={showTrendPlane}
+          />
+          <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+            <span>{filteredData.length} coins displayed</span>
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-1">
+                <span className="w-3 h-3 rounded-full bg-yellow-400"></span> Normal
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-3 h-3 rounded-full bg-orange-500"></span> Moderate Outlier
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-3 h-3 rounded-full bg-red-600"></span> Strong Outlier
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Feature Preview Cards */}
