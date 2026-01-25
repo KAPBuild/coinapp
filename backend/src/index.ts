@@ -4,6 +4,7 @@ import authRouter from './routes/auth'
 import coinsRouter from './routes/coins'
 import pricesRouter from './routes/prices'
 import meltRouter from './routes/melt'
+import { catalogRoutes } from './routes/catalog'
 import { apiRateLimit } from './middleware/rateLimit'
 import { createDb } from './db'
 import { cleanExpiredSessions } from './utils/sessions'
@@ -12,6 +13,7 @@ type Bindings = {
   DB: D1Database
   ENVIRONMENT?: string  // 'production' | 'development'
   ALLOWED_ORIGINS?: string  // Comma-separated list of allowed origins
+  NUMISTA_API_KEY?: string  // Numista API key for coin data sync
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -62,6 +64,7 @@ app.route('/api/auth', authRouter)
 app.route('/api/coins', coinsRouter)
 app.route('/api/prices', pricesRouter)
 app.route('/api/melt', meltRouter)
+app.route('/api/catalog', catalogRoutes)
 
 // 404 handler
 app.notFound((c) => {
