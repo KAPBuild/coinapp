@@ -79,7 +79,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
 
   return (
     <>
-      <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+      <nav className="bg-slate-800 border-b border-slate-700 shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Left Section: Logo */}
@@ -88,8 +88,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0"
               aria-label="Go to home"
             >
-              <Coins className="w-6 h-6 text-blue-600" />
-              <h1 className="text-xl font-bold text-gray-900 hidden sm:block">CoinApp</h1>
+              <Coins className="w-6 h-6 text-blue-400" />
+              <h1 className="text-xl font-bold text-white hidden sm:block">CoinApp</h1>
             </button>
 
             {/* Center Section: Primary Navigation (Desktop Only) */}
@@ -102,8 +102,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                     onClick={() => handleNavClick(item.id)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
                       currentPage === item.id
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -118,7 +118,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               {/* Search Button */}
               <button
                 onClick={() => setSearchOpen(true)}
-                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition-colors"
                 aria-label="Open search"
               >
                 <Search className="w-5 h-5" />
@@ -129,13 +129,13 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 onClick={() => handleNavClick('pcgsGrading')}
                 className={`rounded-lg transition-colors ${
                   currentPage === 'pcgsGrading'
-                    ? 'bg-blue-100'
-                    : 'hover:bg-blue-100'
+                    ? 'bg-blue-600'
+                    : 'hover:bg-slate-700'
                 }`}
                 aria-label="PCGS Grading Guide"
                 title="PCGS Grading Guide"
               >
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-xs">A+</span>
                 </div>
               </button>
@@ -143,10 +143,10 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               {/* Auth Section */}
               {isAuthenticated ? (
                 <div className="hidden sm:flex items-center gap-2">
-                  <span className="text-sm text-gray-600">{user?.email}</span>
+                  <span className="text-sm text-slate-400">{user?.email}</span>
                   <button
                     onClick={() => logout().then(() => setCurrentPage('home'))}
-                    className="p-2 text-gray-600 hover:bg-red-100 hover:text-red-600 rounded-lg transition-colors"
+                    className="p-2 text-slate-300 hover:bg-red-900/50 hover:text-red-400 rounded-lg transition-colors"
                     aria-label="Logout"
                   >
                     <LogOut className="w-5 h-5" />
@@ -156,14 +156,14 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 <div className="hidden sm:flex items-center gap-2">
                   <button
                     onClick={() => setCurrentPage('login')}
-                    className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg font-medium transition-colors"
                   >
                     <LogIn className="w-5 h-5" />
                     <span>Login</span>
                   </button>
                   <button
                     onClick={() => setCurrentPage('register')}
-                    className="hidden sm:flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition-colors text-sm"
+                    className="hidden sm:flex items-center gap-2 px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg font-medium transition-colors text-sm"
                   >
                     Sign Up
                   </button>
@@ -173,7 +173,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               {/* Hamburger Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition-colors"
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -183,18 +183,18 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
 
           {/* Mobile Navigation Menu (Below Header) */}
           {mobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-200 py-2 space-y-1">
+            <div className="md:hidden border-t border-slate-700 py-2 space-y-1 bg-slate-800">
               {/* Mobile Auth Section - At the Top */}
               {isAuthenticated ? (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg mx-2 p-4 mb-3">
+                <div className="bg-slate-700 border border-slate-600 rounded-lg mx-2 p-4 mb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                         <User className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900">Account</p>
-                        <p className="text-xs text-gray-600">{user?.email}</p>
+                        <p className="text-sm font-medium text-white">Account</p>
+                        <p className="text-xs text-slate-400">{user?.email}</p>
                       </div>
                     </div>
                     <button
@@ -204,7 +204,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                           setMobileMenuOpen(false)
                         })
                       }}
-                      className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                      className="p-2 text-red-400 hover:bg-red-900/50 rounded-lg transition-colors"
                       aria-label="Logout"
                     >
                       <LogOut className="w-5 h-5" />
@@ -212,13 +212,13 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                   </div>
                 </div>
               ) : (
-                <div className="space-y-1 mb-3">
+                <div className="space-y-1 mb-3 px-2">
                   <button
                     onClick={() => handleNavClick('login')}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                       currentPage === 'login'
                         ? 'bg-blue-600 text-white'
-                        : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                        : 'bg-slate-700 text-blue-400 hover:bg-slate-600'
                     }`}
                   >
                     <LogIn className="w-5 h-5" />
@@ -228,8 +228,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                     onClick={() => handleNavClick('register')}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                       currentPage === 'register'
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-300 hover:bg-slate-700'
                     }`}
                   >
                     <User className="w-5 h-5" />
@@ -239,7 +239,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               )}
 
               {/* Divider */}
-              <div className="border-t border-gray-200 my-2" />
+              <div className="border-t border-slate-700 my-2" />
 
               {/* Mobile Primary Nav Items */}
               {primaryNavItems.map(item => {
@@ -250,8 +250,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                     onClick={() => handleNavClick(item.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                       currentPage === item.id
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -261,7 +261,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               })}
 
               {/* Divider */}
-              <div className="border-t border-gray-200 my-2" />
+              <div className="border-t border-slate-700 my-2" />
 
               {/* Additional Items */}
               {additionalNavItems.map(item => {
@@ -272,8 +272,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                     onClick={() => handleNavClick(item.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                       currentPage === item.id
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -287,8 +287,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 onClick={() => handleNavClick('pcgsGrading')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                   currentPage === 'pcgsGrading'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-600 hover:bg-gray-100'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                 }`}
               >
                 <Award className="w-5 h-5" />
@@ -301,7 +301,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                   setGameOpen(true)
                   setMobileMenuOpen(false)
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
               >
                 <Target className="w-5 h-5" />
                 Guess the Grade Game
@@ -310,13 +310,13 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               {/* Admin Links (Only for authenticated users) */}
               {isAuthenticated && (
                 <>
-                  <div className="border-t border-gray-200 my-2" />
+                  <div className="border-t border-slate-700 my-2" />
                   <button
                     onClick={() => handleNavClick('priceAdmin')}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                       currentPage === 'priceAdmin'
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                     }`}
                   >
                     <TrendingUp className="w-5 h-5" />
@@ -334,8 +334,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                     onClick={() => handleNavClick(item.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                       currentPage === item.id
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -345,12 +345,12 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               })}
 
               {/* Divider */}
-              <div className="border-t border-gray-200 my-2" />
+              <div className="border-t border-slate-700 my-2" />
 
               {/* Dark Mode Toggle */}
               <div className="px-4 py-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">Dark Mode</span>
+                  <span className="text-sm font-medium text-slate-300">Dark Mode</span>
                   <DarkModeToggle isDark={darkMode} onToggle={handleDarkModeToggle} />
                 </div>
               </div>

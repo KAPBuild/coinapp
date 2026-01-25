@@ -299,17 +299,17 @@ export function Inventory() {
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Coin Inventory</h2>
-            <p className="text-gray-600">Manage your coin collection</p>
+            <h2 className="text-3xl font-bold text-white mb-2">Coin Inventory</h2>
+            <p className="text-slate-400">Manage your coin collection</p>
           </div>
-          <button disabled className="flex items-center gap-2 bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+          <button disabled className="flex items-center gap-2 bg-slate-600 text-white px-6 py-2 rounded-lg font-medium transition-colors">
             <Plus className="w-5 h-5" />
             Add Coin
           </button>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-12 text-center flex flex-col items-center gap-4">
-          <Loader className="w-8 h-8 text-blue-600 animate-spin" />
-          <p className="text-gray-600 text-lg">Loading your inventory...</p>
+        <div className="bg-slate-800 rounded-lg shadow-md p-12 text-center flex flex-col items-center gap-4 border border-slate-700">
+          <Loader className="w-8 h-8 text-blue-400 animate-spin" />
+          <p className="text-slate-400 text-lg">Loading your inventory...</p>
         </div>
       </div>
     )
@@ -319,11 +319,11 @@ export function Inventory() {
     <div className="space-y-6">
       {/* Sample Data Banner */}
       {error && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+        <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-3 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
           <div className="text-sm">
-            <p className="text-blue-900 font-medium">Showing sample data</p>
-            <p className="text-blue-700">Log in to manage your real coins. Add/Edit/Delete features work with sample data below.</p>
+            <p className="text-blue-200 font-medium">Showing sample data</p>
+            <p className="text-blue-300">Log in to manage your real coins. Add/Edit/Delete features work with sample data below.</p>
           </div>
         </div>
       )}
@@ -332,8 +332,8 @@ export function Inventory() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Coin Inventory</h2>
-            <p className="text-gray-600">{coins.length} coins total, {filteredAndSortedCoins.length} displayed</p>
+            <h2 className="text-3xl font-bold text-white mb-2">Coin Inventory</h2>
+            <p className="text-slate-400">{coins.length} coins total, {filteredAndSortedCoins.length} displayed</p>
           </div>
           <div className="flex gap-2">
             {filteredAndSortedCoins.length > 0 && (
@@ -359,13 +359,13 @@ export function Inventory() {
         {/* Search Bar */}
         {coins.length > 0 && (
           <div className="relative">
-            <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 top-3 w-5 h-5 text-slate-500" />
             <input
               type="text"
               placeholder="Search coins by year, series, seller, denomination, mint..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         )}
@@ -378,9 +378,9 @@ export function Inventory() {
 
       {/* Empty State */}
       {coins.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-12 text-center">
-          <p className="text-gray-600 text-lg mb-2">No coins in your inventory yet.</p>
-          <p className="text-gray-500 mb-6">Click "Add Coin" to get started!</p>
+        <div className="bg-slate-800 rounded-lg shadow-md p-12 text-center border border-slate-700">
+          <p className="text-slate-300 text-lg mb-2">No coins in your inventory yet.</p>
+          <p className="text-slate-500 mb-6">Click "Add Coin" to get started!</p>
           <button
             onClick={handleAddClick}
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
@@ -392,7 +392,7 @@ export function Inventory() {
       ) : (
         <>
           {/* Compact Dashboard Summary */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-slate-800 rounded-lg shadow-md p-6 border border-slate-700">
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {/* Total Value */}
               <div className="col-span-2 md:col-span-1 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-4 text-white">
@@ -401,41 +401,41 @@ export function Inventory() {
               </div>
 
               {/* Invested */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-gray-500 text-xs mb-1">Invested</p>
-                <p className="text-xl font-bold text-gray-900">${totalInvested.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+              <div className="bg-slate-700/50 rounded-lg p-4">
+                <p className="text-slate-500 text-xs mb-1">Invested</p>
+                <p className="text-xl font-bold text-white">${totalInvested.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
               </div>
 
               {/* Gain/Loss */}
-              <div className={`rounded-lg p-4 ${(totalValue - totalInvested) >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
-                <p className={`text-xs mb-1 ${(totalValue - totalInvested) >= 0 ? 'text-green-600' : 'text-red-600'}`}>Gain/Loss</p>
-                <p className={`text-xl font-bold ${(totalValue - totalInvested) >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+              <div className={`rounded-lg p-4 ${(totalValue - totalInvested) >= 0 ? 'bg-green-900/30' : 'bg-red-900/30'}`}>
+                <p className={`text-xs mb-1 ${(totalValue - totalInvested) >= 0 ? 'text-green-400' : 'text-red-400'}`}>Gain/Loss</p>
+                <p className={`text-xl font-bold ${(totalValue - totalInvested) >= 0 ? 'text-green-300' : 'text-red-300'}`}>
                   {(totalValue - totalInvested) >= 0 ? '+' : ''}${Math.abs(totalValue - totalInvested).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </p>
               </div>
 
               {/* Total Coins */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-gray-500 text-xs mb-1">Total Coins</p>
-                <p className="text-xl font-bold text-gray-900">{totalCoins}</p>
+              <div className="bg-slate-700/50 rounded-lg p-4">
+                <p className="text-slate-500 text-xs mb-1">Total Coins</p>
+                <p className="text-xl font-bold text-white">{totalCoins}</p>
               </div>
 
               {/* Status Breakdown */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-gray-500 text-xs mb-1">Collection</p>
-                <p className="text-xl font-bold text-gray-700">{privateCollectionCoins.reduce((sum, coin) => sum + coin.quantity, 0)}</p>
+              <div className="bg-slate-700/50 rounded-lg p-4">
+                <p className="text-slate-500 text-xs mb-1">Collection</p>
+                <p className="text-xl font-bold text-slate-300">{privateCollectionCoins.reduce((sum, coin) => sum + coin.quantity, 0)}</p>
               </div>
 
-              <div className="bg-orange-50 rounded-lg p-4">
-                <p className="text-orange-600 text-xs mb-1">For Sale</p>
-                <p className="text-xl font-bold text-orange-700">{forSaleCoins.reduce((sum, coin) => sum + coin.quantity, 0)}</p>
+              <div className="bg-orange-900/30 rounded-lg p-4">
+                <p className="text-orange-400 text-xs mb-1">For Sale</p>
+                <p className="text-xl font-bold text-orange-300">{forSaleCoins.reduce((sum, coin) => sum + coin.quantity, 0)}</p>
               </div>
 
-              <div className="bg-green-50 rounded-lg p-4">
-                <p className="text-green-600 text-xs mb-1">Sold</p>
-                <p className="text-xl font-bold text-green-700">{soldCoins.reduce((sum, coin) => sum + coin.quantity, 0)}</p>
+              <div className="bg-green-900/30 rounded-lg p-4">
+                <p className="text-green-400 text-xs mb-1">Sold</p>
+                <p className="text-xl font-bold text-green-300">{soldCoins.reduce((sum, coin) => sum + coin.quantity, 0)}</p>
                 {totalProfit !== 0 && (
-                  <p className={`text-xs mt-1 ${totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <p className={`text-xs mt-1 ${totalProfit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                     {totalProfit >= 0 ? '+' : ''}${totalProfit.toFixed(0)} profit
                   </p>
                 )}
@@ -444,7 +444,7 @@ export function Inventory() {
 
             {/* Metal Content (if any) */}
             {(totalSilverOz > 0 || totalGoldOz > 0) && (
-              <div className="flex gap-4 mt-4 pt-4 border-t border-gray-200 text-sm text-gray-600">
+              <div className="flex gap-4 mt-4 pt-4 border-t border-slate-700 text-sm text-slate-400">
                 {totalSilverOz > 0 && <span>{totalSilverOz.toFixed(2)} oz silver</span>}
                 {totalGoldOz > 0 && <span>{totalGoldOz.toFixed(4)} oz gold</span>}
               </div>
@@ -452,9 +452,9 @@ export function Inventory() {
           </div>
 
           {/* View Selector - Preset Buttons */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="bg-slate-800 rounded-lg shadow-sm border border-slate-700 p-4">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+              <span className="text-sm font-medium text-slate-300 flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4" />
                 View:
               </span>
@@ -468,7 +468,7 @@ export function Inventory() {
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       activePreset === key
                         ? 'bg-blue-600 text-white shadow-sm'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                     }`}
                     title={preset.description}
                   >
@@ -481,7 +481,7 @@ export function Inventory() {
               <div className="relative ml-auto">
                 <button
                   onClick={() => setShowColumnMenu(!showColumnMenu)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-sm font-medium transition-colors"
                 >
                   <Eye className="w-4 h-4" />
                   Custom
@@ -489,12 +489,12 @@ export function Inventory() {
                 </button>
 
                 {showColumnMenu && (
-                  <div className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl z-20 p-4 w-72">
+                  <div className="absolute top-full right-0 mt-2 bg-slate-800 border border-slate-600 rounded-lg shadow-xl z-20 p-4 w-72">
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-semibold text-gray-900 text-sm">Customize Columns</h4>
+                      <h4 className="font-semibold text-white text-sm">Customize Columns</h4>
                       <button
                         onClick={() => setShowColumnMenu(false)}
-                        className="text-gray-400 hover:text-gray-600"
+                        className="text-slate-500 hover:text-slate-300"
                       >
                         <EyeOff className="w-4 h-4" />
                       </button>
@@ -523,8 +523,8 @@ export function Inventory() {
                           key={col.key}
                           className={`flex items-center gap-2 cursor-pointer p-2 rounded-lg transition-colors ${
                             columnVisibility[col.key as keyof ColumnVisibility]
-                              ? 'bg-blue-50 border border-blue-200'
-                              : 'bg-gray-50 border border-transparent hover:bg-gray-100'
+                              ? 'bg-blue-900/40 border border-blue-600'
+                              : 'bg-slate-700 border border-transparent hover:bg-slate-600'
                           }`}
                         >
                           <input
@@ -534,15 +534,15 @@ export function Inventory() {
                               toggleColumnVisibility(col.key as keyof ColumnVisibility)
                               setActivePreset('custom')
                             }}
-                            className="rounded text-blue-600 focus:ring-blue-500"
+                            className="rounded text-blue-600 focus:ring-blue-500 bg-slate-600 border-slate-500"
                           />
-                          <span className="text-xs text-gray-700">{col.label}</span>
+                          <span className="text-xs text-slate-300">{col.label}</span>
                         </label>
                       ))}
                     </div>
 
-                    <div className="mt-3 pt-3 border-t border-gray-200">
-                      <p className="text-xs text-gray-500">
+                    <div className="mt-3 pt-3 border-t border-slate-700">
+                      <p className="text-xs text-slate-500">
                         {Object.values(columnVisibility).filter(Boolean).length} columns visible
                       </p>
                     </div>
@@ -553,14 +553,14 @@ export function Inventory() {
           </div>
 
           {/* Table */}
-          <div className="bg-white rounded-lg shadow-md overflow-x-auto">
+          <div className="bg-slate-800 rounded-lg shadow-md overflow-x-auto border border-slate-700">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-slate-700 border-b border-slate-600">
                 <tr>
                   {columnVisibility.qty && (
                     <th
                       onClick={() => handleSort('quantity')}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap cursor-pointer hover:bg-gray-100"
+                      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-600"
                     >
                       QTY {sortKey === 'quantity' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
@@ -568,7 +568,7 @@ export function Inventory() {
                   {columnVisibility.year && (
                     <th
                       onClick={() => handleSort('year')}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap cursor-pointer hover:bg-gray-100"
+                      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-600"
                     >
                       Year {sortKey === 'year' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
@@ -576,7 +576,7 @@ export function Inventory() {
                   {columnVisibility.mint && (
                     <th
                       onClick={() => handleSort('mint')}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap cursor-pointer hover:bg-gray-100"
+                      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-600"
                     >
                       Mint {sortKey === 'mint' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
@@ -584,7 +584,7 @@ export function Inventory() {
                   {columnVisibility.denom && (
                     <th
                       onClick={() => handleSort('denomination')}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap cursor-pointer hover:bg-gray-100"
+                      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-600"
                     >
                       Denom {sortKey === 'denomination' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
@@ -592,7 +592,7 @@ export function Inventory() {
                   {columnVisibility.series && (
                     <th
                       onClick={() => handleSort('series')}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap cursor-pointer hover:bg-gray-100"
+                      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-600"
                     >
                       Series {sortKey === 'series' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
@@ -600,24 +600,24 @@ export function Inventory() {
                   {columnVisibility.variation && (
                     <th
                       onClick={() => handleSort('variation')}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap cursor-pointer hover:bg-gray-100"
+                      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-600"
                     >
                       Variation {sortKey === 'variation' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                   )}
                   {columnVisibility.grade && (
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap">Grade</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap">Grade</th>
                   )}
                   {columnVisibility.metalType && (
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap">Metal</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap">Metal</th>
                   )}
                   {columnVisibility.silverContent && (
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap">Silver (oz)</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap">Silver (oz)</th>
                   )}
                   {columnVisibility.purchasePrice && (
                     <th
                       onClick={() => handleSort('purchasePrice')}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap cursor-pointer hover:bg-gray-100"
+                      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-600"
                     >
                       Purchase Price {sortKey === 'purchasePrice' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
@@ -625,30 +625,30 @@ export function Inventory() {
                   {columnVisibility.estValue && (
                     <th
                       onClick={() => handleSort('currentPrice')}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap cursor-pointer hover:bg-gray-100"
+                      className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap cursor-pointer hover:bg-slate-600"
                     >
                       Est. Value {sortKey === 'currentPrice' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                   )}
                   {columnVisibility.totalValue && (
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap">Total Value</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap">Total Value</th>
                   )}
                   {columnVisibility.seller && (
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap">Seller</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap">Seller</th>
                   )}
                   {columnVisibility.orderNumber && (
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap">Order #</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap">Order #</th>
                   )}
                   {columnVisibility.soldPrice && (
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap">Sold Price</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap">Sold Price</th>
                   )}
                   {columnVisibility.profit && (
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap">Profit/Loss</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap">Profit/Loss</th>
                   )}
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900 whitespace-nowrap">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-200 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-slate-700">
                 {filteredAndSortedCoins.map((coin) => {
                   const estValue = coin.currentPrice || coin.purchasePrice
                   const totalCoinValue = estValue * coin.quantity
@@ -656,31 +656,31 @@ export function Inventory() {
                   const profit = coin.soldPrice ? (coin.afterFees || coin.soldPrice) - (coin.purchasePrice * coin.quantity) : null
 
                   return (
-                    <tr key={coin.id} className="hover:bg-gray-50">
-                      {columnVisibility.qty && <td className="px-4 py-3 text-sm text-gray-900 font-medium">{coin.quantity}</td>}
-                      {columnVisibility.year && <td className="px-4 py-3 text-sm text-gray-600">{coin.year || '-'}</td>}
-                      {columnVisibility.mint && <td className="px-4 py-3 text-sm text-gray-600">{coin.mint || '-'}</td>}
-                      {columnVisibility.denom && <td className="px-4 py-3 text-sm text-gray-600">{coin.denomination || '-'}</td>}
-                      {columnVisibility.series && <td className="px-4 py-3 text-sm text-gray-600">{coin.series || '-'}</td>}
-                      {columnVisibility.variation && <td className="px-4 py-3 text-sm text-gray-600">{coin.variation || '-'}</td>}
-                      {columnVisibility.grade && <td className="px-4 py-3 text-sm text-gray-600">{grade}</td>}
-                      {columnVisibility.metalType && <td className="px-4 py-3 text-sm text-gray-600">{coin.metalType || '-'}</td>}
-                      {columnVisibility.silverContent && <td className="px-4 py-3 text-sm text-gray-600">{coin.silverContent ? coin.silverContent.toFixed(4) : '-'}</td>}
-                      {columnVisibility.purchasePrice && <td className="px-4 py-3 text-sm text-gray-600">${coin.purchasePrice.toFixed(2)}</td>}
-                      {columnVisibility.estValue && <td className="px-4 py-3 text-sm text-gray-600">${estValue.toFixed(2)}</td>}
-                      {columnVisibility.totalValue && <td className="px-4 py-3 text-sm font-semibold text-gray-900">${totalCoinValue.toFixed(2)}</td>}
-                      {columnVisibility.seller && <td className="px-4 py-3 text-sm text-gray-600">{coin.seller || '-'}</td>}
-                      {columnVisibility.orderNumber && <td className="px-4 py-3 text-sm text-gray-600">{coin.orderNumber || '-'}</td>}
-                      {columnVisibility.soldPrice && <td className="px-4 py-3 text-sm text-gray-600">{coin.soldPrice ? `$${coin.soldPrice.toFixed(2)}` : '-'}</td>}
+                    <tr key={coin.id} className="hover:bg-slate-700/50">
+                      {columnVisibility.qty && <td className="px-4 py-3 text-sm text-white font-medium">{coin.quantity}</td>}
+                      {columnVisibility.year && <td className="px-4 py-3 text-sm text-slate-400">{coin.year || '-'}</td>}
+                      {columnVisibility.mint && <td className="px-4 py-3 text-sm text-slate-400">{coin.mint || '-'}</td>}
+                      {columnVisibility.denom && <td className="px-4 py-3 text-sm text-slate-400">{coin.denomination || '-'}</td>}
+                      {columnVisibility.series && <td className="px-4 py-3 text-sm text-slate-400">{coin.series || '-'}</td>}
+                      {columnVisibility.variation && <td className="px-4 py-3 text-sm text-slate-400">{coin.variation || '-'}</td>}
+                      {columnVisibility.grade && <td className="px-4 py-3 text-sm text-slate-400">{grade}</td>}
+                      {columnVisibility.metalType && <td className="px-4 py-3 text-sm text-slate-400">{coin.metalType || '-'}</td>}
+                      {columnVisibility.silverContent && <td className="px-4 py-3 text-sm text-slate-400">{coin.silverContent ? coin.silverContent.toFixed(4) : '-'}</td>}
+                      {columnVisibility.purchasePrice && <td className="px-4 py-3 text-sm text-slate-400">${coin.purchasePrice.toFixed(2)}</td>}
+                      {columnVisibility.estValue && <td className="px-4 py-3 text-sm text-slate-400">${estValue.toFixed(2)}</td>}
+                      {columnVisibility.totalValue && <td className="px-4 py-3 text-sm font-semibold text-white">${totalCoinValue.toFixed(2)}</td>}
+                      {columnVisibility.seller && <td className="px-4 py-3 text-sm text-slate-400">{coin.seller || '-'}</td>}
+                      {columnVisibility.orderNumber && <td className="px-4 py-3 text-sm text-slate-400">{coin.orderNumber || '-'}</td>}
+                      {columnVisibility.soldPrice && <td className="px-4 py-3 text-sm text-slate-400">{coin.soldPrice ? `$${coin.soldPrice.toFixed(2)}` : '-'}</td>}
                       {columnVisibility.profit && (
-                        <td className={`px-4 py-3 text-sm font-medium ${profit === null ? 'text-gray-600' : profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <td className={`px-4 py-3 text-sm font-medium ${profit === null ? 'text-slate-500' : profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                           {profit === null ? '-' : `${profit >= 0 ? '+' : ''}$${profit.toFixed(2)}`}
                         </td>
                       )}
                       <td className="px-4 py-3 text-sm flex gap-2">
                         <button
                           onClick={() => handleEdit(coin)}
-                          className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                          className="p-1.5 text-blue-400 hover:bg-blue-900/50 rounded transition-colors"
                           title="Edit coin"
                         >
                           <Edit className="w-4 h-4" />
@@ -688,7 +688,7 @@ export function Inventory() {
                         <button
                           onClick={() => handleDelete(coin.id)}
                           disabled={deleteMutation.isPending}
-                          className="p-1.5 text-red-600 hover:bg-red-50 disabled:opacity-50 rounded transition-colors"
+                          className="p-1.5 text-red-400 hover:bg-red-900/50 disabled:opacity-50 rounded transition-colors"
                           title="Delete coin"
                         >
                           <Trash2 className="w-4 h-4" />

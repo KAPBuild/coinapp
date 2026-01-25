@@ -154,13 +154,13 @@ export function MeltValues() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Melt Values</h2>
-          <p className="text-gray-600">Calculate coin melt values from live spot prices</p>
+          <h2 className="text-3xl font-bold text-white mb-2">Melt Values</h2>
+          <p className="text-slate-400">Calculate coin melt values from live spot prices</p>
         </div>
         <button
           onClick={fetchMeltValues}
           disabled={refreshing}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white rounded-lg font-medium transition-colors"
         >
           <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
           Refresh
@@ -170,41 +170,41 @@ export function MeltValues() {
       {/* Spot Price Cards */}
       {data && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-6">
+          <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg p-6 border border-slate-600">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-slate-500 rounded-full flex items-center justify-center">
                 <Coins className="w-5 h-5 text-white" />
               </div>
-              <span className="text-sm text-gray-600">Silver Spot</span>
+              <span className="text-sm text-slate-400">Silver Spot</span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">${data.spotPrices.silver.toFixed(2)}</p>
-            <p className="text-xs text-gray-500 mt-1">per troy oz</p>
+            <p className="text-3xl font-bold text-white">${data.spotPrices.silver.toFixed(2)}</p>
+            <p className="text-xs text-slate-500 mt-1">per troy oz</p>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg p-6">
+          <div className="bg-gradient-to-br from-yellow-900/40 to-yellow-800/30 rounded-lg p-6 border border-yellow-700/50">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
                 <Coins className="w-5 h-5 text-white" />
               </div>
-              <span className="text-sm text-yellow-700">Gold Spot</span>
+              <span className="text-sm text-yellow-300">Gold Spot</span>
             </div>
-            <p className="text-3xl font-bold text-yellow-900">${data.spotPrices.gold.toFixed(2)}</p>
-            <p className="text-xs text-yellow-600 mt-1">per troy oz</p>
+            <p className="text-3xl font-bold text-yellow-100">${data.spotPrices.gold.toFixed(2)}</p>
+            <p className="text-xs text-yellow-400 mt-1">per troy oz</p>
           </div>
 
-          <div className={`bg-gradient-to-br ${usingFallback ? 'from-orange-100 to-orange-200' : 'from-green-100 to-green-200'} rounded-lg p-6`}>
+          <div className={`bg-gradient-to-br ${usingFallback ? 'from-orange-900/40 to-orange-800/30 border-orange-700/50' : 'from-green-900/40 to-green-800/30 border-green-700/50'} rounded-lg p-6 border`}>
             <div className="flex items-center gap-3 mb-2">
               <div className={`w-10 h-10 ${usingFallback ? 'bg-orange-500' : 'bg-green-500'} rounded-full flex items-center justify-center`}>
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
-              <span className={`text-sm ${usingFallback ? 'text-orange-700' : 'text-green-700'}`}>
+              <span className={`text-sm ${usingFallback ? 'text-orange-300' : 'text-green-300'}`}>
                 {usingFallback ? 'Estimated Prices' : 'Live Prices'}
               </span>
             </div>
-            <p className={`text-lg font-semibold ${usingFallback ? 'text-orange-900' : 'text-green-900'}`}>
+            <p className={`text-lg font-semibold ${usingFallback ? 'text-orange-100' : 'text-green-100'}`}>
               {new Date(data.lastUpdated).toLocaleTimeString()}
             </p>
-            <p className={`text-xs ${usingFallback ? 'text-orange-600' : 'text-green-600'} mt-1`}>
+            <p className={`text-xs ${usingFallback ? 'text-orange-400' : 'text-green-400'} mt-1`}>
               {usingFallback ? 'Using estimated spot prices' : 'Auto-refreshes every 5 min'}
             </p>
           </div>
@@ -212,13 +212,13 @@ export function MeltValues() {
       )}
 
       {/* Tabs */}
-      <div className="flex border-b border-gray-200">
+      <div className="flex border-b border-slate-700">
         <button
           onClick={() => setActiveTab('silver')}
           className={`px-6 py-3 font-medium transition-colors ${
             activeTab === 'silver'
-              ? 'text-gray-700 border-b-2 border-gray-500 bg-gray-50'
-              : 'text-gray-500 hover:text-gray-700'
+              ? 'text-slate-200 border-b-2 border-slate-400 bg-slate-800'
+              : 'text-slate-500 hover:text-slate-300'
           }`}
         >
           Silver Coins ({data?.silverCoins.length || 0})
@@ -227,8 +227,8 @@ export function MeltValues() {
           onClick={() => setActiveTab('gold')}
           className={`px-6 py-3 font-medium transition-colors ${
             activeTab === 'gold'
-              ? 'text-yellow-700 border-b-2 border-yellow-500 bg-yellow-50'
-              : 'text-gray-500 hover:text-gray-700'
+              ? 'text-yellow-300 border-b-2 border-yellow-500 bg-yellow-900/30'
+              : 'text-slate-500 hover:text-slate-300'
           }`}
         >
           Gold Coins ({data?.goldCoins.length || 0})
@@ -239,50 +239,50 @@ export function MeltValues() {
       {loading && (
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading melt values...</p>
+            <div className="w-10 h-10 border-4 border-blue-400 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-slate-400">Loading melt values...</p>
           </div>
         </div>
       )}
 
       {/* Error State */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+        <div className="bg-red-900/30 border border-red-700 rounded-lg p-4 text-red-300">
           {error}
         </div>
       )}
 
       {/* Table */}
       {!loading && coins && (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-slate-800 rounded-lg shadow-md overflow-hidden border border-slate-700">
           <table className="w-full">
-            <thead className={`${activeTab === 'silver' ? 'bg-gray-50' : 'bg-yellow-50'} border-b border-gray-200`}>
+            <thead className={`${activeTab === 'silver' ? 'bg-slate-700' : 'bg-yellow-900/40'} border-b border-slate-600`}>
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Coin</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Years</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">Composition</th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">
+                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-200">Coin</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-200">Years</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-slate-200">Composition</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-slate-200">
                   {activeTab === 'silver' ? 'ASW (oz)' : 'AGW (oz)'}
                 </th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-900">Melt Value</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-slate-200">Melt Value</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-slate-700">
               {coins.map((coin) => (
-                <tr key={coin.id} className="hover:bg-gray-50">
+                <tr key={coin.id} className="hover:bg-slate-700/50">
                   <td className="px-4 py-3">
                     <div>
-                      <p className="font-medium text-gray-900">{coin.name}</p>
-                      <p className="text-xs text-gray-500">{coin.denomination}</p>
+                      <p className="font-medium text-white">{coin.name}</p>
+                      <p className="text-xs text-slate-500">{coin.denomination}</p>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{coin.years}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{coin.composition}</td>
-                  <td className="px-4 py-3 text-sm text-right font-mono text-gray-700">
+                  <td className="px-4 py-3 text-sm text-slate-400">{coin.years}</td>
+                  <td className="px-4 py-3 text-sm text-slate-400">{coin.composition}</td>
+                  <td className="px-4 py-3 text-sm text-right font-mono text-slate-300">
                     {(activeTab === 'silver' ? coin.asw : coin.agw || 0).toFixed(5)}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <span className={`text-lg font-bold ${activeTab === 'silver' ? 'text-gray-900' : 'text-yellow-700'}`}>
+                    <span className={`text-lg font-bold ${activeTab === 'silver' ? 'text-white' : 'text-yellow-300'}`}>
                       ${coin.meltValue.toFixed(2)}
                     </span>
                   </td>
@@ -294,7 +294,7 @@ export function MeltValues() {
       )}
 
       {/* Info Box */}
-      <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-800">
+      <div className="bg-blue-900/30 rounded-lg p-4 text-sm text-blue-200 border border-blue-700/50">
         <p className="font-semibold mb-1">How Melt Values Work</p>
         <p>
           Melt value = Actual {activeTab === 'silver' ? 'Silver' : 'Gold'} Weight (oz) x Spot Price.

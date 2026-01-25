@@ -325,23 +325,23 @@ export function Home({ onNavigate }: HomeProps) {
     <div className="space-y-12">
       {/* Hero Section */}
       <div className="text-center space-y-6 py-8">
-        <h1 className="text-5xl md:text-6xl font-bold text-gray-900">
+        <h1 className="text-5xl md:text-6xl font-bold text-white">
           Track Your Coin Collection
         </h1>
-        <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto">
           Free inventory tool with live pricing.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
           <button
             onClick={handleStartTracking}
-            className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+            className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-500 transition-colors shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
           >
             Start Tracking
             <ChevronRight className="w-5 h-5" />
           </button>
           <button
             onClick={handleViewMeltValues}
-            className="px-8 py-4 bg-white text-gray-700 text-lg font-semibold rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors flex items-center justify-center gap-2"
+            className="px-8 py-4 bg-slate-800 text-slate-200 text-lg font-semibold rounded-lg border-2 border-slate-600 hover:border-slate-500 hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
           >
             Melt Values
           </button>
@@ -349,10 +349,10 @@ export function Home({ onNavigate }: HomeProps) {
       </div>
 
       {/* Live Spot Prices - TradingView Ticker */}
-      <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-4 max-w-4xl mx-auto overflow-hidden">
+      <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-4 max-w-4xl mx-auto overflow-hidden border border-slate-700">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-gray-400 text-sm font-medium">LIVE SPOT PRICES</span>
+          <span className="text-slate-400 text-sm font-medium">LIVE SPOT PRICES</span>
         </div>
         <div
           ref={tickerRef}
@@ -364,16 +364,16 @@ export function Home({ onNavigate }: HomeProps) {
       </div>
 
       {/* Quick Coin Lookup */}
-      <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-4xl mx-auto">
+      <div className="bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8 max-w-4xl mx-auto border border-slate-700">
         <div className="text-center mb-6">
-          <h3 className="text-2xl md:text-3xl font-bold text-gray-900">Quick Coin Lookup</h3>
-          <p className="text-gray-600 mt-1">Search for Morgan Dollars by year and mint mark</p>
+          <h3 className="text-2xl md:text-3xl font-bold text-white">Quick Coin Lookup</h3>
+          <p className="text-slate-400 mt-1">Search for Morgan Dollars by year and mint mark</p>
         </div>
 
         {/* Search Input */}
         <div className="relative max-w-xl mx-auto mb-6">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
             <input
               ref={searchInputRef}
               type="text"
@@ -381,12 +381,12 @@ export function Home({ onNavigate }: HomeProps) {
               onChange={(e) => handleSearch(e.target.value)}
               onFocus={() => searchResults.length > 0 && setShowResults(true)}
               placeholder="Type year or date (e.g., 1921, 1889-CC, 1878-S)"
-              className="w-full pl-12 pr-12 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+              className="w-full pl-12 pr-12 py-4 text-lg bg-slate-700 border-2 border-slate-600 rounded-xl text-white placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
             {searchQuery && (
               <button
                 onClick={clearSearch}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-200"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -395,18 +395,18 @@ export function Home({ onNavigate }: HomeProps) {
 
           {/* Search Results Dropdown */}
           {showResults && searchResults.length > 0 && (
-            <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+            <div className="absolute z-50 w-full mt-2 bg-slate-700 border border-slate-600 rounded-xl shadow-lg overflow-hidden">
               {searchResults.map((coin, idx) => (
                 <button
                   key={`${coin.date}-${idx}`}
                   onClick={() => handleSelectResult(coin)}
-                  className="w-full px-4 py-3 text-left hover:bg-blue-50 flex items-center justify-between border-b border-gray-100 last:border-b-0"
+                  className="w-full px-4 py-3 text-left hover:bg-slate-600 flex items-center justify-between border-b border-slate-600 last:border-b-0"
                 >
                   <div>
-                    <span className="font-bold text-gray-900">{coin.date}</span>
-                    <span className="text-gray-500 ml-2">Morgan Dollar</span>
+                    <span className="font-bold text-white">{coin.date}</span>
+                    <span className="text-slate-400 ml-2">Morgan Dollar</span>
                   </div>
-                  <span className="text-blue-600 font-semibold">${coin.basePrice}</span>
+                  <span className="text-blue-400 font-semibold">${coin.basePrice}</span>
                 </button>
               ))}
             </div>
@@ -415,19 +415,19 @@ export function Home({ onNavigate }: HomeProps) {
 
         {/* Selected Coin Details */}
         {selectedResult && (
-          <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl p-6 border border-amber-200">
+          <div className="bg-gradient-to-br from-amber-900/30 to-yellow-900/20 rounded-xl p-6 border border-amber-700/50">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-amber-200 to-amber-400 rounded-full flex items-center justify-center">
-                  <Coins className="w-8 h-8 text-amber-700" />
+                <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center">
+                  <Coins className="w-8 h-8 text-amber-100" />
                 </div>
                 <div>
-                  <h4 className="text-2xl font-bold text-gray-900">{selectedResult.date} Morgan Dollar</h4>
-                  <p className="text-gray-600">
+                  <h4 className="text-2xl font-bold text-white">{selectedResult.date} Morgan Dollar</h4>
+                  <p className="text-slate-300">
                     {selectedResult.mintMark === 'P' ? 'Philadelphia' :
                      selectedResult.mintMark === 'O' ? 'New Orleans' :
                      selectedResult.mintMark === 'S' ? 'San Francisco' : 'Carson City'} Mint
-                    {selectedResult.mintMark === 'CC' && <span className="ml-2 text-amber-600 font-medium">(Rare)</span>}
+                    {selectedResult.mintMark === 'CC' && <span className="ml-2 text-amber-400 font-medium">(Rare)</span>}
                   </p>
                 </div>
               </div>
@@ -435,7 +435,7 @@ export function Home({ onNavigate }: HomeProps) {
                 href={`https://www.pcgs.com/coinfacts/coin/${selectedResult.year}-morgan-dollar/7${selectedResult.year < 1900 ? '0' : '1'}${selectedResult.year % 100}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition-colors"
               >
                 View on PCGS
                 <ExternalLink className="w-4 h-4" />
@@ -444,12 +444,12 @@ export function Home({ onNavigate }: HomeProps) {
 
             {/* Price Grid by Grade */}
             <div className="mt-6">
-              <h5 className="text-sm font-semibold text-gray-700 mb-3">Estimated Values by Grade</h5>
+              <h5 className="text-sm font-semibold text-slate-300 mb-3">Estimated Values by Grade</h5>
               <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
                 {Object.entries(getPricesByGrade(selectedResult.basePrice)).map(([grade, price]) => (
-                  <div key={grade} className="bg-white rounded-lg p-3 text-center border border-amber-200">
-                    <p className="text-xs font-medium text-gray-500">{grade}</p>
-                    <p className="text-lg font-bold text-gray-900">${price}</p>
+                  <div key={grade} className="bg-slate-700/50 rounded-lg p-3 text-center border border-slate-600">
+                    <p className="text-xs font-medium text-slate-400">{grade}</p>
+                    <p className="text-lg font-bold text-white">${price}</p>
                   </div>
                 ))}
               </div>
@@ -460,13 +460,13 @@ export function Home({ onNavigate }: HomeProps) {
         {/* Quick Examples */}
         {!selectedResult && (
           <div className="text-center">
-            <p className="text-sm text-gray-500 mb-3">Try searching:</p>
+            <p className="text-sm text-slate-500 mb-3">Try searching:</p>
             <div className="flex flex-wrap justify-center gap-2">
               {['1921', '1889-CC', '1878-S', '1893-O', '1884-CC'].map(example => (
                 <button
                   key={example}
                   onClick={() => handleSearch(example)}
-                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium text-sm transition-colors"
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg font-medium text-sm transition-colors"
                 >
                   {example}
                 </button>
@@ -558,13 +558,13 @@ export function Home({ onNavigate }: HomeProps) {
       </div>
 
       {/* Example Collection Visual */}
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-4xl mx-auto">
+      <div className="bg-slate-800 rounded-2xl shadow-xl p-8 max-w-4xl mx-auto border border-slate-700">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">My Collection</h3>
-            <p className="text-sm text-gray-500">4 coins · Total Value: $224</p>
+            <h3 className="text-lg font-semibold text-white">My Collection</h3>
+            <p className="text-sm text-slate-400">4 coins · Total Value: $224</p>
           </div>
-          <div className="flex items-center gap-2 text-green-600">
+          <div className="flex items-center gap-2 text-green-400">
             <TrendingUp className="w-5 h-5" />
             <span className="font-medium">+$18 today</span>
           </div>
@@ -573,17 +573,17 @@ export function Home({ onNavigate }: HomeProps) {
           {exampleCollection.map((coin, index) => (
             <div
               key={index}
-              className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100"
+              className="flex items-center gap-4 p-4 bg-slate-700/50 rounded-lg border border-slate-600"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-amber-200 to-amber-400 rounded-full flex items-center justify-center">
-                <Coins className="w-6 h-6 text-amber-700" />
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center">
+                <Coins className="w-6 h-6 text-amber-100" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-gray-900">{coin.name}</p>
-                <p className="text-sm text-gray-500">{coin.grade}</p>
+                <p className="font-medium text-white">{coin.name}</p>
+                <p className="text-sm text-slate-400">{coin.grade}</p>
               </div>
               <div className="text-right">
-                <p className="font-semibold text-gray-900">{coin.value}</p>
+                <p className="font-semibold text-white">{coin.value}</p>
               </div>
             </div>
           ))}

@@ -161,8 +161,8 @@ export function Dashboard() {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your stack...</p>
+          <div className="w-12 h-12 border-4 border-blue-400 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-400">Loading your stack...</p>
         </div>
       </div>
     )
@@ -173,11 +173,11 @@ export function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-1">Stack Dashboard</h2>
-          <p className="text-gray-600">Your complete coin collection overview</p>
+          <h2 className="text-3xl font-bold text-white mb-1">Stack Dashboard</h2>
+          <p className="text-slate-400">Your complete coin collection overview</p>
         </div>
         {(error || apiCoins.length === 0) && (
-          <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+          <span className="px-3 py-1 bg-blue-600/20 text-blue-300 rounded-full text-sm font-medium">
             Sample Data
           </span>
         )}
@@ -223,68 +223,68 @@ export function Dashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-gray-400">
+        <div className="bg-slate-800 rounded-xl shadow-md p-6 border-l-4 border-slate-500 border border-slate-700">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-gray-100 rounded-lg">
-              <Scale className="w-5 h-5 text-gray-600" />
+            <div className="p-2 bg-slate-700 rounded-lg">
+              <Scale className="w-5 h-5 text-slate-300" />
             </div>
-            <span className="text-sm text-gray-600">Melt Value</span>
+            <span className="text-sm text-slate-400">Melt Value</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-2xl font-bold text-white">
             ${stats.meltValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Silver: ${(stats.totalSilverOz * spotPrices.silver).toFixed(2)} | Gold: ${(stats.totalGoldOz * spotPrices.gold).toFixed(2)}
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-400">
+        <div className="bg-slate-800 rounded-xl shadow-md p-6 border-l-4 border-purple-500 border border-slate-700">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <Gem className="w-5 h-5 text-purple-600" />
+            <div className="p-2 bg-purple-900/50 rounded-lg">
+              <Gem className="w-5 h-5 text-purple-400" />
             </div>
-            <span className="text-sm text-gray-600">Numismatic Premium</span>
+            <span className="text-sm text-slate-400">Numismatic Premium</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-2xl font-bold text-white">
             ${stats.numismaticPremium.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             {stats.meltValue > 0 ? ((stats.numismaticPremium / stats.meltValue) * 100).toFixed(0) : 0}% over melt
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-400">
+        <div className="bg-slate-800 rounded-xl shadow-md p-6 border-l-4 border-yellow-500 border border-slate-700">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-yellow-100 rounded-lg">
-              <CircleDollarSign className="w-5 h-5 text-yellow-600" />
+            <div className="p-2 bg-yellow-900/50 rounded-lg">
+              <CircleDollarSign className="w-5 h-5 text-yellow-400" />
             </div>
-            <span className="text-sm text-gray-600">Gold Spot</span>
+            <span className="text-sm text-slate-400">Gold Spot</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">${spotPrices.gold.toFixed(2)}</p>
-          <p className="text-xs text-gray-500 mt-1">per troy oz</p>
+          <p className="text-2xl font-bold text-white">${spotPrices.gold.toFixed(2)}</p>
+          <p className="text-xs text-slate-500 mt-1">per troy oz</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-gray-300">
+        <div className="bg-slate-800 rounded-xl shadow-md p-6 border-l-4 border-slate-400 border border-slate-700">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-gray-100 rounded-lg">
-              <Coins className="w-5 h-5 text-gray-500" />
+            <div className="p-2 bg-slate-700 rounded-lg">
+              <Coins className="w-5 h-5 text-slate-400" />
             </div>
-            <span className="text-sm text-gray-600">Silver Spot</span>
+            <span className="text-sm text-slate-400">Silver Spot</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">${spotPrices.silver.toFixed(2)}</p>
-          <p className="text-xs text-gray-500 mt-1">per troy oz</p>
+          <p className="text-2xl font-bold text-white">${spotPrices.silver.toFixed(2)}</p>
+          <p className="text-xs text-slate-500 mt-1">per troy oz</p>
         </div>
       </div>
 
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Stack Breakdown by Series */}
-        <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="bg-slate-800 rounded-xl shadow-md p-6 border border-slate-700">
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <PieChart className="w-5 h-5 text-blue-600" />
+            <div className="p-2 bg-blue-900/50 rounded-lg">
+              <PieChart className="w-5 h-5 text-blue-400" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900">Stack Breakdown</h3>
+            <h3 className="text-lg font-bold text-white">Stack Breakdown</h3>
           </div>
 
           <div className="space-y-4">
@@ -300,17 +300,17 @@ export function Dashboard() {
               return (
                 <div key={series}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-700">{series}</span>
-                    <span className="text-sm text-gray-500">{data.count} coins</span>
+                    <span className="text-sm font-medium text-slate-300">{series}</span>
+                    <span className="text-sm text-slate-500">{data.count} coins</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-3 bg-slate-700 rounded-full overflow-hidden">
                       <div
                         className={`h-full ${barColor} rounded-full transition-all`}
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
-                    <span className="text-sm font-semibold text-gray-900 w-20 text-right">
+                    <span className="text-sm font-semibold text-white w-20 text-right">
                       ${data.value.toFixed(0)}
                     </span>
                   </div>
@@ -320,19 +320,19 @@ export function Dashboard() {
           </div>
 
           {sortedSeries.length > 6 && (
-            <p className="text-sm text-gray-500 mt-4 text-center">
+            <p className="text-sm text-slate-500 mt-4 text-center">
               +{sortedSeries.length - 6} more series
             </p>
           )}
         </div>
 
         {/* Set Completion Progress */}
-        <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="bg-slate-800 rounded-xl shadow-md p-6 border border-slate-700">
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <Target className="w-5 h-5 text-green-600" />
+            <div className="p-2 bg-green-900/50 rounded-lg">
+              <Target className="w-5 h-5 text-green-400" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900">Set Completion</h3>
+            <h3 className="text-lg font-bold text-white">Set Completion</h3>
           </div>
 
           <div className="space-y-4">
@@ -348,22 +348,22 @@ export function Dashboard() {
                 return (
                   <div key={series}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">{series}</span>
-                      <span className={`text-sm font-semibold ${isComplete ? 'text-green-600' : 'text-gray-600'}`}>
+                      <span className="text-sm font-medium text-slate-300">{series}</span>
+                      <span className={`text-sm font-semibold ${isComplete ? 'text-green-400' : 'text-slate-400'}`}>
                         {owned}/{total}
                         {isComplete && <CheckCircle2 className="w-4 h-4 inline ml-1" />}
                       </span>
                     </div>
-                    <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${
                           isComplete ? 'bg-green-500' :
-                          percentage > 50 ? 'bg-blue-500' : 'bg-gray-400'
+                          percentage > 50 ? 'bg-blue-500' : 'bg-slate-500'
                         }`}
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-slate-500 mt-1">
                       {percentage.toFixed(0)}% complete
                     </p>
                   </div>
@@ -372,8 +372,8 @@ export function Dashboard() {
           </div>
 
           {sortedSeries.filter(([s]) => SERIES_TOTALS[s]).length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              <Target className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+            <div className="text-center py-8 text-slate-500">
+              <Target className="w-12 h-12 mx-auto mb-3 text-slate-600" />
               <p>Add coins with series info to track set completion</p>
             </div>
           )}
@@ -381,21 +381,21 @@ export function Dashboard() {
       </div>
 
       {/* Metal Allocation - Compact */}
-      <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="bg-slate-800 rounded-xl shadow-md p-6 border border-slate-700">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-yellow-100 rounded-lg">
-            <BarChart3 className="w-5 h-5 text-yellow-600" />
+          <div className="p-2 bg-yellow-900/50 rounded-lg">
+            <BarChart3 className="w-5 h-5 text-yellow-400" />
           </div>
-          <h3 className="text-lg font-bold text-gray-900">Metal Allocation</h3>
+          <h3 className="text-lg font-bold text-white">Metal Allocation</h3>
         </div>
 
         <div className="flex gap-2 mb-4">
           {/* Stacked bar */}
-          <div className="flex-1 h-8 bg-gray-100 rounded-full overflow-hidden flex">
+          <div className="flex-1 h-8 bg-slate-700 rounded-full overflow-hidden flex">
             {stats.totalValue > 0 && (
               <>
                 <div
-                  className="h-full bg-gray-400 transition-all"
+                  className="h-full bg-slate-400 transition-all"
                   style={{ width: `${(stats.metalBreakdown.silver / stats.totalValue) * 100}%` }}
                   title={`Silver: ${((stats.metalBreakdown.silver / stats.totalValue) * 100).toFixed(0)}%`}
                 />
@@ -415,55 +415,55 @@ export function Dashboard() {
         </div>
 
         <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="p-3 bg-gray-50 rounded-lg">
+          <div className="p-3 bg-slate-700/50 rounded-lg">
             <div className="flex items-center justify-center gap-2 mb-1">
-              <div className="w-3 h-3 bg-gray-400 rounded-full" />
-              <span className="text-sm font-medium text-gray-700">Silver</span>
+              <div className="w-3 h-3 bg-slate-400 rounded-full" />
+              <span className="text-sm font-medium text-slate-300">Silver</span>
             </div>
-            <p className="text-lg font-bold text-gray-900">{stats.totalSilverOz.toFixed(1)} oz</p>
-            <p className="text-xs text-gray-500">${stats.metalBreakdown.silver.toFixed(0)}</p>
+            <p className="text-lg font-bold text-white">{stats.totalSilverOz.toFixed(1)} oz</p>
+            <p className="text-xs text-slate-500">${stats.metalBreakdown.silver.toFixed(0)}</p>
           </div>
-          <div className="p-3 bg-yellow-50 rounded-lg">
+          <div className="p-3 bg-yellow-900/30 rounded-lg">
             <div className="flex items-center justify-center gap-2 mb-1">
               <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-              <span className="text-sm font-medium text-yellow-700">Gold</span>
+              <span className="text-sm font-medium text-yellow-300">Gold</span>
             </div>
-            <p className="text-lg font-bold text-yellow-900">{stats.totalGoldOz.toFixed(2)} oz</p>
-            <p className="text-xs text-yellow-600">${stats.metalBreakdown.gold.toFixed(0)}</p>
+            <p className="text-lg font-bold text-yellow-100">{stats.totalGoldOz.toFixed(2)} oz</p>
+            <p className="text-xs text-yellow-400">${stats.metalBreakdown.gold.toFixed(0)}</p>
           </div>
-          <div className="p-3 bg-purple-50 rounded-lg">
+          <div className="p-3 bg-purple-900/30 rounded-lg">
             <div className="flex items-center justify-center gap-2 mb-1">
               <div className="w-3 h-3 bg-purple-500 rounded-full" />
-              <span className="text-sm font-medium text-purple-700">Other</span>
+              <span className="text-sm font-medium text-purple-300">Other</span>
             </div>
-            <p className="text-lg font-bold text-purple-900">
+            <p className="text-lg font-bold text-purple-100">
               {stats.totalValue > 0 ? ((stats.metalBreakdown.other / stats.totalValue) * 100).toFixed(0) : 0}%
             </p>
-            <p className="text-xs text-purple-600">${stats.metalBreakdown.other.toFixed(0)}</p>
+            <p className="text-xs text-purple-400">${stats.metalBreakdown.other.toFixed(0)}</p>
           </div>
         </div>
       </div>
 
       {/* Recent Additions / Top Holdings */}
-      <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="bg-slate-800 rounded-xl shadow-md p-6 border border-slate-700">
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-indigo-100 rounded-lg">
-            <Award className="w-5 h-5 text-indigo-600" />
+          <div className="p-2 bg-indigo-900/50 rounded-lg">
+            <Award className="w-5 h-5 text-indigo-400" />
           </div>
-          <h3 className="text-lg font-bold text-gray-900">Top Holdings</h3>
+          <h3 className="text-lg font-bold text-white">Top Holdings</h3>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-sm text-gray-500 border-b border-gray-200">
+              <tr className="text-left text-sm text-slate-500 border-b border-slate-700">
                 <th className="pb-3 font-medium">Coin</th>
                 <th className="pb-3 font-medium text-center">Qty</th>
                 <th className="pb-3 font-medium text-right">Value</th>
                 <th className="pb-3 font-medium text-right">Gain/Loss</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-slate-700">
               {coins
                 .sort((a, b) => {
                   const aValue = (a.currentPrice || a.purchasePrice) * a.quantity
@@ -478,21 +478,21 @@ export function Dashboard() {
                   const gainPercent = cost > 0 ? (gain / cost) * 100 : 0
 
                   return (
-                    <tr key={coin.id} className="hover:bg-gray-50">
+                    <tr key={coin.id} className="hover:bg-slate-700/50">
                       <td className="py-3">
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-white">
                           {coin.year} {coin.mint && coin.mint !== 'P' ? `-${coin.mint}` : ''} {coin.series || 'Unknown'}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-slate-500">
                           {coin.actualGrade || coin.estimatedGrade || 'Ungraded'}
                           {coin.gradingCompany && ` (${coin.gradingCompany})`}
                         </p>
                       </td>
-                      <td className="py-3 text-center text-gray-600">{coin.quantity}</td>
-                      <td className="py-3 text-right font-semibold text-gray-900">
+                      <td className="py-3 text-center text-slate-400">{coin.quantity}</td>
+                      <td className="py-3 text-right font-semibold text-white">
                         ${value.toFixed(2)}
                       </td>
-                      <td className={`py-3 text-right font-medium ${gain >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <td className={`py-3 text-right font-medium ${gain >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                         {gain >= 0 ? '+' : ''}{gainPercent.toFixed(1)}%
                       </td>
                     </tr>
@@ -504,29 +504,29 @@ export function Dashboard() {
       </div>
 
       {/* Quick Stats Footer */}
-      <div className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-xl p-6">
+      <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-6 border border-slate-600">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div>
-            <p className="text-2xl font-bold text-gray-900">{Object.keys(stats.seriesBreakdown).length}</p>
-            <p className="text-sm text-gray-600">Series Collected</p>
+            <p className="text-2xl font-bold text-white">{Object.keys(stats.seriesBreakdown).length}</p>
+            <p className="text-sm text-slate-400">Series Collected</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-white">
               ${stats.totalCoins > 0 ? (stats.totalValue / stats.totalCoins).toFixed(0) : 0}
             </p>
-            <p className="text-sm text-gray-600">Avg. Coin Value</p>
+            <p className="text-sm text-slate-400">Avg. Coin Value</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-white">
               {coins.filter(c => c.isGraded === 'Y').length}
             </p>
-            <p className="text-sm text-gray-600">Graded Coins</p>
+            <p className="text-sm text-slate-400">Graded Coins</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-white">
               {stats.meltValue > 0 ? ((stats.numismaticPremium / stats.meltValue) * 100).toFixed(0) : 0}%
             </p>
-            <p className="text-sm text-gray-600">Premium Over Melt</p>
+            <p className="text-sm text-slate-400">Premium Over Melt</p>
           </div>
         </div>
       </div>
