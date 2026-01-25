@@ -20,9 +20,10 @@ import { Register } from './pages/Register'
 import { PriceAdmin } from './pages/PriceAdmin'
 import { MeltValues } from './pages/MeltValues'
 import { PCGSGrading } from './pages/PCGSGrading'
+import { StackIntel } from './pages/StackIntel'
 import { Navigation } from './components/Navigation'
 
-type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading'
+type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading' | 'stackIntel'
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('home')
@@ -72,6 +73,7 @@ function AppContent() {
         {currentPage === 'priceAdmin' && <PriceAdmin />}
         {currentPage === 'meltValues' && <MeltValues />}
         {currentPage === 'pcgsGrading' && <PCGSGrading />}
+        {currentPage === 'stackIntel' && <StackIntel />}
       </main>
     </div>
   )

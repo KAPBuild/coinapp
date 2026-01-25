@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Coins, Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Target, LogOut, Filter, User, TrendingUp, Award } from 'lucide-react'
+import { Coins, Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Target, LogOut, Filter, User, TrendingUp, Award, Database } from 'lucide-react'
 import { DarkModeToggle } from './DarkModeToggle'
 import { SearchModal } from './SearchModal'
 import { GradeGuessingGame } from './GradeGuessingGame'
@@ -7,7 +7,7 @@ import { GradingChartModal } from './GradingChartModal'
 import { QuickPhotogradeModal } from './QuickPhotogradeModal'
 import { useAuth } from '../contexts/AuthContext'
 
-type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading'
+type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading' | 'stackIntel'
 
 interface NavigationProps {
   currentPage: Page
@@ -25,6 +25,7 @@ const primaryNavItems: NavItem[] = [
   { id: 'inventory', label: 'Inventory', icon: Package },
   { id: 'dashboard', label: 'Portfolio', icon: BarChart3 },
   { id: 'meltValues', label: 'Melt Values', icon: TrendingUp },
+  { id: 'stackIntel', label: 'Stack Intel', icon: Database },
   { id: 'explore', label: 'Explore', icon: Filter },
   { id: 'shop', label: 'Shop', icon: ShoppingBag },
 ]
