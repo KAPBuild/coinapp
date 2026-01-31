@@ -31,9 +31,9 @@ export function StackIntel() {
 
   // Scatter plot state
   const [axisConfig, setAxisConfig] = useState<AxisConfig>({
-    x: 'survival',
-    y: 'value65',
-    z: 'pop65'
+    x: 'pop65',
+    y: 'survival',
+    z: 'value65'
   })
   const [filters, setFilters] = useState<FilterConfig>({
     keyDatesOnly: false,
