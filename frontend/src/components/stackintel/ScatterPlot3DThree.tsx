@@ -19,53 +19,46 @@ const THEME = {
   accent: '#3b82f6',
 }
 
-// Color gradient based on outlier score - smooth transitions with vibrant outliers
+// Color gradient based on outlier score - VIBRANT colors
 function getColor(score: number): string {
   // Clamp score to 0-1 range
   const s = Math.max(0, Math.min(1, score))
 
-  // Simple gradient: blue shades for low, transition through cyan/green, vibrant for high
-  if (s < 0.2) {
-    // Deep to medium blue
-    const t = s / 0.2
-    const r = Math.round(30 + t * 29)   // 30 -> 59
-    const g = Math.round(58 + t * 72)   // 58 -> 130
-    const b = Math.round(138 + t * 108) // 138 -> 246
+  // Vibrant gradient with high saturation colors
+  if (s < 0.25) {
+    // Electric blue to bright cyan
+    const t = s / 0.25
+    const r = Math.round(0 + t * 0)       // 0 -> 0
+    const g = Math.round(150 + t * 105)   // 150 -> 255
+    const b = Math.round(255 - t * 55)    // 255 -> 200
     return `rgb(${r}, ${g}, ${b})`
-  } else if (s < 0.4) {
-    // Medium blue to cyan
-    const t = (s - 0.2) / 0.2
-    const r = Math.round(59 - t * 53)   // 59 -> 6
-    const g = Math.round(130 + t * 52)  // 130 -> 182
-    const b = Math.round(246 - t * 34)  // 246 -> 212
+  } else if (s < 0.5) {
+    // Bright cyan to neon green
+    const t = (s - 0.25) / 0.25
+    const r = Math.round(0 + t * 50)      // 0 -> 50
+    const g = Math.round(255)             // 255
+    const b = Math.round(200 - t * 150)   // 200 -> 50
     return `rgb(${r}, ${g}, ${b})`
-  } else if (s < 0.6) {
-    // Cyan to green
-    const t = (s - 0.4) / 0.2
-    const r = Math.round(6 + t * 10)    // 6 -> 16
-    const g = Math.round(182 + t * 3)   // 182 -> 185
-    const b = Math.round(212 - t * 83)  // 212 -> 129
+  } else if (s < 0.7) {
+    // Neon green to bright yellow
+    const t = (s - 0.5) / 0.2
+    const r = Math.round(50 + t * 205)    // 50 -> 255
+    const g = Math.round(255)             // 255
+    const b = Math.round(50 - t * 50)     // 50 -> 0
     return `rgb(${r}, ${g}, ${b})`
-  } else if (s < 0.75) {
-    // Green to yellow
-    const t = (s - 0.6) / 0.15
-    const r = Math.round(16 + t * 235)  // 16 -> 251
-    const g = Math.round(185 + t * 6)   // 185 -> 191
-    const b = Math.round(129 - t * 93)  // 129 -> 36
-    return `rgb(${r}, ${g}, ${b})`
-  } else if (s < 0.9) {
-    // Yellow to orange
-    const t = (s - 0.75) / 0.15
-    const r = Math.round(251 - t * 2)   // 251 -> 249
-    const g = Math.round(191 - t * 76)  // 191 -> 115
-    const b = Math.round(36 - t * 14)   // 36 -> 22
+  } else if (s < 0.85) {
+    // Bright yellow to hot orange
+    const t = (s - 0.7) / 0.15
+    const r = Math.round(255)             // 255
+    const g = Math.round(255 - t * 125)   // 255 -> 130
+    const b = Math.round(0)               // 0
     return `rgb(${r}, ${g}, ${b})`
   } else {
-    // Orange to hot red/pink
-    const t = (s - 0.9) / 0.1
-    const r = Math.round(249 + t * 6)   // 249 -> 255
-    const g = Math.round(115 - t * 70)  // 115 -> 45
-    const b = Math.round(22 + t * 63)   // 22 -> 85
+    // Hot orange to blazing red/magenta
+    const t = (s - 0.85) / 0.15
+    const r = Math.round(255)             // 255
+    const g = Math.round(130 - t * 100)   // 130 -> 30
+    const b = Math.round(0 + t * 100)     // 0 -> 100
     return `rgb(${r}, ${g}, ${b})`
   }
 }
@@ -423,7 +416,7 @@ function ColorLegend() {
       <div
         className="w-24 h-3 rounded-full"
         style={{
-          background: 'linear-gradient(to right, #1e3a5f, #2563eb, #3b82f6, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444, #ff2d55)'
+          background: 'linear-gradient(to right, #0096ff, #00ffc8, #32ff50, #ffff00, #ff8200, #ff1e64)'
         }}
       />
       <div className="flex justify-between mt-1">
