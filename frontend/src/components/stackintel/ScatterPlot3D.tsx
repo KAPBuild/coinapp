@@ -214,35 +214,40 @@ export function ScatterPlot3D({ data, axisConfig, showTrendPlane }: ScatterPlot3
         ...baseLayout,
         scene: {
           xaxis: {
-            title: { text: AXIS_LABELS[axisConfig.x], font: { color: THEME.text, size: 13 } },
+            title: { text: AXIS_LABELS[axisConfig.x], font: { color: THEME.text, size: titleSize } },
             ...axisStyle,
             spikecolor: THEME.accent,
             spikethickness: 1,
-            nticks: 6
+            nticks: isMobile ? 4 : 6,
+            showspikes: false
           },
           yaxis: {
-            title: { text: AXIS_LABELS[axisConfig.y], font: { color: THEME.text, size: 13 } },
+            title: { text: AXIS_LABELS[axisConfig.y], font: { color: THEME.text, size: titleSize } },
             ...axisStyle,
             spikecolor: THEME.accent,
             spikethickness: 1,
-            nticks: 6
+            nticks: isMobile ? 4 : 6,
+            showspikes: false
           },
           zaxis: {
-            title: { text: AXIS_LABELS[axisConfig.z!], font: { color: THEME.text, size: 13 } },
+            title: { text: AXIS_LABELS[axisConfig.z!], font: { color: THEME.text, size: titleSize } },
             ...axisStyle,
             spikecolor: THEME.accent,
             spikethickness: 1,
-            nticks: 6
+            nticks: isMobile ? 4 : 6,
+            showspikes: false
           },
           camera: {
-            eye: { x: 1.6, y: 1.6, z: 1.0 },
+            eye: { x: 1.5, y: 1.5, z: 1.2 },
             center: { x: 0, y: 0, z: 0 },
-            up: { x: 0, y: 0, z: 1 }
+            up: { x: 0, y: 0, z: 1 },
+            projection: { type: 'perspective' }
           },
-          aspectmode: 'manual' as const,
-          aspectratio: { x: 1, y: 1, z: 0.8 },
-          dragmode: 'turntable' as const
-        }
+          aspectmode: 'cube' as const,
+          dragmode: 'turntable' as const,
+          hovermode: 'closest' as const
+        },
+        dragmode: 'turntable' as const
       }
     } else {
       return {
@@ -267,10 +272,11 @@ export function ScatterPlot3D({ data, axisConfig, showTrendPlane }: ScatterPlot3
 
   const config: Partial<Plotly.Config> = {
     responsive: true,
-    displayModeBar: true,
+    displayModeBar: !isMobile,
     modeBarButtonsToRemove: ['lasso2d', 'select2d'],
     displaylogo: false,
-    scrollZoom: true
+    scrollZoom: true,
+    doubleClick: 'reset' as const
   }
 
   return (
