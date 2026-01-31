@@ -72,34 +72,42 @@ interface DataPointProps {
   color: string
   size: number
   coin: MorganScatterPoint
-  onHover: (coin: MorganScatterPoint | null, position: { x: number, y: number } | null) => void
+  isSelected: boolean
+  onSelect: (coin: MorganScatterPoint, position: { x: number, y: number }) => void
 }
 
-function DataPoint({ position, color, size, coin, onHover }: DataPointProps) {
+function DataPoint({ position, color, size, coin, isSelected, onSelect }: DataPointProps) {
   const [hovered, setHovered] = useState(false)
 
-  const handlePointerOver = useCallback((e: ThreeEvent<PointerEvent>) => {
+  const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation()
+    onSelect(coin, { x: e.clientX, y: e.clientY })
+  }, [coin, onSelect])
+
+  const handlePointerOver = useCallback(() => {
     setHovered(true)
-    onHover(coin, { x: e.clientX, y: e.clientY })
-  }, [coin, onHover])
+    document.body.style.cursor = 'pointer'
+  }, [])
 
   const handlePointerOut = useCallback(() => {
     setHovered(false)
-    onHover(null, null)
-  }, [onHover])
+    document.body.style.cursor = 'auto'
+  }, [])
+
+  const isHighlighted = hovered || isSelected
 
   return (
     <mesh
       position={position}
+      onClick={handleClick}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
     >
-      <sphereGeometry args={[hovered ? size * 1.3 : size, 16, 16]} />
+      <sphereGeometry args={[isHighlighted ? size * 1.4 : size, 16, 16]} />
       <meshStandardMaterial
-        color={color}
-        emissive={hovered ? color : '#000000'}
-        emissiveIntensity={hovered ? 0.3 : 0}
+        color={isSelected ? '#ffffff' : color}
+        emissive={isHighlighted ? color : '#000000'}
+        emissiveIntensity={isHighlighted ? 0.5 : 0}
         transparent
         opacity={0.9}
       />
@@ -234,10 +242,11 @@ interface SceneProps {
   data: MorganScatterPoint[]
   axisConfig: AxisConfig
   showTrendPlane: boolean
-  onHover: (coin: MorganScatterPoint | null, position: { x: number, y: number } | null) => void
+  selectedCoinId: string | null
+  onSelect: (coin: MorganScatterPoint, position: { x: number, y: number }) => void
 }
 
-function Scene({ data, axisConfig, showTrendPlane, onHover }: SceneProps) {
+function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, onSelect }: SceneProps) {
   const processedData = useMemo(() => {
     if (data.length === 0) return null
 
@@ -298,37 +307,68 @@ function Scene({ data, axisConfig, showTrendPlane, onHover }: SceneProps) {
           color={point.color}
           size={point.size}
           coin={point.coin}
-          onHover={onHover}
+          isSelected={selectedCoinId === point.coin.id}
+          onSelect={onSelect}
         />
       ))}
     </>
   )
 }
 
-// Tooltip overlay
-interface TooltipProps {
+// Info card overlay (dismissible)
+interface InfoCardProps {
   coin: MorganScatterPoint | null
-  position: { x: number, y: number } | null
+  onClose: () => void
 }
 
-function Tooltip({ coin, position }: TooltipProps) {
-  if (!coin || !position) return null
+function InfoCard({ coin, onClose }: InfoCardProps) {
+  if (!coin) return null
 
   return (
-    <div
-      className="fixed z-50 pointer-events-none bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 shadow-xl"
-      style={{
-        left: position.x + 15,
-        top: position.y + 15,
-        maxWidth: 200
-      }}
-    >
-      <p className="font-bold text-white text-sm">{coin.id}</p>
-      <p className="text-slate-400 text-xs">Mintage: {coin.mintage.toLocaleString()}</p>
-      <p className="text-slate-400 text-xs">Survival: {coin.survival.toLocaleString()}</p>
-      <p className="text-slate-400 text-xs">MS-65 Pop: {coin.pop65.toLocaleString()}</p>
-      <p className="text-green-400 text-xs font-semibold">MS-65 Value: ${coin.value65.toLocaleString()}</p>
-      {coin.keyDate && <p className="text-amber-400 text-xs font-semibold">KEY DATE</p>}
+    <div className="absolute top-4 left-4 z-50 bg-slate-800/95 border border-slate-600 rounded-xl p-4 shadow-2xl backdrop-blur-sm max-w-[280px]">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <h3 className="font-bold text-white text-lg">{coin.id}</h3>
+          {coin.keyDate && (
+            <span className="inline-block px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-full mt-1">
+              KEY DATE
+            </span>
+          )}
+        </div>
+        <button
+          onClick={onClose}
+          className="p-1 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="space-y-2 text-sm">
+        <div className="flex justify-between">
+          <span className="text-slate-400">Mintage</span>
+          <span className="text-white font-medium">{coin.mintage.toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-slate-400">Est. Survival</span>
+          <span className="text-white font-medium">{coin.survival.toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-slate-400">Survival Rate</span>
+          <span className="text-white font-medium">{((coin.survival / coin.mintage) * 100).toFixed(1)}%</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-slate-400">MS-65 Pop</span>
+          <span className="text-white font-medium">{coin.pop65.toLocaleString()}</span>
+        </div>
+        <div className="border-t border-slate-700 pt-2 mt-2">
+          <div className="flex justify-between items-center">
+            <span className="text-slate-400">MS-65 Value</span>
+            <span className="text-green-400 font-bold text-lg">${coin.value65.toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -362,12 +402,14 @@ function ColorLegend() {
 }
 
 export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: ScatterPlot3DThreeProps) {
-  const [hoveredCoin, setHoveredCoin] = useState<MorganScatterPoint | null>(null)
-  const [hoverPosition, setHoverPosition] = useState<{ x: number, y: number } | null>(null)
+  const [selectedCoin, setSelectedCoin] = useState<MorganScatterPoint | null>(null)
 
-  const handleHover = useCallback((coin: MorganScatterPoint | null, position: { x: number, y: number } | null) => {
-    setHoveredCoin(coin)
-    setHoverPosition(position)
+  const handleSelect = useCallback((coin: MorganScatterPoint) => {
+    setSelectedCoin(prev => prev?.id === coin.id ? null : coin)
+  }, [])
+
+  const handleCloseInfo = useCallback(() => {
+    setSelectedCoin(null)
   }, [])
 
   return (
@@ -413,16 +455,17 @@ export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: Scatter
           data={data}
           axisConfig={axisConfig}
           showTrendPlane={showTrendPlane}
-          onHover={handleHover}
+          selectedCoinId={selectedCoin?.id || null}
+          onSelect={handleSelect}
         />
       </Canvas>
 
-      <Tooltip coin={hoveredCoin} position={hoverPosition} />
+      <InfoCard coin={selectedCoin} onClose={handleCloseInfo} />
       <ColorLegend />
 
       {/* Touch hint for mobile */}
       <div className="absolute bottom-4 left-4 text-xs text-slate-500 sm:hidden">
-        1 finger: rotate | 2 fingers: zoom/pan
+        Tap coin for info | 2 fingers: zoom/pan
       </div>
     </div>
   )
