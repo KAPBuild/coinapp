@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { queryClient } from './lib/queryClient'
@@ -29,16 +29,39 @@ function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('home')
   const { isAuthenticated, isLoading } = useAuth()
 
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const page = event.state?.page || 'home'
+      setCurrentPage(page as Page)
+    }
+
+    window.addEventListener('popstate', handlePopState)
+
+    // Set initial state if not already set
+    if (!window.history.state?.page) {
+      window.history.replaceState({ page: 'home' }, '', '/')
+    }
+
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
   // Redirect to login if trying to access protected pages while not authenticated
-  const handlePageChange = (page: Page) => {
+  const handlePageChange = useCallback((page: Page) => {
     const protectedPages: Page[] = ['dashboard', 'forSale', 'priceAdmin']
 
+    let targetPage = page
     if (protectedPages.includes(page) && !isAuthenticated) {
-      setCurrentPage('login')
-    } else {
-      setCurrentPage(page)
+      targetPage = 'login'
     }
-  }
+
+    setCurrentPage(targetPage)
+
+    // Push to browser history (but not if same page)
+    if (window.history.state?.page !== targetPage) {
+      window.history.pushState({ page: targetPage }, '', `/${targetPage === 'home' ? '' : targetPage}`)
+    }
+  }, [isAuthenticated])
 
   if (isLoading) {
     return (
