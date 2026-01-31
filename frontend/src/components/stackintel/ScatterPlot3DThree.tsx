@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react'
+import { useMemo, useState, useCallback, useRef, useEffect } from 'react'
 import { Canvas, ThreeEvent } from '@react-three/fiber'
 import { OrbitControls, Text, Line } from '@react-three/drei'
 import * as THREE from 'three'
@@ -436,6 +436,8 @@ function ColorLegend() {
 
 export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: ScatterPlot3DThreeProps) {
   const [selectedCoin, setSelectedCoin] = useState<MorganScatterPoint | null>(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const handleSelect = useCallback((coin: MorganScatterPoint) => {
     setSelectedCoin(prev => prev?.id === coin.id ? null : coin)
@@ -445,9 +447,34 @@ export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: Scatter
     setSelectedCoin(null)
   }, [])
 
+  const toggleFullscreen = useCallback(() => {
+    if (!containerRef.current) return
+
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen().catch(err => {
+        console.error('Fullscreen error:', err)
+      })
+    } else {
+      document.exitFullscreen()
+    }
+  }, [])
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  }, [])
+
   return (
     <div
-      className="relative w-full h-[380px] sm:h-[480px] md:h-[600px] rounded-xl overflow-hidden shadow-2xl"
+      ref={containerRef}
+      className={`relative w-full rounded-xl overflow-hidden shadow-2xl ${
+        isFullscreen ? 'h-screen' : 'h-[380px] sm:h-[480px] md:h-[600px]'
+      }`}
       style={{ background: THEME.bg }}
     >
       <Canvas
@@ -495,6 +522,23 @@ export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: Scatter
 
       <InfoCard coin={selectedCoin} onClose={handleCloseInfo} />
       <ColorLegend />
+
+      {/* Fullscreen button */}
+      <button
+        onClick={toggleFullscreen}
+        className="absolute top-4 right-4 p-2.5 bg-slate-800/90 hover:bg-slate-700 border border-slate-600 rounded-lg text-slate-300 hover:text-white transition-colors shadow-lg"
+        title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+      >
+        {isFullscreen ? (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        ) : (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+        )}
+      </button>
 
       {/* Touch hint for mobile */}
       <div className="absolute bottom-4 left-4 text-xs text-slate-500 sm:hidden">
