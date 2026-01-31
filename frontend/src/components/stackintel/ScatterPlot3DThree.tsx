@@ -19,13 +19,46 @@ const THEME = {
   accent: '#3b82f6',
 }
 
-// Color gradient based on outlier score
+// Interpolate between two hex colors
+function lerpColor(color1: string, color2: string, t: number): string {
+  const r1 = parseInt(color1.slice(1, 3), 16)
+  const g1 = parseInt(color1.slice(3, 5), 16)
+  const b1 = parseInt(color1.slice(5, 7), 16)
+  const r2 = parseInt(color2.slice(1, 3), 16)
+  const g2 = parseInt(color2.slice(3, 5), 16)
+  const b2 = parseInt(color2.slice(5, 7), 16)
+
+  const r = Math.round(r1 + (r2 - r1) * t)
+  const g = Math.round(g1 + (g2 - g1) * t)
+  const b = Math.round(b1 + (b2 - b1) * t)
+
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+}
+
+// Color gradient based on outlier score - smooth transitions with vibrant outliers
 function getColor(score: number): string {
-  if (score < 0.25) return '#3b82f6'      // blue
-  if (score < 0.5) return '#06b6d4'       // cyan
-  if (score < 0.75) return '#22c55e'      // green
-  if (score < 0.9) return '#f59e0b'       // amber
-  return '#ef4444'                         // red
+  // Color stops: deep blue -> sky blue -> cyan -> green -> yellow -> orange -> hot red
+  const colorStops = [
+    { pos: 0.0, color: '#1e3a5f' },   // Deep navy blue (lowest)
+    { pos: 0.15, color: '#2563eb' },  // Royal blue
+    { pos: 0.3, color: '#3b82f6' },   // Blue
+    { pos: 0.45, color: '#06b6d4' },  // Cyan
+    { pos: 0.6, color: '#10b981' },   // Emerald green
+    { pos: 0.75, color: '#fbbf24' },  // Bright yellow (attention)
+    { pos: 0.85, color: '#f97316' },  // Vibrant orange
+    { pos: 0.95, color: '#ef4444' },  // Red
+    { pos: 1.0, color: '#ff2d55' },   // Hot pink/red (max outlier)
+  ]
+
+  // Find the two color stops to interpolate between
+  for (let i = 0; i < colorStops.length - 1; i++) {
+    if (score >= colorStops[i].pos && score <= colorStops[i + 1].pos) {
+      const t = (score - colorStops[i].pos) / (colorStops[i + 1].pos - colorStops[i].pos)
+      return lerpColor(colorStops[i].color, colorStops[i + 1].color, t)
+    }
+  }
+
+  return colorStops[colorStops.length - 1].color
 }
 
 // Get value for a given axis variable
@@ -373,29 +406,20 @@ function InfoCard({ coin, onClose }: InfoCardProps) {
   )
 }
 
-// Color legend
+// Color legend with gradient bar
 function ColorLegend() {
-  const colors = [
-    { color: '#3b82f6', label: 'Low' },
-    { color: '#06b6d4', label: '' },
-    { color: '#22c55e', label: 'Med' },
-    { color: '#f59e0b', label: '' },
-    { color: '#ef4444', label: 'High' }
-  ]
-
   return (
-    <div className="absolute bottom-4 right-4 bg-slate-800/90 rounded-lg p-2 border border-slate-700">
-      <p className="text-xs text-slate-400 mb-1 text-center">Outlier Score</p>
-      <div className="flex gap-1">
-        {colors.map((c, i) => (
-          <div key={i} className="text-center">
-            <div
-              className="w-4 h-4 rounded"
-              style={{ backgroundColor: c.color }}
-            />
-            {c.label && <p className="text-[10px] text-slate-400 mt-0.5">{c.label}</p>}
-          </div>
-        ))}
+    <div className="absolute bottom-4 right-4 bg-slate-800/95 rounded-lg p-2.5 border border-slate-700 shadow-lg">
+      <p className="text-xs text-slate-400 mb-1.5 text-center font-medium">Outlier Score</p>
+      <div
+        className="w-24 h-3 rounded-full"
+        style={{
+          background: 'linear-gradient(to right, #1e3a5f, #2563eb, #3b82f6, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444, #ff2d55)'
+        }}
+      />
+      <div className="flex justify-between mt-1">
+        <span className="text-[10px] text-slate-500">Low</span>
+        <span className="text-[10px] text-slate-500">High</span>
       </div>
     </div>
   )
