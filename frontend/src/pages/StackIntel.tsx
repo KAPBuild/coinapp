@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { TrendingUp, Search, BarChart2, Database, Clock, Star, ChevronRight, Lock, Layers } from 'lucide-react'
-import { ScatterPlot3D } from '../components/stackintel/ScatterPlot3D'
+import { ScatterPlot3DThree as ScatterPlot3D } from '../components/stackintel/ScatterPlot3DThree'
 import { AxisControls } from '../components/stackintel/AxisControls'
 import { ViewModeToggle } from '../components/stackintel/ViewModeToggle'
 import { FilterControls } from '../components/stackintel/FilterControls'

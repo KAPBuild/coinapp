@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Target, LogOut, Filter, User, TrendingUp, Award, Database } from 'lucide-react'
+import { Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Target, LogOut, User, TrendingUp, Award, Database } from 'lucide-react'
 import { DarkModeToggle } from './DarkModeToggle'
 import { SearchModal } from './SearchModal'
 import { GradeGuessingGame } from './GradeGuessingGame'
