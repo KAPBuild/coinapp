@@ -123,14 +123,16 @@ export function StackIntel() {
       </div>
 
       {/* 3D Scatter Plot Section */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-700 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Layers className="w-6 h-6 text-white" />
+      <div className="bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden">
+        <div className="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-700">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <Layers className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Outlier Explorer</h2>
-                <p className="text-indigo-200 text-sm">Find undervalued coins in 2D/3D space</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-white">3D Outlier Explorer</h2>
+                <p className="text-slate-400 text-xs sm:text-sm">Rotate, zoom, and discover undervalued coins</p>
               </div>
             </div>
             <ViewModeToggle is3D={is3D} onChange={handleViewModeChange} />
@@ -138,41 +140,44 @@ export function StackIntel() {
         </div>
 
         {/* Controls */}
-        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-slate-800/50 border-b border-slate-700 space-y-3 sm:space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <AxisControls axisConfig={axisConfig} onChange={setAxisConfig} />
-            <label className="flex items-center gap-2 text-sm text-gray-600">
+            <label className="flex items-center gap-2 text-sm text-slate-300 bg-slate-800/50 px-3 py-2.5 rounded-lg border border-slate-700 cursor-pointer hover:bg-slate-700 transition-colors w-full sm:w-auto justify-center sm:justify-start">
               <input
                 type="checkbox"
                 checked={showTrendPlane}
                 onChange={(e) => setShowTrendPlane(e.target.checked)}
                 disabled={!is3D}
-                className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 disabled:opacity-50"
+                className="w-4 h-4 text-cyan-500 rounded border-slate-500 bg-slate-700 focus:ring-cyan-500 disabled:opacity-50"
               />
-              Show Trend Plane
+              Trend Plane
             </label>
           </div>
           <FilterControls filters={filters} onChange={setFilters} />
         </div>
 
         {/* Scatter Plot */}
-        <div className="p-4">
+        <div className="p-3 sm:p-4 bg-slate-900">
           <ScatterPlot3D
             data={filteredData}
             axisConfig={axisConfig}
             showTrendPlane={showTrendPlane}
           />
-          <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-            <span>{filteredData.length} coins displayed</span>
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1">
-                <span className="w-3 h-3 rounded-full bg-yellow-400"></span> Normal
+          <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 text-sm">
+            <span className="text-slate-400 font-medium text-center sm:text-left">{filteredData.length} coins displayed</span>
+            <div className="flex items-center justify-center sm:justify-end gap-3 sm:gap-5 flex-wrap">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-blue-500 shadow-sm shadow-blue-500/50"></span>
+                <span className="text-slate-400 text-xs sm:text-sm">Normal</span>
               </span>
-              <span className="flex items-center gap-1">
-                <span className="w-3 h-3 rounded-full bg-orange-500"></span> Moderate Outlier
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span>
+                <span className="text-slate-400 text-xs sm:text-sm">Moderate</span>
               </span>
-              <span className="flex items-center gap-1">
-                <span className="w-3 h-3 rounded-full bg-red-600"></span> Strong Outlier
+              <span className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500 shadow-sm shadow-red-500/50"></span>
+                <span className="text-slate-400 text-xs sm:text-sm">Outlier</span>
               </span>
             </div>
           </div>

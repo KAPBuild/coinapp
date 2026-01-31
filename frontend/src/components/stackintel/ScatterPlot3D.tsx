@@ -1,11 +1,32 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import Plot from 'react-plotly.js'
 import { MorganScatterPoint, AxisConfig, AXIS_LABELS, AxisVariable } from '../../types/morganScatterData'
+
+// Hook to detect mobile viewport
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
 
 interface ScatterPlot3DProps {
   data: MorganScatterPoint[]
   axisConfig: AxisConfig
   showTrendPlane: boolean
+}
+
+// Navy professional dark theme
+const THEME = {
+  bg: '#0f172a',
+  plotBg: '#1e293b',
+  grid: '#334155',
+  text: '#e2e8f0',
+  accent: '#3b82f6',
 }
 
 // Get value for a given axis variable
@@ -37,6 +58,7 @@ function calculateOutlierScores(data: MorganScatterPoint[], axisConfig: AxisConf
 
 export function ScatterPlot3D({ data, axisConfig, showTrendPlane }: ScatterPlot3DProps) {
   const is3D = axisConfig.z !== null
+  const isMobile = useIsMobile()
 
   const plotData = useMemo(() => {
     const xData = data.map(d => getValue(d, axisConfig.x))
@@ -45,18 +67,45 @@ export function ScatterPlot3D({ data, axisConfig, showTrendPlane }: ScatterPlot3
 
     const outlierScores = calculateOutlierScores(data, axisConfig)
 
-    // Size based on outlier score: 8-20px
-    const sizes = outlierScores.map(score => 8 + score * 12)
+    // Size based on outlier score: 10-28px for better visibility
+    const sizes = outlierScores.map(score => 10 + score * 18)
 
-    // Hover text with coin details
+    // Hover text with coin details - styled
     const hoverText = data.map((d) =>
-      `<b>${d.id}</b><br>` +
-      `Mintage: ${d.mintage.toLocaleString()}<br>` +
-      `Survival: ${d.survival.toLocaleString()}<br>` +
-      `MS-65 Pop: ${d.pop65.toLocaleString()}<br>` +
-      `MS-65 Value: $${d.value65.toLocaleString()}<br>` +
-      `${d.keyDate ? '<b>KEY DATE</b>' : ''}`
+      `<b style="font-size:14px">${d.id}</b><br>` +
+      `<span style="color:#94a3b8">Mintage:</span> ${d.mintage.toLocaleString()}<br>` +
+      `<span style="color:#94a3b8">Survival:</span> ${d.survival.toLocaleString()}<br>` +
+      `<span style="color:#94a3b8">MS-65 Pop:</span> ${d.pop65.toLocaleString()}<br>` +
+      `<span style="color:#22c55e;font-weight:bold">MS-65 Value: $${d.value65.toLocaleString()}</span><br>` +
+      `${d.keyDate ? '<span style="color:#f59e0b;font-weight:bold">⭐ KEY DATE</span>' : ''}`
     )
+
+    // Custom colorscale: blue -> cyan -> gold -> orange for outliers
+    const customColorscale: [number, string][] = [
+      [0, '#3b82f6'],
+      [0.25, '#06b6d4'],
+      [0.5, '#22c55e'],
+      [0.75, '#f59e0b'],
+      [1, '#ef4444']
+    ]
+
+    // Responsive colorbar config
+    const colorbarConfig = isMobile ? {
+      title: { text: '', font: { color: THEME.text } },
+      tickfont: { color: THEME.text, size: 8 },
+      bgcolor: 'rgba(0,0,0,0)',
+      bordercolor: THEME.grid,
+      thickness: 10,
+      len: 0.4,
+      x: 1.02
+    } : {
+      title: { text: 'Outlier Score', font: { color: THEME.text } },
+      tickfont: { color: THEME.text },
+      bgcolor: 'rgba(0,0,0,0)',
+      bordercolor: THEME.grid,
+      thickness: 15,
+      len: 0.6
+    }
 
     const trace: Partial<Plotly.Data> = is3D ? {
       type: 'scatter3d',
@@ -65,14 +114,20 @@ export function ScatterPlot3D({ data, axisConfig, showTrendPlane }: ScatterPlot3
       y: yData,
       z: zData,
       marker: {
-        size: sizes,
+        size: isMobile ? sizes.map(s => s * 0.8) : sizes,
         color: outlierScores,
-        colorscale: 'YlOrRd',
-        opacity: 0.85,
-        line: { color: 'white', width: 1 }
+        colorscale: customColorscale,
+        opacity: 0.9,
+        line: { color: 'rgba(255,255,255,0.3)', width: 1 },
+        colorbar: colorbarConfig
       },
       text: hoverText,
       hoverinfo: 'text',
+      hoverlabel: {
+        bgcolor: '#1e293b',
+        bordercolor: '#475569',
+        font: { color: '#f1f5f9', size: isMobile ? 10 : 12 }
+      },
       name: 'Morgan Dollars'
     } : {
       type: 'scatter',
@@ -80,14 +135,20 @@ export function ScatterPlot3D({ data, axisConfig, showTrendPlane }: ScatterPlot3
       x: xData,
       y: yData,
       marker: {
-        size: sizes,
+        size: isMobile ? sizes.map(s => s * 0.8) : sizes,
         color: outlierScores,
-        colorscale: 'YlOrRd',
-        opacity: 0.85,
-        line: { color: 'white', width: 1 }
+        colorscale: customColorscale,
+        opacity: 0.9,
+        line: { color: 'rgba(255,255,255,0.4)', width: 1.5 },
+        colorbar: colorbarConfig
       },
       text: hoverText,
       hoverinfo: 'text',
+      hoverlabel: {
+        bgcolor: '#1e293b',
+        bordercolor: '#475569',
+        font: { color: '#f1f5f9', size: isMobile ? 10 : 12 }
+      },
       name: 'Morgan Dollars'
     }
 
@@ -112,25 +173,40 @@ export function ScatterPlot3D({ data, axisConfig, showTrendPlane }: ScatterPlot3
         i: new Int32Array([0, 0]),
         j: new Int32Array([1, 2]),
         k: new Int32Array([2, 3]),
-        opacity: 0.3,
-        color: '#3b82f6',
+        opacity: 0.25,
+        color: '#06b6d4',
         name: 'Median Plane',
+        flatshading: true,
         hoverinfo: 'skip' as const
       }
       traces.push(planeTrace as Plotly.Data)
     }
 
     return traces
-  }, [data, axisConfig, showTrendPlane, is3D])
+  }, [data, axisConfig, showTrendPlane, is3D, isMobile])
 
   const layout: Partial<Plotly.Layout> = useMemo(() => {
+    const tickSize = isMobile ? 9 : 11
+    const titleSize = isMobile ? 11 : 13
+
+    const axisStyle = {
+      gridcolor: THEME.grid,
+      linecolor: THEME.grid,
+      zerolinecolor: THEME.grid,
+      showbackground: true,
+      backgroundcolor: THEME.plotBg,
+      tickfont: { color: THEME.text, size: tickSize },
+      titlefont: { color: THEME.text, size: titleSize }
+    }
+
     const baseLayout = {
       autosize: true,
-      margin: { l: 50, r: 30, b: 50, t: 30 },
-      paper_bgcolor: 'transparent',
-      plot_bgcolor: 'rgba(249, 250, 251, 0.8)',
+      margin: isMobile ? { l: 35, r: 25, b: 40, t: 25 } : { l: 60, r: 50, b: 60, t: 40 },
+      paper_bgcolor: THEME.bg,
+      plot_bgcolor: THEME.plotBg,
       hovermode: 'closest' as const,
       showlegend: false,
+      font: { color: THEME.text, size: isMobile ? 10 : 12 }
     }
 
     if (is3D) {
@@ -138,52 +214,67 @@ export function ScatterPlot3D({ data, axisConfig, showTrendPlane }: ScatterPlot3
         ...baseLayout,
         scene: {
           xaxis: {
-            title: { text: AXIS_LABELS[axisConfig.x] },
-            gridcolor: '#e5e7eb',
-            showbackground: true,
-            backgroundcolor: 'rgba(249, 250, 251, 0.5)'
+            title: { text: AXIS_LABELS[axisConfig.x], font: { color: THEME.text, size: 13 } },
+            ...axisStyle,
+            spikecolor: THEME.accent,
+            spikethickness: 1,
+            nticks: 6
           },
           yaxis: {
-            title: { text: AXIS_LABELS[axisConfig.y] },
-            gridcolor: '#e5e7eb',
-            showbackground: true,
-            backgroundcolor: 'rgba(249, 250, 251, 0.5)'
+            title: { text: AXIS_LABELS[axisConfig.y], font: { color: THEME.text, size: 13 } },
+            ...axisStyle,
+            spikecolor: THEME.accent,
+            spikethickness: 1,
+            nticks: 6
           },
           zaxis: {
-            title: { text: AXIS_LABELS[axisConfig.z!] },
-            gridcolor: '#e5e7eb',
-            showbackground: true,
-            backgroundcolor: 'rgba(249, 250, 251, 0.5)'
+            title: { text: AXIS_LABELS[axisConfig.z!], font: { color: THEME.text, size: 13 } },
+            ...axisStyle,
+            spikecolor: THEME.accent,
+            spikethickness: 1,
+            nticks: 6
           },
-          camera: { eye: { x: 1.5, y: 1.5, z: 1.2 } }
+          camera: {
+            eye: { x: 1.6, y: 1.6, z: 1.0 },
+            center: { x: 0, y: 0, z: 0 },
+            up: { x: 0, y: 0, z: 1 }
+          },
+          aspectmode: 'manual' as const,
+          aspectratio: { x: 1, y: 1, z: 0.8 },
+          dragmode: 'turntable' as const
         }
       }
     } else {
       return {
         ...baseLayout,
         xaxis: {
-          title: { text: AXIS_LABELS[axisConfig.x] },
-          gridcolor: '#e5e7eb',
+          title: { text: AXIS_LABELS[axisConfig.x], font: { color: THEME.text } },
+          gridcolor: THEME.grid,
+          linecolor: THEME.grid,
+          tickfont: { color: THEME.text },
           zeroline: false
         },
         yaxis: {
-          title: { text: AXIS_LABELS[axisConfig.y] },
-          gridcolor: '#e5e7eb',
+          title: { text: AXIS_LABELS[axisConfig.y], font: { color: THEME.text } },
+          gridcolor: THEME.grid,
+          linecolor: THEME.grid,
+          tickfont: { color: THEME.text },
           zeroline: false
         }
       }
     }
-  }, [axisConfig, is3D])
+  }, [axisConfig, is3D, isMobile])
 
   const config: Partial<Plotly.Config> = {
     responsive: true,
     displayModeBar: true,
     modeBarButtonsToRemove: ['lasso2d', 'select2d'],
-    displaylogo: false
+    displaylogo: false,
+    scrollZoom: true
   }
 
   return (
-    <div className="w-full h-[500px] md:h-[600px] bg-gray-50 rounded-xl overflow-hidden">
+    <div className="w-full h-[380px] sm:h-[480px] md:h-[600px] rounded-xl overflow-hidden shadow-2xl" style={{ background: THEME.bg }}>
       <Plot
         data={plotData as Plotly.Data[]}
         layout={layout}
