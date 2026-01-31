@@ -253,19 +253,88 @@ function Axes({ xLabel, yLabel, zLabel, xRange, yRange, zRange }: AxesProps) {
   )
 }
 
-// Median plane
-interface MedianPlaneProps {
-  yMedian: number
+// Calculate linear regression plane: Y = a*X + b*Z + c
+function calculateRegressionPlane(points: { x: number, y: number, z: number }[]): { a: number, b: number, c: number } {
+  const n = points.length
+  if (n < 3) return { a: 0, b: 0, c: 5 }
+
+  // Calculate means
+  const meanX = points.reduce((sum, p) => sum + p.x, 0) / n
+  const meanY = points.reduce((sum, p) => sum + p.y, 0) / n
+  const meanZ = points.reduce((sum, p) => sum + p.z, 0) / n
+
+  // Calculate sums for least squares
+  let sumXX = 0, sumZZ = 0, sumXZ = 0, sumXY = 0, sumZY = 0
+  for (const p of points) {
+    const dx = p.x - meanX
+    const dy = p.y - meanY
+    const dz = p.z - meanZ
+    sumXX += dx * dx
+    sumZZ += dz * dz
+    sumXZ += dx * dz
+    sumXY += dx * dy
+    sumZY += dz * dy
+  }
+
+  // Solve for coefficients (handle edge cases)
+  const det = sumXX * sumZZ - sumXZ * sumXZ
+  if (Math.abs(det) < 0.0001) {
+    return { a: 0, b: 0, c: meanY }
+  }
+
+  const a = (sumZZ * sumXY - sumXZ * sumZY) / det
+  const b = (sumXX * sumZY - sumXZ * sumXY) / det
+  const c = meanY - a * meanX - b * meanZ
+
+  return { a, b, c }
 }
 
-function MedianPlane({ yMedian }: MedianPlaneProps) {
+// Regression trend plane
+interface TrendPlaneProps {
+  coefficients: { a: number, b: number, c: number }
+}
+
+function TrendPlane({ coefficients }: TrendPlaneProps) {
+  const { a, b, c } = coefficients
+
+  // Calculate Y values at corners of the XZ plane (0-10 range)
+  const y00 = a * 0 + b * 0 + c
+  const y10 = a * 10 + b * 0 + c
+  const y01 = a * 0 + b * 10 + c
+  const y11 = a * 10 + b * 10 + c
+
+  // Clamp Y values to visible range
+  const clamp = (v: number) => Math.max(0, Math.min(10, v))
+
+  const vertices = new Float32Array([
+    0, clamp(y00), 0,
+    10, clamp(y10), 0,
+    10, clamp(y11), 10,
+    0, clamp(y01), 10,
+  ])
+
+  const indices = new Uint16Array([0, 1, 2, 0, 2, 3])
+
   return (
-    <mesh position={[5, yMedian, 5]} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[10, 10]} />
+    <mesh>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          array={vertices}
+          count={4}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="index"
+          array={indices}
+          count={6}
+          itemSize={1}
+        />
+      </bufferGeometry>
       <meshStandardMaterial
         color="#06b6d4"
         transparent
-        opacity={0.15}
+        opacity={0.25}
         side={THREE.DoubleSide}
       />
     </mesh>
@@ -303,16 +372,20 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, onSelect }: S
       score: outlierScores[i]
     }))
 
-    // Calculate median Y for trend plane
-    const sortedY = [...yNorm.normalized].sort((a, b) => a - b)
-    const yMedian = sortedY[Math.floor(sortedY.length / 2)]
+    // Calculate regression plane coefficients from normalized data
+    const planePoints = points.map(p => ({
+      x: p.position[0],
+      y: p.position[1],
+      z: p.position[2]
+    }))
+    const planeCoefficients = calculateRegressionPlane(planePoints)
 
     return {
       points,
       xRange: { min: xNorm.min, max: xNorm.max },
       yRange: { min: yNorm.min, max: yNorm.max },
       zRange: { min: zNorm.min, max: zNorm.max },
-      yMedian
+      planeCoefficients
     }
   }, [data, axisConfig])
 
@@ -333,7 +406,7 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, onSelect }: S
         zRange={processedData.zRange}
       />
 
-      {showTrendPlane && <MedianPlane yMedian={processedData.yMedian} />}
+      {showTrendPlane && <TrendPlane coefficients={processedData.planeCoefficients} />}
 
       {processedData.points.map((point) => (
         <DataPoint
