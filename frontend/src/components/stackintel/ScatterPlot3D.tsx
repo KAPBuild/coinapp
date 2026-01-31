@@ -280,12 +280,15 @@ export function ScatterPlot3D({ data, axisConfig, showTrendPlane }: ScatterPlot3
   }
 
   return (
-    <div className="w-full h-[380px] sm:h-[480px] md:h-[600px] rounded-xl overflow-hidden shadow-2xl" style={{ background: THEME.bg }}>
+    <div
+      className="w-full h-[380px] sm:h-[480px] md:h-[600px] rounded-xl overflow-hidden shadow-2xl"
+      style={{ background: THEME.bg, touchAction: 'none' }}
+    >
       <Plot
         data={plotData as Plotly.Data[]}
         layout={layout}
         config={config}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', touchAction: 'none' }}
         useResizeHandler
       />
     </div>
