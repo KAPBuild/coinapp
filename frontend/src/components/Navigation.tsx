@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Coins, Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Target, LogOut, Filter, User, TrendingUp, Award, Database } from 'lucide-react'
+import { Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Target, LogOut, Filter, User, TrendingUp, Award, Database } from 'lucide-react'
 import { DarkModeToggle } from './DarkModeToggle'
 import { SearchModal } from './SearchModal'
 import { GradeGuessingGame } from './GradeGuessingGame'
 import { GradingChartModal } from './GradingChartModal'
 import { QuickPhotogradeModal } from './QuickPhotogradeModal'
+import { LogoDark } from './Logo'
 import { useAuth } from '../contexts/AuthContext'
 
 type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading' | 'stackIntel'
@@ -26,7 +27,7 @@ const primaryNavItems: NavItem[] = [
   { id: 'dashboard', label: 'Portfolio', icon: BarChart3 },
   { id: 'meltValues', label: 'Melt Values', icon: TrendingUp },
   { id: 'stackIntel', label: 'Stack Intel', icon: Database },
-  { id: 'explore', label: 'Explore', icon: Filter },
+  { id: 'explore', label: 'Coin Search', icon: Search },
   { id: 'shop', label: 'Shop', icon: ShoppingBag },
 ]
 
@@ -88,7 +89,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0"
               aria-label="Go to home"
             >
-              <Coins className="w-6 h-6 text-blue-400" />
+              <LogoDark size={32} />
               <h1 className="text-xl font-bold text-white hidden sm:block">CoinApp</h1>
             </button>
 
