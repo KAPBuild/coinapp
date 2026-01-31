@@ -19,46 +19,55 @@ const THEME = {
   accent: '#3b82f6',
 }
 
-// Interpolate between two hex colors
-function lerpColor(color1: string, color2: string, t: number): string {
-  const r1 = parseInt(color1.slice(1, 3), 16)
-  const g1 = parseInt(color1.slice(3, 5), 16)
-  const b1 = parseInt(color1.slice(5, 7), 16)
-  const r2 = parseInt(color2.slice(1, 3), 16)
-  const g2 = parseInt(color2.slice(3, 5), 16)
-  const b2 = parseInt(color2.slice(5, 7), 16)
-
-  const r = Math.round(r1 + (r2 - r1) * t)
-  const g = Math.round(g1 + (g2 - g1) * t)
-  const b = Math.round(b1 + (b2 - b1) * t)
-
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
-}
-
 // Color gradient based on outlier score - smooth transitions with vibrant outliers
 function getColor(score: number): string {
-  // Color stops: deep blue -> sky blue -> cyan -> green -> yellow -> orange -> hot red
-  const colorStops = [
-    { pos: 0.0, color: '#1e3a5f' },   // Deep navy blue (lowest)
-    { pos: 0.15, color: '#2563eb' },  // Royal blue
-    { pos: 0.3, color: '#3b82f6' },   // Blue
-    { pos: 0.45, color: '#06b6d4' },  // Cyan
-    { pos: 0.6, color: '#10b981' },   // Emerald green
-    { pos: 0.75, color: '#fbbf24' },  // Bright yellow (attention)
-    { pos: 0.85, color: '#f97316' },  // Vibrant orange
-    { pos: 0.95, color: '#ef4444' },  // Red
-    { pos: 1.0, color: '#ff2d55' },   // Hot pink/red (max outlier)
-  ]
+  // Clamp score to 0-1 range
+  const s = Math.max(0, Math.min(1, score))
 
-  // Find the two color stops to interpolate between
-  for (let i = 0; i < colorStops.length - 1; i++) {
-    if (score >= colorStops[i].pos && score <= colorStops[i + 1].pos) {
-      const t = (score - colorStops[i].pos) / (colorStops[i + 1].pos - colorStops[i].pos)
-      return lerpColor(colorStops[i].color, colorStops[i + 1].color, t)
-    }
+  // Simple gradient: blue shades for low, transition through cyan/green, vibrant for high
+  if (s < 0.2) {
+    // Deep to medium blue
+    const t = s / 0.2
+    const r = Math.round(30 + t * 29)   // 30 -> 59
+    const g = Math.round(58 + t * 72)   // 58 -> 130
+    const b = Math.round(138 + t * 108) // 138 -> 246
+    return `rgb(${r}, ${g}, ${b})`
+  } else if (s < 0.4) {
+    // Medium blue to cyan
+    const t = (s - 0.2) / 0.2
+    const r = Math.round(59 - t * 53)   // 59 -> 6
+    const g = Math.round(130 + t * 52)  // 130 -> 182
+    const b = Math.round(246 - t * 34)  // 246 -> 212
+    return `rgb(${r}, ${g}, ${b})`
+  } else if (s < 0.6) {
+    // Cyan to green
+    const t = (s - 0.4) / 0.2
+    const r = Math.round(6 + t * 10)    // 6 -> 16
+    const g = Math.round(182 + t * 3)   // 182 -> 185
+    const b = Math.round(212 - t * 83)  // 212 -> 129
+    return `rgb(${r}, ${g}, ${b})`
+  } else if (s < 0.75) {
+    // Green to yellow
+    const t = (s - 0.6) / 0.15
+    const r = Math.round(16 + t * 235)  // 16 -> 251
+    const g = Math.round(185 + t * 6)   // 185 -> 191
+    const b = Math.round(129 - t * 93)  // 129 -> 36
+    return `rgb(${r}, ${g}, ${b})`
+  } else if (s < 0.9) {
+    // Yellow to orange
+    const t = (s - 0.75) / 0.15
+    const r = Math.round(251 - t * 2)   // 251 -> 249
+    const g = Math.round(191 - t * 76)  // 191 -> 115
+    const b = Math.round(36 - t * 14)   // 36 -> 22
+    return `rgb(${r}, ${g}, ${b})`
+  } else {
+    // Orange to hot red/pink
+    const t = (s - 0.9) / 0.1
+    const r = Math.round(249 + t * 6)   // 249 -> 255
+    const g = Math.round(115 - t * 70)  // 115 -> 45
+    const b = Math.round(22 + t * 63)   // 22 -> 85
+    return `rgb(${r}, ${g}, ${b})`
   }
-
-  return colorStops[colorStops.length - 1].color
 }
 
 // Get value for a given axis variable
