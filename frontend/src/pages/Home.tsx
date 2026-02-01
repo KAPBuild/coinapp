@@ -1,4 +1,4 @@
-import { TrendingUp, Coins, ChevronRight, ExternalLink, HelpCircle, Search, X } from 'lucide-react'
+import { TrendingUp, Coins, ChevronRight, ExternalLink, HelpCircle, Search, X, Calculator, Award, BarChart3, Package, LineChart } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 // Morgan Dollar data for quick lookup
@@ -114,7 +114,7 @@ function getPricesByGrade(basePrice: number) {
   }
 }
 
-type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading'
+type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading' | 'stackIntel'
 
 interface HomeProps {
   onNavigate?: (page: Page) => void
@@ -339,13 +339,46 @@ export function Home({ onNavigate }: HomeProps) {
             Start Tracking
             <ChevronRight className="w-5 h-5" />
           </button>
-          <button
-            onClick={handleViewMeltValues}
-            className="px-8 py-4 bg-slate-800 text-slate-200 text-lg font-semibold rounded-lg border-2 border-slate-600 hover:border-slate-500 hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
-          >
-            Melt Values
-          </button>
         </div>
+      </div>
+
+      {/* Quick Navigation Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 max-w-4xl mx-auto">
+        <button
+          onClick={handleViewMeltValues}
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
+        >
+          <Calculator className="w-8 h-8 text-amber-400 group-hover:scale-110 transition-transform" />
+          <span className="text-white font-medium text-sm">Melt Values</span>
+        </button>
+        <button
+          onClick={handleViewPCGSGrading}
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
+        >
+          <Award className="w-8 h-8 text-blue-400 group-hover:scale-110 transition-transform" />
+          <span className="text-white font-medium text-sm">PCGS Grading</span>
+        </button>
+        <button
+          onClick={() => onNavigate?.('stackIntel')}
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
+        >
+          <BarChart3 className="w-8 h-8 text-green-400 group-hover:scale-110 transition-transform" />
+          <span className="text-white font-medium text-sm">Stack Intel</span>
+        </button>
+        <button
+          onClick={handleStartTracking}
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
+        >
+          <Package className="w-8 h-8 text-purple-400 group-hover:scale-110 transition-transform" />
+          <span className="text-white font-medium text-sm">Inventory</span>
+        </button>
+        <button
+          onClick={() => onNavigate?.('dashboard')}
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group col-span-2 sm:col-span-1"
+        >
+          <LineChart className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform" />
+          <span className="text-white font-medium text-sm">Spot Charts</span>
+        </button>
       </div>
 
       {/* Live Spot Prices - TradingView Ticker */}
