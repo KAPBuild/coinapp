@@ -4,6 +4,18 @@ import { OrbitControls, Text, Line } from '@react-three/drei'
 import * as THREE from 'three'
 import { MorganScatterPoint, AxisConfig, AXIS_LABELS, AxisVariable } from '../../types/morganScatterData'
 
+// Hook to detect mobile viewport - Text component from drei can break WebGL on mobile
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isMobile
+}
+
 interface ScatterPlot3DThreeProps {
   data: MorganScatterPoint[]
   axisConfig: AxisConfig
@@ -108,11 +120,11 @@ interface DataPointProps {
   size: number
   coin: MorganScatterPoint
   isSelected: boolean
-  isExtremeOutlier: boolean
+  showLabel: boolean // Only show labels on desktop - drei Text breaks mobile WebGL
   onSelect: (coin: MorganScatterPoint, position: { x: number, y: number }) => void
 }
 
-function DataPoint({ position, color, size, coin, isSelected, isExtremeOutlier, onSelect }: DataPointProps) {
+function DataPoint({ position, color, size, coin, isSelected, showLabel, onSelect }: DataPointProps) {
   const [hovered, setHovered] = useState(false)
 
   const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
@@ -156,8 +168,8 @@ function DataPoint({ position, color, size, coin, isSelected, isExtremeOutlier, 
           opacity={0.9}
         />
       </mesh>
-      {/* Label for extreme outliers */}
-      {isExtremeOutlier && (
+      {/* Label for extreme outliers - only on desktop (showLabel combines isExtremeOutlier && !isMobile) */}
+      {showLabel && (
         <Text
           position={[0, visualSize + 0.4, 0]}
           fontSize={0.35}
@@ -371,10 +383,11 @@ interface SceneProps {
   axisConfig: AxisConfig
   showTrendPlane: boolean
   selectedCoinId: string | null
+  isMobile: boolean
   onSelect: (coin: MorganScatterPoint, position: { x: number, y: number }) => void
 }
 
-function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, onSelect }: SceneProps) {
+function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, isMobile, onSelect }: SceneProps) {
   const processedData = useMemo(() => {
     if (data.length === 0) return null
 
@@ -440,7 +453,7 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, onSelect }: S
           size={point.size}
           coin={point.coin}
           isSelected={selectedCoinId === point.coin.id}
-          isExtremeOutlier={point.score >= 0.75}
+          showLabel={!isMobile && point.score >= 0.75}
           onSelect={onSelect}
         />
       ))}
@@ -529,6 +542,7 @@ export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: Scatter
   const [selectedCoin, setSelectedCoin] = useState<MorganScatterPoint | null>(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const isMobile = useIsMobile()
 
   const handleSelect = useCallback((coin: MorganScatterPoint) => {
     setSelectedCoin(prev => prev?.id === coin.id ? null : coin)
@@ -607,6 +621,7 @@ export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: Scatter
           axisConfig={axisConfig}
           showTrendPlane={showTrendPlane}
           selectedCoinId={selectedCoin?.id || null}
+          isMobile={isMobile}
           onSelect={handleSelect}
         />
       </Canvas>
