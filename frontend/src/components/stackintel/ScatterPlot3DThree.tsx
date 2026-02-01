@@ -130,23 +130,32 @@ function DataPoint({ position, color, size, coin, isSelected, onSelect }: DataPo
   }, [])
 
   const isHighlighted = hovered || isSelected
+  const visualSize = isHighlighted ? size * 1.5 : size
+  const hitAreaSize = size * 2.5 // Larger invisible hit area for easier tapping
 
   return (
-    <mesh
-      position={position}
-      onClick={handleClick}
-      onPointerOver={handlePointerOver}
-      onPointerOut={handlePointerOut}
-    >
-      <sphereGeometry args={[isHighlighted ? size * 1.4 : size, 16, 16]} />
-      <meshStandardMaterial
-        color={isSelected ? '#ffffff' : color}
-        emissive={isHighlighted ? color : '#000000'}
-        emissiveIntensity={isHighlighted ? 0.5 : 0}
-        transparent
-        opacity={0.9}
-      />
-    </mesh>
+    <group position={position}>
+      {/* Invisible larger hit area for easier tapping */}
+      <mesh
+        onClick={handleClick}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
+      >
+        <sphereGeometry args={[hitAreaSize, 8, 8]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+      {/* Visible sphere */}
+      <mesh>
+        <sphereGeometry args={[visualSize, 16, 16]} />
+        <meshStandardMaterial
+          color={isSelected ? '#ffffff' : color}
+          emissive={isHighlighted ? color : '#000000'}
+          emissiveIntensity={isHighlighted ? 0.5 : 0}
+          transparent
+          opacity={0.9}
+        />
+      </mesh>
+    </group>
   )
 }
 
@@ -368,7 +377,7 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, onSelect }: S
       coin,
       position: [xNorm.normalized[i], yNorm.normalized[i], zNorm.normalized[i]] as [number, number, number],
       color: getColor(outlierScores[i]),
-      size: 0.15 + outlierScores[i] * 0.15,
+      size: 0.3 + outlierScores[i] * 0.25,
       score: outlierScores[i]
     }))
 
