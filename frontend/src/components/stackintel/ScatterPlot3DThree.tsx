@@ -108,10 +108,11 @@ interface DataPointProps {
   size: number
   coin: MorganScatterPoint
   isSelected: boolean
+  isExtremeOutlier: boolean
   onSelect: (coin: MorganScatterPoint, position: { x: number, y: number }) => void
 }
 
-function DataPoint({ position, color, size, coin, isSelected, onSelect }: DataPointProps) {
+function DataPoint({ position, color, size, coin, isSelected, isExtremeOutlier, onSelect }: DataPointProps) {
   const [hovered, setHovered] = useState(false)
 
   const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
@@ -155,6 +156,20 @@ function DataPoint({ position, color, size, coin, isSelected, onSelect }: DataPo
           opacity={0.9}
         />
       </mesh>
+      {/* Label for extreme outliers */}
+      {isExtremeOutlier && (
+        <Text
+          position={[0, visualSize + 0.4, 0]}
+          fontSize={0.35}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="bottom"
+          outlineWidth={0.03}
+          outlineColor="#000000"
+        >
+          {coin.id}
+        </Text>
+      )}
     </group>
   )
 }
@@ -425,6 +440,7 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, onSelect }: S
           size={point.size}
           coin={point.coin}
           isSelected={selectedCoinId === point.coin.id}
+          isExtremeOutlier={point.score >= 0.75}
           onSelect={onSelect}
         />
       ))}
