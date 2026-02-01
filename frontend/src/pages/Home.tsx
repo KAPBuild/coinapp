@@ -1,4 +1,4 @@
-import { TrendingUp, Coins, ChevronRight, ExternalLink, HelpCircle, Search, X, Calculator, Award, BarChart3, Package, LineChart } from 'lucide-react'
+import { TrendingUp, Coins, ExternalLink, HelpCircle, Search, X, Calculator, Award, BarChart3, Package, LineChart } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 // Morgan Dollar data for quick lookup
@@ -323,27 +323,17 @@ export function Home({ onNavigate }: HomeProps) {
 
   return (
     <div className="space-y-12">
-      {/* Hero Section */}
-      <div className="text-center space-y-6 py-8">
-        <h1 className="text-5xl md:text-6xl font-bold text-white">
-          Track Your Coin Collection
+      {/* Welcome Header */}
+      <div className="pt-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-white text-center mb-2">
+          Coin Collector Tools
         </h1>
-        <p className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto">
-          Free inventory tool with live pricing.
+        <p className="text-slate-400 text-center mb-8">
+          Melt values, grading references, portfolio tracking, and more
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-          <button
-            onClick={handleStartTracking}
-            className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-500 transition-colors shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-          >
-            Start Tracking
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
 
-      {/* Quick Navigation Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 max-w-4xl mx-auto">
+        {/* Tools Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 max-w-4xl mx-auto">
         <button
           onClick={handleViewMeltValues}
           className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
@@ -379,6 +369,7 @@ export function Home({ onNavigate }: HomeProps) {
           <LineChart className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform" />
           <span className="text-white font-medium text-sm">Spot Charts</span>
         </button>
+        </div>
       </div>
 
       {/* Live Spot Prices - TradingView Ticker */}
