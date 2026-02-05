@@ -155,7 +155,7 @@ function DataPoint({ position, color, size, coin, isSelected, showLabel, onSelec
         onPointerOut={handlePointerOut}
       >
         <sphereGeometry args={[hitAreaSize, 8, 8]} />
-        <meshBasicMaterial transparent opacity={0} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
       {/* Visible sphere */}
       <mesh>
@@ -163,7 +163,7 @@ function DataPoint({ position, color, size, coin, isSelected, showLabel, onSelec
         <meshStandardMaterial
           color={isSelected ? '#ffffff' : color}
           emissive={isHighlighted ? color : '#000000'}
-          emissiveIntensity={isHighlighted ? 0.5 : 0}
+          emissiveIntensity={isHighlighted ? 0.5 : 0.15}
           transparent
           opacity={0.9}
         />
@@ -405,7 +405,7 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, isMobile, onS
       coin,
       position: [xNorm.normalized[i], yNorm.normalized[i], zNorm.normalized[i]] as [number, number, number],
       color: getColor(outlierScores[i]),
-      size: 0.3 + outlierScores[i] * 0.25,
+      size: 0.4 + outlierScores[i] * 0.3,
       score: outlierScores[i]
     }))
 
@@ -430,7 +430,7 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, isMobile, onS
 
   return (
     <>
-      <ambientLight intensity={0.6} />
+      <ambientLight intensity={0.7} />
       <pointLight position={[15, 15, 15]} intensity={0.8} />
       <pointLight position={[-10, -10, -10]} intensity={0.3} />
 
@@ -578,7 +578,7 @@ export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: Scatter
     <div
       ref={containerRef}
       className={`relative w-full rounded-xl overflow-hidden shadow-2xl ${
-        isFullscreen ? 'h-screen' : 'h-[380px] sm:h-[480px] md:h-[600px]'
+        isFullscreen ? 'h-screen' : 'h-[420px] sm:h-[480px] md:h-[600px]'
       }`}
       style={{ background: THEME.bg }}
     >
