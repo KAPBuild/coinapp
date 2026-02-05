@@ -289,91 +289,204 @@ function Axes({ xLabel, yLabel, zLabel, xRange, yRange, zRange }: AxesProps) {
   )
 }
 
-// Calculate linear regression plane: Y = a*X + b*Z + c
-function calculateRegressionPlane(points: { x: number, y: number, z: number }[]): { a: number, b: number, c: number } {
-  const n = points.length
-  if (n < 3) return { a: 0, b: 0, c: 5 }
+// Calculate terrain surface using Inverse Distance Weighting interpolation
+function calculateTerrainGrid(
+  points: { x: number, y: number, z: number }[],
+  gridSize: number = 30
+): { vertices: Float32Array, indices: Uint16Array, colors: Float32Array } {
+  const step = 10 / (gridSize - 1)
+  const power = 2 // IDW power parameter
+  const smoothRadius = 1.5 // Radius for smoothing influence
 
-  // Calculate means
-  const meanX = points.reduce((sum, p) => sum + p.x, 0) / n
-  const meanY = points.reduce((sum, p) => sum + p.y, 0) / n
-  const meanZ = points.reduce((sum, p) => sum + p.z, 0) / n
+  // Build height grid using IDW
+  const heights: number[][] = []
+  for (let zi = 0; zi < gridSize; zi++) {
+    heights[zi] = []
+    for (let xi = 0; xi < gridSize; xi++) {
+      const gx = xi * step
+      const gz = zi * step
 
-  // Calculate sums for least squares
-  let sumXX = 0, sumZZ = 0, sumXZ = 0, sumXY = 0, sumZY = 0
-  for (const p of points) {
-    const dx = p.x - meanX
-    const dy = p.y - meanY
-    const dz = p.z - meanZ
-    sumXX += dx * dx
-    sumZZ += dz * dz
-    sumXZ += dx * dz
-    sumXY += dx * dy
-    sumZY += dz * dy
+      let weightSum = 0
+      let valueSum = 0
+
+      for (const p of points) {
+        const dx = gx - p.x
+        const dz = gz - p.z
+        const dist = Math.sqrt(dx * dx + dz * dz)
+
+        if (dist < 0.001) {
+          // Exactly on a data point
+          weightSum = 1
+          valueSum = p.y
+          break
+        }
+
+        const w = 1 / Math.pow(dist, power)
+        weightSum += w
+        valueSum += w * p.y
+      }
+
+      heights[zi][xi] = weightSum > 0 ? valueSum / weightSum : 0
+    }
   }
 
-  // Solve for coefficients (handle edge cases)
-  const det = sumXX * sumZZ - sumXZ * sumXZ
-  if (Math.abs(det) < 0.0001) {
-    return { a: 0, b: 0, c: meanY }
+  // Gaussian smoothing pass for organic look
+  const smoothed: number[][] = []
+  for (let zi = 0; zi < gridSize; zi++) {
+    smoothed[zi] = []
+    for (let xi = 0; xi < gridSize; xi++) {
+      let wSum = 0
+      let vSum = 0
+      const radius = Math.ceil(smoothRadius / step)
+
+      for (let dz = -radius; dz <= radius; dz++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+          const nz = zi + dz
+          const nx = xi + dx
+          if (nz < 0 || nz >= gridSize || nx < 0 || nx >= gridSize) continue
+
+          const dist = Math.sqrt(dx * dx + dz * dz) * step
+          const w = Math.exp(-(dist * dist) / (2 * smoothRadius * smoothRadius))
+          wSum += w
+          vSum += w * heights[nz][nx]
+        }
+      }
+
+      smoothed[zi][xi] = Math.max(0, Math.min(10, wSum > 0 ? vSum / wSum : 0))
+    }
   }
 
-  const a = (sumZZ * sumXY - sumXZ * sumZY) / det
-  const b = (sumXX * sumZY - sumXZ * sumXY) / det
-  const c = meanY - a * meanX - b * meanZ
+  // Build vertex buffer and color buffer
+  const vertexCount = gridSize * gridSize
+  const vertices = new Float32Array(vertexCount * 3)
+  const colors = new Float32Array(vertexCount * 3)
 
-  return { a, b, c }
+  // Find height range for color mapping
+  let minH = Infinity, maxH = -Infinity
+  for (let zi = 0; zi < gridSize; zi++) {
+    for (let xi = 0; xi < gridSize; xi++) {
+      minH = Math.min(minH, smoothed[zi][xi])
+      maxH = Math.max(maxH, smoothed[zi][xi])
+    }
+  }
+  const hRange = maxH - minH || 1
+
+  for (let zi = 0; zi < gridSize; zi++) {
+    for (let xi = 0; xi < gridSize; xi++) {
+      const idx = zi * gridSize + xi
+      const h = smoothed[zi][xi]
+
+      vertices[idx * 3] = xi * step       // x
+      vertices[idx * 3 + 1] = h           // y (height)
+      vertices[idx * 3 + 2] = zi * step   // z
+
+      // Color by height: deep blue (valleys) -> bright cyan (peaks)
+      const t = (h - minH) / hRange
+      colors[idx * 3] = 0.02 + t * 0.02     // R: very low
+      colors[idx * 3 + 1] = 0.15 + t * 0.55 // G: 0.15 -> 0.70
+      colors[idx * 3 + 2] = 0.35 + t * 0.48 // B: 0.35 -> 0.83
+    }
+  }
+
+  // Build index buffer (two triangles per grid cell)
+  const cellCount = (gridSize - 1) * (gridSize - 1)
+  const indices = new Uint16Array(cellCount * 6)
+  let idx = 0
+
+  for (let zi = 0; zi < gridSize - 1; zi++) {
+    for (let xi = 0; xi < gridSize - 1; xi++) {
+      const topLeft = zi * gridSize + xi
+      const topRight = topLeft + 1
+      const bottomLeft = (zi + 1) * gridSize + xi
+      const bottomRight = bottomLeft + 1
+
+      indices[idx++] = topLeft
+      indices[idx++] = bottomLeft
+      indices[idx++] = topRight
+
+      indices[idx++] = topRight
+      indices[idx++] = bottomLeft
+      indices[idx++] = bottomRight
+    }
+  }
+
+  return { vertices, indices, colors }
 }
 
-// Regression trend plane
-interface TrendPlaneProps {
-  coefficients: { a: number, b: number, c: number }
+// Holographic terrain surface - Star Wars hologram style
+interface TerrainSurfaceProps {
+  points: { x: number, y: number, z: number }[]
 }
 
-function TrendPlane({ coefficients }: TrendPlaneProps) {
-  const { a, b, c } = coefficients
+function TerrainSurface({ points }: TerrainSurfaceProps) {
+  const terrain = useMemo(() => calculateTerrainGrid(points, 30), [points])
 
-  // Calculate Y values at corners of the XZ plane (0-10 range)
-  const y00 = a * 0 + b * 0 + c
-  const y10 = a * 10 + b * 0 + c
-  const y01 = a * 0 + b * 10 + c
-  const y11 = a * 10 + b * 10 + c
-
-  // Clamp Y values to visible range
-  const clamp = (v: number) => Math.max(0, Math.min(10, v))
-
-  const vertices = new Float32Array([
-    0, clamp(y00), 0,
-    10, clamp(y10), 0,
-    10, clamp(y11), 10,
-    0, clamp(y01), 10,
-  ])
-
-  const indices = new Uint16Array([0, 1, 2, 0, 2, 3])
+  const vertexCount = terrain.vertices.length / 3
+  const indexCount = terrain.indices.length
 
   return (
-    <mesh>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          array={vertices}
-          count={4}
-          itemSize={3}
+    <group>
+      {/* Solid transparent fill */}
+      <mesh>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            array={terrain.vertices}
+            count={vertexCount}
+            itemSize={3}
+          />
+          <bufferAttribute
+            attach="attributes-color"
+            array={terrain.colors}
+            count={vertexCount}
+            itemSize={3}
+          />
+          <bufferAttribute
+            attach="index"
+            array={terrain.indices}
+            count={indexCount}
+            itemSize={1}
+          />
+        </bufferGeometry>
+        <meshStandardMaterial
+          vertexColors
+          transparent
+          opacity={0.10}
+          side={THREE.DoubleSide}
+          depthWrite={false}
         />
-        <bufferAttribute
-          attach="index"
-          array={indices}
-          count={6}
-          itemSize={1}
+      </mesh>
+      {/* Wireframe overlay for hologram grid-line effect */}
+      <mesh>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            array={terrain.vertices}
+            count={vertexCount}
+            itemSize={3}
+          />
+          <bufferAttribute
+            attach="attributes-color"
+            array={terrain.colors}
+            count={vertexCount}
+            itemSize={3}
+          />
+          <bufferAttribute
+            attach="index"
+            array={terrain.indices}
+            count={indexCount}
+            itemSize={1}
+          />
+        </bufferGeometry>
+        <meshBasicMaterial
+          vertexColors
+          transparent
+          opacity={0.35}
+          wireframe
+          depthWrite={false}
         />
-      </bufferGeometry>
-      <meshStandardMaterial
-        color="#06b6d4"
-        transparent
-        opacity={0.25}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
+      </mesh>
+    </group>
   )
 }
 
@@ -405,24 +518,23 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, isMobile, onS
       coin,
       position: [xNorm.normalized[i], yNorm.normalized[i], zNorm.normalized[i]] as [number, number, number],
       color: getColor(outlierScores[i]),
-      size: 0.4 + outlierScores[i] * 0.3,
+      size: 0.32 + outlierScores[i] * 0.22,
       score: outlierScores[i]
     }))
 
-    // Calculate regression plane coefficients from normalized data
-    const planePoints = points.map(p => ({
+    // Extract normalized positions for terrain surface
+    const terrainPoints = points.map(p => ({
       x: p.position[0],
       y: p.position[1],
       z: p.position[2]
     }))
-    const planeCoefficients = calculateRegressionPlane(planePoints)
 
     return {
       points,
       xRange: { min: xNorm.min, max: xNorm.max },
       yRange: { min: yNorm.min, max: yNorm.max },
       zRange: { min: zNorm.min, max: zNorm.max },
-      planeCoefficients
+      terrainPoints
     }
   }, [data, axisConfig])
 
@@ -443,7 +555,7 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, isMobile, onS
         zRange={processedData.zRange}
       />
 
-      {showTrendPlane && <TrendPlane coefficients={processedData.planeCoefficients} />}
+      {showTrendPlane && <TerrainSurface points={processedData.terrainPoints} />}
 
       {processedData.points.map((point) => (
         <DataPoint
@@ -453,7 +565,7 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, isMobile, onS
           size={point.size}
           coin={point.coin}
           isSelected={selectedCoinId === point.coin.id}
-          showLabel={!isMobile && point.score >= 0.75}
+          showLabel={!isMobile && point.score >= 0.50}
           onSelect={onSelect}
         />
       ))}
