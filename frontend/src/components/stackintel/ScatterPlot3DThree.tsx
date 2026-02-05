@@ -168,16 +168,17 @@ function DataPoint({ position, color, size, coin, isSelected, showLabel, onSelec
           opacity={0.9}
         />
       </mesh>
-      {/* Label for extreme outliers - only on desktop (showLabel combines isExtremeOutlier && !isMobile) */}
+      {/* Date & mint mark label for outliers - only on desktop (drei Text breaks mobile WebGL) */}
       {showLabel && (
         <Text
-          position={[0, visualSize + 0.4, 0]}
-          fontSize={0.35}
+          position={[0, visualSize + 0.5, 0]}
+          fontSize={0.38}
           color="#ffffff"
           anchorX="center"
           anchorY="bottom"
-          outlineWidth={0.03}
+          outlineWidth={0.04}
           outlineColor="#000000"
+          fontWeight="bold"
         >
           {coin.id}
         </Text>
