@@ -1,4 +1,6 @@
 import { Coin } from '../types/coin'
+import type { BatchCreateResponse } from '../types/importTypes'
+import type { ShopCoin } from '../types/shopTypes'
 
 // Use deployed Cloudflare backend
 const API_URL = import.meta.env.VITE_API_URL || 'https://coinapp-api.kapp-build.workers.dev'
@@ -57,4 +59,15 @@ export const coinsApi = {
     apiRequest<{ success: boolean }>(`/api/coins/${id}`, {
       method: 'DELETE',
     }),
+
+  batchCreate: (coins: Omit<Coin, 'id' | 'userId' | 'createdAt' | 'updatedAt'>[]) =>
+    apiRequest<BatchCreateResponse>('/api/coins/batch', {
+      method: 'POST',
+      body: JSON.stringify({ coins }),
+    }),
+}
+
+// Shop API functions (public, no auth required)
+export const shopApi = {
+  getCoins: () => apiRequest<ShopCoin[]>('/api/shop'),
 }

@@ -1,7 +1,8 @@
-import { Plus, Trash2, Edit, Download, AlertCircle, Loader, Eye, EyeOff, Search, SlidersHorizontal, ChevronDown } from 'lucide-react'
+import { Plus, Trash2, Edit, Download, Upload, AlertCircle, Loader, Eye, EyeOff, Search, SlidersHorizontal, ChevronDown } from 'lucide-react'
 import { useState, useMemo } from 'react'
 import { useCoins, useDeleteCoin } from '../hooks/useCoins'
 import { AddEditCoinModal } from '../components/inventory/AddEditCoinModal'
+import { ImportCSVModal } from '../components/inventory/ImportCSVModal'
 import { exportToCSV } from '../lib/exportUtils'
 import { Coin } from '../types/coin'
 
@@ -136,6 +137,7 @@ const COLUMN_PRESETS = {
 
 export function Inventory() {
   const [showModal, setShowModal] = useState(false)
+  const [showImportModal, setShowImportModal] = useState(false)
   const [editingCoin, setEditingCoin] = useState<Coin | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>(null)
@@ -336,6 +338,14 @@ export function Inventory() {
             <p className="text-slate-400">{coins.length} coins total, {filteredAndSortedCoins.length} displayed</p>
           </div>
           <div className="flex gap-2">
+            <button
+              onClick={() => setShowImportModal(true)}
+              className="flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              title="Import coins from CSV"
+            >
+              <Upload className="w-5 h-5" />
+              Import
+            </button>
             {filteredAndSortedCoins.length > 0 && (
               <button
                 onClick={() => exportToCSV(filteredAndSortedCoins, 'coin-inventory')}
@@ -374,6 +384,9 @@ export function Inventory() {
       {/* Modal */}
       {showModal && (
         <AddEditCoinModal coin={editingCoin} onClose={handleCloseModal} />
+      )}
+      {showImportModal && (
+        <ImportCSVModal onClose={() => setShowImportModal(false)} />
       )}
 
       {/* Empty State */}
