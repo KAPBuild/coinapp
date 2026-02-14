@@ -20,6 +20,12 @@ export interface AxisConfig {
   z: AxisVariable | null  // null = 2D mode
 }
 
+export interface InvertConfig {
+  x: boolean
+  y: boolean
+  z: boolean
+}
+
 export interface FilterConfig {
   keyDatesOnly: boolean
   mints: string[]         // ['P', 'S', 'O', 'CC']

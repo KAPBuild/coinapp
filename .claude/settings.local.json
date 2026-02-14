@@ -21,7 +21,23 @@
       "WebFetch(domain:api.metals.live)",
       "WebFetch(domain:www.goldapi.io)",
       "WebFetch(domain:metalpriceapi.com)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:en.numista.com)",
+      "WebFetch(domain:app.getcollectr.com)",
+      "WebFetch(domain:metals.dev)",
+      "WebFetch(domain:developers.cloudflare.com)",
+      "Bash(findstr:*)",
+      "Bash(npx vite build:*)",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" status)",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" diff --stat)",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" log --oneline -5)",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" add backend/src/utils/batchValidation.ts backend/src/routes/coins.ts frontend/src/lib/importUtils.ts frontend/src/types/importTypes.ts frontend/src/hooks/useImportCoins.ts frontend/src/components/inventory/ImportCSVModal.tsx frontend/src/lib/api.ts frontend/src/pages/Inventory.tsx)",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" commit -m \"$\\(cat <<''EOF''\nAdd CSV import feature with batch endpoint and upload modal\n\nUsers can now import their coin collections from CSV spreadsheets.\nAdds a backend batch endpoint \\(POST /api/coins/batch\\) that validates\neach row individually, imports valid ones, and reports failures.\nFrontend includes a drag-and-drop upload modal with preview, parsing\nvia PapaParse, and a results summary.\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" add backend/src/db/migrations/0006_add_admin_field.sql backend/src/db/schema.ts backend/src/routes/auth.ts backend/src/middleware/auth.ts backend/src/routes/shop.ts backend/src/index.ts frontend/src/contexts/AuthContext.tsx frontend/src/types/shopTypes.ts frontend/src/hooks/useShop.ts frontend/src/pages/Shop.tsx frontend/src/components/Navigation.tsx frontend/src/App.tsx)",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" commit -m \"$\\(cat <<''EOF''\nAdd admin role and rework Shop page as company storefront\n\nAdds isAdmin flag to users table with DB migration. Auth routes now\nreturn isAdmin status. Shop page rewritten from hardcoded demo to a\nreal storefront that displays the admin''s \"For Sale\" coins via a new\npublic GET /api/shop endpoint. Each coin card shows grade/metal badges,\npricing, a \"View on eBay\" link, and an \"Inquire\" button with email\nmodal. ForSale and PriceAdmin pages are now admin-only.\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" push)",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" add frontend/index.html frontend/src/pages/StackIntel.tsx frontend/src/types/morganScatterData.ts frontend/public/favicon.svg .claude/settings.local.json)",
+      "Bash(git -C \"C:/Users/r7y23s6/Documents/coinapp\" commit -m \"$\\(cat <<''EOF''\nUpdate StackIntel scatter data, favicon, and local settings\n\nAdds new morgan scatter data entries, updates index.html, adds\nfavicon, and updates local Claude settings.\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }

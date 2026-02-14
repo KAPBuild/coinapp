@@ -5,7 +5,7 @@ import { AxisControls } from '../components/stackintel/AxisControls'
 import { ViewModeToggle } from '../components/stackintel/ViewModeToggle'
 import { FilterControls } from '../components/stackintel/FilterControls'
 import { MORGAN_DATA_WITH_COMPUTED } from '../data/morganScatterData'
-import { AxisConfig, FilterConfig } from '../types/morganScatterData'
+import { AxisConfig, FilterConfig, InvertConfig } from '../types/morganScatterData'
 
 // Morgan Dollar series data (placeholder - will be expanded)
 const SERIES_DATA = [
@@ -39,6 +39,11 @@ export function StackIntel() {
     keyDatesOnly: false,
     mints: ['P', 'S', 'O', 'CC'],
     yearRange: [1878, 1921]
+  })
+  const [invertConfig, setInvertConfig] = useState<InvertConfig>({
+    x: true,   // Default invert so low pop = peak (rare coins stand out)
+    y: true,   // Default invert so low survival = peak
+    z: false   // value65 default — high value is already desirable
   })
   const [showTrendPlane, setShowTrendPlane] = useState(false)
 

@@ -1,0 +1,18 @@
+<svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main coin -->
+  <circle cx="32" cy="32" r="28" fill="url(#coinGrad)" stroke="#b45309" stroke-width="3"/>
+
+  <!-- Inner ring -->
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#fef3c7" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- C monogram -->
+  <text x="32" y="42" text-anchor="middle" font-size="28" font-weight="bold" font-family="Georgia, serif" fill="#78350f">C</text>
+
+  <defs>
+    <linearGradient id="coinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+</svg>
