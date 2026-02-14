@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback, useRef, useEffect } from 'react'
 import { Canvas, ThreeEvent } from '@react-three/fiber'
 import { OrbitControls, Text, Line } from '@react-three/drei'
 import * as THREE from 'three'
-import { MorganScatterPoint, AxisConfig, AXIS_LABELS, AxisVariable } from '../../types/morganScatterData'
+import { MorganScatterPoint, AxisConfig, InvertConfig, AXIS_LABELS, AxisVariable } from '../../types/morganScatterData'
 
 // Hook to detect mobile viewport - Text component from drei can break WebGL on mobile
 function useIsMobile() {
@@ -19,6 +19,7 @@ function useIsMobile() {
 interface ScatterPlot3DThreeProps {
   data: MorganScatterPoint[]
   axisConfig: AxisConfig
+  invertConfig: InvertConfig
   showTrendPlane: boolean
 }
 
@@ -88,28 +89,57 @@ function getValue(coin: MorganScatterPoint, variable: AxisVariable): number {
 }
 
 // Normalize data to 0-10 range for visualization
-function normalizeData(values: number[]): { normalized: number[], min: number, max: number } {
+// When invert=true, low real values map to high positions (10) so rare coins stand out at the top
+function normalizeData(values: number[], invert: boolean = false): { normalized: number[], min: number, max: number } {
   const min = Math.min(...values)
   const max = Math.max(...values)
   const range = max - min || 1
   return {
-    normalized: values.map(v => ((v - min) / range) * 10),
+    normalized: values.map(v => {
+      const norm = ((v - min) / range) * 10
+      return invert ? 10 - norm : norm
+    }),
     min,
     max
   }
 }
 
-// Calculate outlier scores
-function calculateOutlierScores(data: MorganScatterPoint[], axisConfig: AxisConfig): number[] {
+// Calculate outlier scores based on how "rare/notable" a coin is
+// Uses a composite score across all visible axes, weighted by inversion direction
+function calculateOutlierScores(data: MorganScatterPoint[], axisConfig: AxisConfig, invertConfig: InvertConfig): number[] {
   if (data.length === 0) return []
+
+  // Helper: for a given axis, compute a 0-1 score where higher = more notable
+  // When inverted, LOW real values are notable (rare); otherwise HIGH values are notable
+  function axisScore(values: number[], invert: boolean): number[] {
+    const min = Math.min(...values)
+    const max = Math.max(...values)
+    const range = max - min || 1
+    return values.map(v => {
+      const norm = (v - min) / range  // 0 (lowest) to 1 (highest)
+      return invert ? 1 - norm : norm // if inverted, low values → high score
+    })
+  }
+
+  const xValues = data.map(d => getValue(d, axisConfig.x))
   const yValues = data.map(d => getValue(d, axisConfig.y))
-  const sortedY = [...yValues].sort((a, b) => a - b)
-  const median = sortedY[Math.floor(sortedY.length / 2)]
-  const maxDev = Math.max(...yValues.map(v => Math.abs(v - median)))
-  return data.map(d => {
-    const yVal = getValue(d, axisConfig.y)
-    const deviation = Math.abs(yVal - median)
-    return maxDev > 0 ? deviation / maxDev : 0
+  const xScores = axisScore(xValues, invertConfig.x)
+  const yScores = axisScore(yValues, invertConfig.y)
+
+  let zScores: number[] | null = null
+  if (axisConfig.z) {
+    const zValues = data.map(d => getValue(d, axisConfig.z!))
+    zScores = axisScore(zValues, invertConfig.z)
+  }
+
+  // Composite: average across visible axes, with Y weighted heavier (primary interest axis)
+  return data.map((_, i) => {
+    const x = xScores[i]
+    const y = yScores[i]
+    if (zScores) {
+      return x * 0.25 + y * 0.5 + zScores[i] * 0.25
+    }
+    return x * 0.35 + y * 0.65
   })
 }
 
@@ -495,13 +525,14 @@ function TerrainSurface({ points }: TerrainSurfaceProps) {
 interface SceneProps {
   data: MorganScatterPoint[]
   axisConfig: AxisConfig
+  invertConfig: InvertConfig
   showTrendPlane: boolean
   selectedCoinId: string | null
   isMobile: boolean
   onSelect: (coin: MorganScatterPoint, position: { x: number, y: number }) => void
 }
 
-function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, isMobile, onSelect }: SceneProps) {
+function Scene({ data, axisConfig, invertConfig, showTrendPlane, selectedCoinId, isMobile, onSelect }: SceneProps) {
   const processedData = useMemo(() => {
     if (data.length === 0) return null
 
@@ -509,11 +540,11 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, isMobile, onS
     const yValues = data.map(d => getValue(d, axisConfig.y))
     const zValues = axisConfig.z ? data.map(d => getValue(d, axisConfig.z!)) : data.map(() => 0)
 
-    const xNorm = normalizeData(xValues)
-    const yNorm = normalizeData(yValues)
-    const zNorm = normalizeData(zValues)
+    const xNorm = normalizeData(xValues, invertConfig.x)
+    const yNorm = normalizeData(yValues, invertConfig.y)
+    const zNorm = normalizeData(zValues, invertConfig.z)
 
-    const outlierScores = calculateOutlierScores(data, axisConfig)
+    const outlierScores = calculateOutlierScores(data, axisConfig, invertConfig)
 
     const points = data.map((coin, i) => ({
       coin,
@@ -532,12 +563,19 @@ function Scene({ data, axisConfig, showTrendPlane, selectedCoinId, isMobile, onS
 
     return {
       points,
-      xRange: { min: xNorm.min, max: xNorm.max },
-      yRange: { min: yNorm.min, max: yNorm.max },
-      zRange: { min: zNorm.min, max: zNorm.max },
+      // When inverted, low values are at top (position 10), so swap labels
+      xRange: invertConfig.x
+        ? { min: xNorm.max, max: xNorm.min }
+        : { min: xNorm.min, max: xNorm.max },
+      yRange: invertConfig.y
+        ? { min: yNorm.max, max: yNorm.min }
+        : { min: yNorm.min, max: yNorm.max },
+      zRange: invertConfig.z
+        ? { min: zNorm.max, max: zNorm.min }
+        : { min: zNorm.min, max: zNorm.max },
       terrainPoints
     }
-  }, [data, axisConfig])
+  }, [data, axisConfig, invertConfig])
 
   if (!processedData) return null
 
@@ -651,7 +689,7 @@ function ColorLegend() {
   )
 }
 
-export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: ScatterPlot3DThreeProps) {
+export function ScatterPlot3DThree({ data, axisConfig, invertConfig, showTrendPlane }: ScatterPlot3DThreeProps) {
   const [selectedCoin, setSelectedCoin] = useState<MorganScatterPoint | null>(null)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -732,6 +770,7 @@ export function ScatterPlot3DThree({ data, axisConfig, showTrendPlane }: Scatter
         <Scene
           data={data}
           axisConfig={axisConfig}
+          invertConfig={invertConfig}
           showTrendPlane={showTrendPlane}
           selectedCoinId={selectedCoin?.id || null}
           isMobile={isMobile}

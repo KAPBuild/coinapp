@@ -148,16 +148,57 @@ export function StackIntel() {
         <div className="px-4 sm:px-6 py-3 sm:py-4 bg-slate-800/50 border-b border-slate-700 space-y-3 sm:space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <AxisControls axisConfig={axisConfig} onChange={setAxisConfig} />
-            <label className="flex items-center gap-2 text-sm text-slate-300 bg-slate-800/50 px-3 py-2.5 rounded-lg border border-slate-700 cursor-pointer hover:bg-slate-700 transition-colors w-full sm:w-auto justify-center sm:justify-start">
-              <input
-                type="checkbox"
-                checked={showTrendPlane}
-                onChange={(e) => setShowTrendPlane(e.target.checked)}
-                disabled={!is3D}
-                className="w-4 h-4 text-cyan-500 rounded border-slate-500 bg-slate-700 focus:ring-cyan-500 disabled:opacity-50"
-              />
-              Trend Plane
-            </label>
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <label className="flex items-center gap-2 text-sm text-slate-300 bg-slate-800/50 px-3 py-2.5 rounded-lg border border-slate-700 cursor-pointer hover:bg-slate-700 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={showTrendPlane}
+                  onChange={(e) => setShowTrendPlane(e.target.checked)}
+                  disabled={!is3D}
+                  className="w-4 h-4 text-cyan-500 rounded border-slate-500 bg-slate-700 focus:ring-cyan-500 disabled:opacity-50"
+                />
+                Trend Plane
+              </label>
+              {/* Invert Axis Toggles */}
+              <div className="flex items-center gap-1 bg-slate-800/50 px-3 py-2 rounded-lg border border-slate-700">
+                <span className="text-xs text-slate-400 mr-1">Invert:</span>
+                <button
+                  onClick={() => setInvertConfig(prev => ({ ...prev, x: !prev.x }))}
+                  className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+                    invertConfig.x
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
+                  }`}
+                  title={`X-Axis: ${invertConfig.x ? 'Inverted (low values = high position)' : 'Normal (low values = low position)'}`}
+                >
+                  X
+                </button>
+                <button
+                  onClick={() => setInvertConfig(prev => ({ ...prev, y: !prev.y }))}
+                  className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+                    invertConfig.y
+                      ? 'bg-green-600 text-white'
+                      : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
+                  }`}
+                  title={`Y-Axis: ${invertConfig.y ? 'Inverted (low values = high position)' : 'Normal (low values = low position)'}`}
+                >
+                  Y
+                </button>
+                {is3D && (
+                  <button
+                    onClick={() => setInvertConfig(prev => ({ ...prev, z: !prev.z }))}
+                    className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+                      invertConfig.z
+                        ? 'bg-amber-600 text-white'
+                        : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
+                    }`}
+                    title={`Z-Axis: ${invertConfig.z ? 'Inverted (low values = high position)' : 'Normal (low values = low position)'}`}
+                  >
+                    Z
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
           <FilterControls filters={filters} onChange={setFilters} />
         </div>
@@ -167,6 +208,7 @@ export function StackIntel() {
           <ScatterPlot3D
             data={filteredData}
             axisConfig={axisConfig}
+            invertConfig={invertConfig}
             showTrendPlane={showTrendPlane}
           />
           <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 text-sm">
