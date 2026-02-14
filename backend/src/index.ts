@@ -5,6 +5,7 @@ import coinsRouter from './routes/coins'
 import pricesRouter from './routes/prices'
 import meltRouter from './routes/melt'
 import { catalogRoutes } from './routes/catalog'
+import shopRouter from './routes/shop'
 import { apiRateLimit } from './middleware/rateLimit'
 import { createDb } from './db'
 import { cleanExpiredSessions } from './utils/sessions'
@@ -65,6 +66,7 @@ app.route('/api/coins', coinsRouter)
 app.route('/api/prices', pricesRouter)
 app.route('/api/melt', meltRouter)
 app.route('/api/catalog', catalogRoutes)
+app.route('/api/shop', shopRouter)
 
 // 404 handler
 app.notFound((c) => {

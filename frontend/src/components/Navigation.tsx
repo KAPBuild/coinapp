@@ -49,6 +49,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
   const [quickPhotogradeOpen, setQuickPhotogradeOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
   const { isAuthenticated, user, logout } = useAuth()
+  const isAdmin = user?.isAdmin
 
   // Load preferences from localStorage
   useEffect(() => {
@@ -264,8 +265,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               {/* Divider */}
               <div className="border-t border-slate-700 my-2" />
 
-              {/* Additional Items */}
-              {additionalNavItems.map(item => {
+              {/* Additional Items (Admin Only) */}
+              {isAdmin && additionalNavItems.map(item => {
                 const Icon = item.icon
                 return (
                   <button
@@ -308,8 +309,8 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 Guess the Grade Game
               </button>
 
-              {/* Admin Links (Only for authenticated users) */}
-              {isAuthenticated && (
+              {/* Admin Links (Only for admin users) */}
+              {isAdmin && (
                 <>
                   <div className="border-t border-slate-700 my-2" />
                   <button

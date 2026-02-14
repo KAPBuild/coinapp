@@ -1,5 +1,6 @@
 import { Context } from 'hono'
-import { createDb } from '../db'
+import { eq } from 'drizzle-orm'
+import { createDb, schema } from '../db'
 import { validateSession } from '../utils/sessions'
 
 export async function authMiddleware(c: Context, next: () => Promise<void>) {
@@ -17,8 +18,16 @@ export async function authMiddleware(c: Context, next: () => Promise<void>) {
     return c.json({ error: 'Invalid or expired session' }, 401)
   }
 
-  // Attach userId to context for use in route handlers
+  // Fetch user to get admin status
+  const [user] = await db
+    .select({ id: schema.users.id, isAdmin: schema.users.isAdmin })
+    .from(schema.users)
+    .where(eq(schema.users.id, session.userId))
+    .limit(1)
+
+  // Attach userId and isAdmin to context for use in route handlers
   c.set('userId', session.userId)
+  c.set('isAdmin', !!user?.isAdmin)
 
   await next()
 }

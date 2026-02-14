@@ -57,7 +57,7 @@ app.post('/register', async (c) => {
 
     return c.json(
       {
-        user: { id: userId, email },
+        user: { id: userId, email, isAdmin: false },
         token,
         expiresAt,
       },
@@ -120,7 +120,7 @@ app.post('/login', async (c) => {
     const { token, expiresAt } = await createSession(db, user.id)
 
     return c.json({
-      user: { id: user.id, email: user.email },
+      user: { id: user.id, email: user.email, isAdmin: !!user.isAdmin },
       token,
       expiresAt,
     })
@@ -166,7 +166,7 @@ app.get('/me', async (c) => {
     }
 
     const [user] = await db
-      .select({ id: schema.users.id, email: schema.users.email })
+      .select({ id: schema.users.id, email: schema.users.email, isAdmin: schema.users.isAdmin })
       .from(schema.users)
       .where(eq(schema.users.id, session.userId))
       .limit(1)
@@ -175,7 +175,7 @@ app.get('/me', async (c) => {
       return c.json({ error: 'User not found' }, 404)
     }
 
-    return c.json({ user })
+    return c.json({ user: { ...user, isAdmin: !!user.isAdmin } })
   } catch (error) {
     console.error('Auth check error:', error)
     return c.json({ error: 'Failed to validate session' }, 500)

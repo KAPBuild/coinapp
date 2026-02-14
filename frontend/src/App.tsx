@@ -27,7 +27,7 @@ type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('home')
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, user } = useAuth()
 
   // Handle browser back/forward buttons
   useEffect(() => {
@@ -47,12 +47,17 @@ function AppContent() {
   }, [])
 
   // Redirect to login if trying to access protected pages while not authenticated
+  // Redirect to home if trying to access admin pages without admin role
   const handlePageChange = useCallback((page: Page) => {
-    const protectedPages: Page[] = ['dashboard', 'forSale', 'priceAdmin']
+    const protectedPages: Page[] = ['dashboard']
+    const adminPages: Page[] = ['forSale', 'priceAdmin']
 
     let targetPage = page
     if (protectedPages.includes(page) && !isAuthenticated) {
       targetPage = 'login'
+    }
+    if (adminPages.includes(page) && !user?.isAdmin) {
+      targetPage = isAuthenticated ? 'home' : 'login'
     }
 
     setCurrentPage(targetPage)
@@ -61,7 +66,7 @@ function AppContent() {
     if (window.history.state?.page !== targetPage) {
       window.history.pushState({ page: targetPage }, '', `/${targetPage === 'home' ? '' : targetPage}`)
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, user])
 
   if (isLoading) {
     return (

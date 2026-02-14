@@ -1,277 +1,275 @@
-import { ShoppingCart, Heart, Filter, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
+import { Filter, ChevronDown, ExternalLink, Mail, Loader, ShoppingBag, Award, Coins } from 'lucide-react'
+import { useShopCoins } from '../hooks/useShop'
+import type { ShopCoin } from '../types/shopTypes'
 
-interface ShopCoin {
-  id: string
-  name: string
-  seller: string
-  price: number
-  originalPrice: number
-  condition: string
-  year: number
-  metalType: string
-  quantity: number
-  rating: number
-  reviews: number
-  image: string
-  inStock: boolean
+function formatTitle(coin: ShopCoin): string {
+  const year = coin.year ? String(coin.year) : ''
+  const mint = coin.mint ? `-${coin.mint}` : ''
+  const series = coin.series || coin.denomination || ''
+  return `${year}${mint} ${series}`.trim() || 'Coin'
 }
 
-const shopCoins: ShopCoin[] = [
-  {
-    id: '1',
-    name: 'American Eagle Gold Coin 2023',
-    seller: 'GoldTraders Inc',
-    price: 1650,
-    originalPrice: 1800,
-    condition: 'MS-70',
-    year: 2023,
-    metalType: 'Gold',
-    quantity: 5,
-    rating: 4.8,
-    reviews: 124,
-    image: '🪙',
-    inStock: true,
-  },
-  {
-    id: '2',
-    name: 'British Sovereign 1980',
-    seller: 'Heritage Coins',
-    price: 380,
-    originalPrice: 420,
-    condition: 'MS-65',
-    year: 1980,
-    metalType: 'Gold',
-    quantity: 3,
-    rating: 4.9,
-    reviews: 89,
-    image: '🪙',
-    inStock: true,
-  },
-  {
-    id: '3',
-    name: 'Canadian Maple Leaf 2024',
-    seller: 'BullionDirect',
-    price: 1300,
-    originalPrice: 1400,
-    condition: 'MS-69',
-    year: 2024,
-    metalType: 'Silver',
-    quantity: 10,
-    rating: 4.7,
-    reviews: 156,
-    image: '🪙',
-    inStock: true,
-  },
-  {
-    id: '4',
-    name: 'US Morgan Dollar 1921',
-    seller: 'Vintage Coins LLC',
-    price: 450,
-    originalPrice: 500,
-    condition: 'AU-58',
-    year: 1921,
-    metalType: 'Silver',
-    quantity: 2,
-    rating: 4.6,
-    reviews: 67,
-    image: '🪙',
-    inStock: true,
-  },
-  {
-    id: '5',
-    name: 'Swiss Gold Francs 1947',
-    seller: 'European Rare Coins',
-    price: 280,
-    originalPrice: 320,
-    condition: 'MS-68',
-    year: 1947,
-    metalType: 'Gold',
-    quantity: 1,
-    rating: 4.9,
-    reviews: 45,
-    image: '🪙',
-    inStock: true,
-  },
-  {
-    id: '6',
-    name: 'Austrian Philharmonic 2023',
-    seller: 'BullionVault',
-    price: 1750,
-    originalPrice: 1900,
-    condition: 'MS-70',
-    year: 2023,
-    metalType: 'Gold',
-    quantity: 8,
-    rating: 4.8,
-    reviews: 203,
-    image: '🪙',
-    inStock: true,
-  },
-  {
-    id: '7',
-    name: 'Chinese Panda 2023',
-    seller: 'Asian Numismatics',
-    price: 320,
-    originalPrice: 380,
-    condition: 'MS-69',
-    year: 2023,
-    metalType: 'Silver',
-    quantity: 6,
-    rating: 4.7,
-    reviews: 128,
-    image: '🪙',
-    inStock: true,
-  },
-  {
-    id: '8',
-    name: 'South African Krugerrand 2022',
-    seller: 'Global Coins',
-    price: 1600,
-    originalPrice: 1700,
-    condition: 'MS-67',
-    year: 2022,
-    metalType: 'Gold',
-    quantity: 4,
-    rating: 4.6,
-    reviews: 91,
-    image: '🪙',
-    inStock: true,
-  },
-]
+function gradeDisplay(coin: ShopCoin): string | null {
+  if (coin.isGraded === 'Y' && coin.actualGrade) {
+    return coin.actualGrade
+  }
+  if (coin.estimatedGrade) {
+    return `~${coin.estimatedGrade}`
+  }
+  return null
+}
+
+function metalColor(type: string | null | undefined): string {
+  switch (type?.toLowerCase()) {
+    case 'gold': return 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+    case 'silver': return 'bg-slate-400/20 text-slate-300 border-slate-400/30'
+    case 'platinum': return 'bg-blue-400/20 text-blue-300 border-blue-400/30'
+    case 'copper': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+    default: return 'bg-slate-500/20 text-slate-400 border-slate-500/30'
+  }
+}
+
+interface InquiryModalProps {
+  coin: ShopCoin
+  onClose: () => void
+}
+
+function InquiryModal({ coin, onClose }: InquiryModalProps) {
+  const title = formatTitle(coin)
+  const grade = gradeDisplay(coin)
+  const subject = `Inquiry about: ${title}${grade ? ` (${grade})` : ''}`
+  const body = `Hi,\n\nI'm interested in the following coin:\n\n${title}${grade ? `\nGrade: ${grade}` : ''}${coin.currentPrice ? `\nListed Price: $${coin.currentPrice.toLocaleString()}` : ''}\n\nPlease let me know if it's still available.\n\nThank you!`
+  const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-slate-800 border border-slate-700 rounded-xl w-full max-w-md p-6 space-y-4" onClick={e => e.stopPropagation()}>
+        <h3 className="text-lg font-bold text-white">Interested in this coin?</h3>
+        <div className="bg-slate-700/50 rounded-lg p-4">
+          <p className="text-white font-medium">{title}</p>
+          {grade && <p className="text-slate-400 text-sm">Grade: {grade}</p>}
+          {coin.currentPrice && (
+            <p className="text-green-400 font-semibold mt-1">${coin.currentPrice.toLocaleString()}</p>
+          )}
+        </div>
+        <p className="text-slate-400 text-sm">
+          Send us an email and we'll get back to you with availability and details.
+        </p>
+        <div className="flex gap-3">
+          <a
+            href={mailtoLink}
+            className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors"
+          >
+            <Mail className="w-4 h-4" />
+            Send Email
+          </a>
+          <button
+            onClick={onClose}
+            className="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export function Shop() {
-  const [cart, setCart] = useState<string[]>([])
-  const [wishlist, setWishlist] = useState<string[]>([])
-  const [sortBy, setSortBy] = useState('relevance')
+  const { data: coins, isLoading, error } = useShopCoins()
+  const [sortBy, setSortBy] = useState('newest')
   const [filterMetal, setFilterMetal] = useState('all')
+  const [inquiryCoin, setInquiryCoin] = useState<ShopCoin | null>(null)
 
-  const filtered = shopCoins.filter(coin => filterMetal === 'all' || coin.metalType === filterMetal)
+  const filtered = (coins || []).filter(coin =>
+    filterMetal === 'all' || (coin.metalType?.toLowerCase() === filterMetal.toLowerCase())
+  )
 
   const sorted = [...filtered].sort((a, b) => {
-    if (sortBy === 'price-low') return a.price - b.price
-    if (sortBy === 'price-high') return b.price - a.price
-    if (sortBy === 'rating') return b.rating - a.rating
+    if (sortBy === 'price-low') return (a.currentPrice || 0) - (b.currentPrice || 0)
+    if (sortBy === 'price-high') return (b.currentPrice || 0) - (a.currentPrice || 0)
+    if (sortBy === 'year-new') return (b.year || 0) - (a.year || 0)
+    if (sortBy === 'year-old') return (a.year || 0) - (b.year || 0)
     return 0
   })
 
-  const toggleWishlist = (id: string) => {
-    setWishlist(wishlist.includes(id) ? wishlist.filter(w => w !== id) : [...wishlist, id])
-  }
-
-  const addToCart = (id: string) => {
-    setCart([...cart, id])
-  }
-
-  const discount = (original: number, current: number) => {
-    return Math.round(((original - current) / original) * 100)
-  }
+  // Get unique metal types for the filter
+  const metalTypes = [...new Set((coins || []).map(c => c.metalType).filter(Boolean))]
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Shop Coins</h2>
-          <p className="text-gray-600">Browse coins from verified sellers</p>
+      {/* Header */}
+      <div>
+        <div className="flex items-center gap-3 mb-2">
+          <ShoppingBag className="w-8 h-8 text-amber-400" />
+          <h2 className="text-3xl font-bold text-white">Shop</h2>
         </div>
-        <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow">
-          <ShoppingCart className="w-5 h-5 text-blue-600" />
-          <span className="font-semibold text-gray-900">{cart.length}</span>
-        </div>
+        <p className="text-slate-400">Browse our coins available for sale</p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex items-center gap-2">
-          <Filter className="w-5 h-5 text-gray-400" />
-          <select
-            value={filterMetal}
-            onChange={(e) => setFilterMetal(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="all">All Metals</option>
-            <option value="Gold">Gold</option>
-            <option value="Silver">Silver</option>
-            <option value="Platinum">Platinum</option>
-          </select>
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex flex-col items-center justify-center py-20">
+          <Loader className="w-10 h-10 text-blue-400 animate-spin mb-4" />
+          <p className="text-slate-400">Loading shop...</p>
         </div>
+      )}
 
-        <div className="flex items-center gap-2">
-          <ChevronDown className="w-5 h-5 text-gray-400" />
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="relevance">Most Relevant</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="rating">Highest Rated</option>
-          </select>
+      {/* Error State */}
+      {error && (
+        <div className="bg-red-900/20 border border-red-800/50 rounded-lg p-6 text-center">
+          <p className="text-red-400">Failed to load shop. Please try again later.</p>
         </div>
-      </div>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {sorted.map(coin => (
-          <div key={coin.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="relative h-40 bg-gradient-to-br from-amber-50 to-yellow-50 flex items-center justify-center text-5xl">
-              {coin.image}
-              {coin.originalPrice > coin.price && (
-                <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold">
-                  -{discount(coin.originalPrice, coin.price)}%
-                </div>
-              )}
-              <button
-                onClick={() => toggleWishlist(coin.id)}
-                className={`absolute top-2 left-2 p-2 rounded-full transition-colors ${
-                  wishlist.includes(coin.id)
-                    ? 'bg-red-500 text-white'
-                    : 'bg-white text-gray-400 hover:text-red-500'
-                }`}
-              >
-                <Heart className="w-5 h-5" fill={wishlist.includes(coin.id) ? 'currentColor' : 'none'} />
-              </button>
-            </div>
-
-            <div className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 h-14">{coin.name}</h3>
-              <p className="text-sm text-gray-600 mb-2">{coin.seller}</p>
-
-              <div className="flex items-center gap-1 mb-3">
-                <div className="flex text-yellow-400">
-                  {'★'.repeat(Math.floor(coin.rating))}
-                </div>
-                <span className="text-sm text-gray-600">({coin.reviews})</span>
+      {/* Content */}
+      {!isLoading && !error && (
+        <>
+          {/* Filters */}
+          {(coins?.length || 0) > 0 && (
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-slate-500" />
+                <select
+                  value={filterMetal}
+                  onChange={(e) => setFilterMetal(e.target.value)}
+                  className="px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="all">All Metals</option>
+                  {metalTypes.map(metal => (
+                    <option key={metal} value={metal!}>{metal}</option>
+                  ))}
+                </select>
               </div>
 
-              <div className="space-y-2 mb-4 py-3 border-y border-gray-200">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-gray-900">${coin.price.toLocaleString()}</span>
-                  {coin.originalPrice > coin.price && (
-                    <span className="text-sm text-gray-500 line-through">${coin.originalPrice}</span>
-                  )}
-                </div>
-                <div className="flex justify-between text-sm text-gray-600">
-                  <span>{coin.condition}</span>
-                  <span>{coin.year}</span>
-                </div>
+              <div className="flex items-center gap-2">
+                <ChevronDown className="w-4 h-4 text-slate-500" />
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="year-new">Year: Newest</option>
+                  <option value="year-old">Year: Oldest</option>
+                </select>
               </div>
 
-              <button
-                onClick={() => addToCart(coin.id)}
-                className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                Add to Cart
-              </button>
+              <div className="text-slate-500 text-sm flex items-center ml-auto">
+                {sorted.length} coin{sorted.length !== 1 ? 's' : ''}
+              </div>
             </div>
+          )}
+
+          {/* Coin Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {sorted.map(coin => {
+              const title = formatTitle(coin)
+              const grade = gradeDisplay(coin)
+              const hasEbay = !!coin.ebayTitle
+
+              return (
+                <div key={coin.id} className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:border-slate-600 transition-colors">
+                  {/* Card Header */}
+                  <div className="relative h-32 bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center">
+                    <Coins className="w-16 h-16 text-slate-600" />
+
+                    {/* Metal type badge */}
+                    {coin.metalType && (
+                      <span className={`absolute top-3 left-3 text-xs font-medium px-2 py-1 rounded-full border ${metalColor(coin.metalType)}`}>
+                        {coin.metalType}
+                      </span>
+                    )}
+
+                    {/* Grade badge */}
+                    {grade && (
+                      <span className="absolute top-3 right-3 flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                        <Award className="w-3 h-3" />
+                        {coin.isGraded === 'Y' && coin.gradingCompany ? `${coin.gradingCompany} ` : ''}{grade}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-4 space-y-3">
+                    <div>
+                      <h3 className="font-semibold text-white text-lg leading-tight">{title}</h3>
+                      {coin.variation && (
+                        <p className="text-slate-400 text-sm mt-0.5">{coin.variation}</p>
+                      )}
+                      {coin.denomination && coin.series && (
+                        <p className="text-slate-500 text-sm">{coin.denomination}</p>
+                      )}
+                    </div>
+
+                    {coin.notes && (
+                      <p className="text-slate-400 text-sm line-clamp-2">{coin.notes}</p>
+                    )}
+
+                    {/* Price */}
+                    <div className="pt-2 border-t border-slate-700">
+                      {coin.currentPrice ? (
+                        <span className="text-2xl font-bold text-green-400">
+                          ${coin.currentPrice.toLocaleString()}
+                        </span>
+                      ) : (
+                        <span className="text-lg text-slate-400">Contact for price</span>
+                      )}
+                      {coin.quantity > 1 && (
+                        <span className="text-slate-500 text-sm ml-2">({coin.quantity} available)</span>
+                      )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-1">
+                      {hasEbay && (
+                        <a
+                          href={`https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(coin.ebayTitle!)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition-colors text-sm"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          View on eBay
+                        </a>
+                      )}
+                      <button
+                        onClick={() => setInquiryCoin(coin)}
+                        className={`flex items-center justify-center gap-2 ${hasEbay ? 'flex-1' : 'w-full'} bg-slate-700 hover:bg-slate-600 text-white py-2.5 rounded-lg font-medium transition-colors text-sm`}
+                      >
+                        <Mail className="w-4 h-4" />
+                        Inquire
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
-        ))}
-      </div>
 
-      {sorted.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-600 text-lg">No coins found in this category.</p>
-        </div>
+          {/* Empty State */}
+          {sorted.length === 0 && (coins?.length || 0) > 0 && (
+            <div className="text-center py-12">
+              <p className="text-slate-400 text-lg">No coins match this filter.</p>
+            </div>
+          )}
+
+          {(coins?.length || 0) === 0 && (
+            <div className="text-center py-20">
+              <ShoppingBag className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-white mb-2">No coins currently for sale</h3>
+              <p className="text-slate-400">Check back soon - new coins are added regularly.</p>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Inquiry Modal */}
+      {inquiryCoin && (
+        <InquiryModal coin={inquiryCoin} onClose={() => setInquiryCoin(null)} />
       )}
     </div>
   )
