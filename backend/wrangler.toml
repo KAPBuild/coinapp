@@ -36,8 +36,9 @@ migrations_dir = "src/db/migrations"
 # Scheduled tasks for production
 [env.production.triggers]
 crons = [
-  "0 0 * * *",   # Daily at midnight UTC - cleanup expired sessions
-  "0 */6 * * *"  # Every 6 hours - price data refresh (optional)
+  "0 0 * * *",     # Daily at midnight UTC - cleanup expired sessions
+  "0 */6 * * *",   # Every 6 hours - price data refresh (optional)
+  "*/30 * * * *"   # Every 30 minutes - sync eBay listings
 ]
 
 # ============================================

@@ -20,3 +20,42 @@ export interface ShopCoin {
   weight?: number | null
   status?: string | null
 }
+
+export interface EbayShopItem {
+  id: string
+  ebayItemId: string
+  title: string
+  price: number | null
+  currency: string
+  imageUrl: string | null
+  imageUrls: string[]
+  ebayUrl: string
+  affiliateUrl: string | null
+  condition: string | null
+  categoryName: string | null
+  quantityAvailable: number
+}
+
+export interface ShopResponse {
+  ebayListings: EbayShopItem[]
+  directListings: ShopCoin[]
+}
+
+export interface CreatePaymentIntentRequest {
+  listingId: string
+  customerEmail: string
+  customerName?: string
+  shippingAddress?: {
+    line1: string
+    line2?: string
+    city: string
+    state: string
+    postalCode: string
+    country: string
+  }
+}
+
+export interface CreatePaymentIntentResponse {
+  clientSecret: string
+  orderId: string
+}

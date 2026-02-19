@@ -1,6 +1,6 @@
 import { Coin } from '../types/coin'
 import type { BatchCreateResponse } from '../types/importTypes'
-import type { ShopCoin } from '../types/shopTypes'
+import type { ShopResponse, CreatePaymentIntentRequest, CreatePaymentIntentResponse } from '../types/shopTypes'
 
 // Use deployed Cloudflare backend
 const API_URL = import.meta.env.VITE_API_URL || 'https://coinapp-api.kapp-build.workers.dev'
@@ -69,5 +69,11 @@ export const coinsApi = {
 
 // Shop API functions (public, no auth required)
 export const shopApi = {
-  getCoins: () => apiRequest<ShopCoin[]>('/api/shop'),
+  getShop: () => apiRequest<ShopResponse>('/api/shop'),
+
+  createPaymentIntent: (data: CreatePaymentIntentRequest) =>
+    apiRequest<CreatePaymentIntentResponse>('/api/checkout/create-intent', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
 }

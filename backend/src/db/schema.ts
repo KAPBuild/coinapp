@@ -206,3 +206,60 @@ export type CoinCatalog = typeof coinCatalog.$inferSelect
 export type NewCoinCatalog = typeof coinCatalog.$inferInsert
 export type CoinVariety = typeof coinVarieties.$inferSelect
 export type NewCoinVariety = typeof coinVarieties.$inferInsert
+
+// eBay listings (synced from Browse API)
+export const ebayListings = sqliteTable('ebay_listings', {
+  id: text('id').primaryKey(),
+  ebayItemId: text('ebay_item_id').notNull().unique(),
+  title: text('title').notNull(),
+  price: real('price'),
+  currency: text('currency').default('USD'),
+  imageUrl: text('image_url'),
+  imageUrls: text('image_urls'), // JSON array
+  ebayUrl: text('ebay_url').notNull(),
+  affiliateUrl: text('affiliate_url'),
+  condition: text('condition'),
+  categoryName: text('category_name'),
+  quantityAvailable: integer('quantity_available').default(1),
+  listingStatus: text('listing_status').default('active'),
+  syncedAt: text('synced_at').notNull(),
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+  index('idx_ebay_listing_status').on(table.listingStatus),
+])
+
+// Orders (for Stripe purchases)
+export const orders = sqliteTable('orders', {
+  id: text('id').primaryKey(),
+  ebayListingId: text('ebay_listing_id').references(() => ebayListings.id),
+  stripePaymentIntentId: text('stripe_payment_intent_id').unique(),
+  stripeCheckoutStatus: text('stripe_checkout_status').default('pending'),
+  customerEmail: text('customer_email').notNull(),
+  customerName: text('customer_name'),
+  shippingAddress: text('shipping_address'), // JSON
+  amount: integer('amount').notNull(), // in cents
+  currency: text('currency').default('usd'),
+  itemTitle: text('item_title').notNull(),
+  status: text('status').default('pending'), // pending, paid, shipped, completed, cancelled
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+  index('idx_orders_status').on(table.status),
+])
+
+// eBay sync log
+export const ebaySyncLog = sqliteTable('ebay_sync_log', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  status: text('status').notNull(),
+  listingsSynced: integer('listings_synced').default(0),
+  errorMessage: text('error_message'),
+  startedAt: text('started_at').default(sql`CURRENT_TIMESTAMP`),
+  completedAt: text('completed_at'),
+})
+
+export type EbayListing = typeof ebayListings.$inferSelect
+export type NewEbayListing = typeof ebayListings.$inferInsert
+export type Order = typeof orders.$inferSelect
+export type NewOrder = typeof orders.$inferInsert
+export type EbaySyncLog = typeof ebaySyncLog.$inferSelect

@@ -6,15 +6,23 @@ import pricesRouter from './routes/prices'
 import meltRouter from './routes/melt'
 import { catalogRoutes } from './routes/catalog'
 import shopRouter from './routes/shop'
+import checkoutRouter from './routes/checkout'
+import adminRouter from './routes/admin'
 import { apiRateLimit } from './middleware/rateLimit'
-import { createDb } from './db'
+import { createDb, schema } from './db'
 import { cleanExpiredSessions } from './utils/sessions'
+import { syncEbayListings } from './services/ebaySync'
 
 type Bindings = {
   DB: D1Database
-  ENVIRONMENT?: string  // 'production' | 'development'
-  ALLOWED_ORIGINS?: string  // Comma-separated list of allowed origins
-  NUMISTA_API_KEY?: string  // Numista API key for coin data sync
+  ENVIRONMENT?: string
+  ALLOWED_ORIGINS?: string
+  NUMISTA_API_KEY?: string
+  EBAY_CLIENT_ID?: string
+  EBAY_CLIENT_SECRET?: string
+  EBAY_AFFILIATE_CAMPAIGN_ID?: string
+  STRIPE_SECRET_KEY?: string
+  STRIPE_WEBHOOK_SECRET?: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -67,6 +75,8 @@ app.route('/api/prices', pricesRouter)
 app.route('/api/melt', meltRouter)
 app.route('/api/catalog', catalogRoutes)
 app.route('/api/shop', shopRouter)
+app.route('/api/checkout', checkoutRouter)
+app.route('/api/admin', adminRouter)
 
 // 404 handler
 app.notFound((c) => {
@@ -108,7 +118,26 @@ export default {
       case '0 */6 * * *':
         // Every 6 hours - price refresh (placeholder for future implementation)
         console.log('Price refresh cron triggered (not yet implemented)')
-        // TODO: Implement price scraping here
+        break
+
+      case '*/30 * * * *':
+        // Every 30 minutes - sync eBay listings
+        console.log('Running eBay listing sync...')
+        if (env.EBAY_CLIENT_ID && env.EBAY_CLIENT_SECRET) {
+          try {
+            const result = await syncEbayListings(db, schema, {
+              EBAY_CLIENT_ID: env.EBAY_CLIENT_ID,
+              EBAY_CLIENT_SECRET: env.EBAY_CLIENT_SECRET,
+              EBAY_AFFILIATE_CAMPAIGN_ID: env.EBAY_AFFILIATE_CAMPAIGN_ID,
+            })
+            console.log(`eBay sync completed: ${result.synced} listings synced`)
+            if (result.error) console.error('eBay sync error:', result.error)
+          } catch (error) {
+            console.error('eBay sync cron failed:', error)
+          }
+        } else {
+          console.log('eBay sync skipped: missing EBAY_CLIENT_ID or EBAY_CLIENT_SECRET')
+        }
         break
 
       default:
