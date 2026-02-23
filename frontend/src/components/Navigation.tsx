@@ -28,6 +28,7 @@ const primaryNavItems: NavItem[] = [
   { id: 'meltValues', label: 'Melt Values', icon: TrendingUp },
   { id: 'stackIntel', label: 'Stack Intel', icon: Database },
   { id: 'explore', label: 'Coin Search', icon: Search },
+  { id: 'pcgsGrading', label: 'Grading', icon: Award },
   { id: 'shop', label: 'Shop', icon: ShoppingBag },
 ]
 
@@ -124,22 +125,6 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                 aria-label="Open search"
               >
                 <Search className="w-5 h-5" />
-              </button>
-
-              {/* PCGS Grading Guide Button */}
-              <button
-                onClick={() => handleNavClick('pcgsGrading')}
-                className={`rounded-lg transition-colors ${
-                  currentPage === 'pcgsGrading'
-                    ? 'bg-blue-600'
-                    : 'hover:bg-slate-700'
-                }`}
-                aria-label="PCGS Grading Guide"
-                title="PCGS Grading Guide"
-              >
-                <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xs">A+</span>
-                </div>
               </button>
 
               {/* Auth Section */}
@@ -283,19 +268,6 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                   </button>
                 )
               })}
-
-              {/* PCGS Grading Guide Page Button */}
-              <button
-                onClick={() => handleNavClick('pcgsGrading')}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
-                  currentPage === 'pcgsGrading'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-slate-300 hover:bg-slate-700 hover:text-white'
-                }`}
-              >
-                <Award className="w-5 h-5" />
-                PCGS Grading Guide
-              </button>
 
               {/* Grade Guessing Game Button */}
               <button
