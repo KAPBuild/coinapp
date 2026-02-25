@@ -1,15 +1,21 @@
 import { useState } from 'react'
-import { Search, ArrowLeft, Coins } from 'lucide-react'
+import { Search, ArrowLeft, Coins, Star } from 'lucide-react'
 import { CoinSearchAutocomplete } from '../components/CoinSearchAutocomplete'
 import { CoinCategoryCard, CoinSubcategoryCard } from '../components/CoinCategoryCard'
 import { COIN_CATEGORIES, CoinCategory, CoinSubcategory } from '../data/coinCategories'
+import { getKeyDatesForSeries, formatMintage, Rarity } from '../data/keyDatesData'
+
+const RARITY_STYLES: Record<Rarity, { badge: string; label: string }> = {
+  'semi-key': { badge: 'bg-yellow-100 text-yellow-800 border-yellow-300', label: 'Semi-Key' },
+  'key':      { badge: 'bg-orange-100 text-orange-800 border-orange-300', label: 'Key Date' },
+  'ultra-rare': { badge: 'bg-red-100 text-red-800 border-red-300', label: 'Ultra-Rare' },
+}
 
 export function Explore() {
   const [selectedCategory, setSelectedCategory] = useState<CoinCategory | null>(null)
   const [selectedSubcategory, setSelectedSubcategory] = useState<CoinSubcategory | null>(null)
 
   const handleSearchSelect = (result: { id: string; name: string; category: string }) => {
-    // Find the category or subcategory
     const category = COIN_CATEGORIES.find(c => c.id === result.id)
     if (category) {
       setSelectedCategory(category)
@@ -17,7 +23,6 @@ export function Explore() {
       return
     }
 
-    // Check subcategories
     for (const cat of COIN_CATEGORIES) {
       const sub = cat.subcategories?.find(s => s.id === result.id)
       if (sub) {
@@ -45,7 +50,7 @@ export function Explore() {
     }
   }
 
-  // Main categories view
+  // ── Main categories view ─────────────────────────────────────────────────
   if (!selectedCategory) {
     return (
       <div className="max-w-7xl mx-auto space-y-8">
@@ -57,11 +62,11 @@ export function Explore() {
             </div>
             <div>
               <h1 className="text-4xl font-bold text-gray-900">Coin Search</h1>
-              <p className="text-sm text-amber-600 font-medium">US Coin Price Guide</p>
+              <p className="text-sm text-amber-600 font-medium">US Coin Reference Guide</p>
             </div>
           </div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore US coins by type, denomination, and era. Find pricing, population data, and historical information.
+            Explore US coins by type, denomination, and era. Browse categories and dive into key dates.
           </p>
         </div>
 
@@ -113,11 +118,10 @@ export function Explore() {
     )
   }
 
-  // Category detail view
+  // ── Category detail view ─────────────────────────────────────────────────
   if (!selectedSubcategory) {
     return (
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Back Button */}
         <button
           onClick={handleBack}
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
@@ -153,13 +157,20 @@ export function Explore() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {selectedCategory.subcategories.map(sub => (
-                <CoinSubcategoryCard
-                  key={sub.id}
-                  name={sub.name}
-                  years={sub.years}
-                  imageUrl={sub.imageUrl}
-                  onClick={() => handleSubcategoryClick(sub)}
-                />
+                <div key={sub.id} className="relative">
+                  {sub.hasKeyDates && (
+                    <div className="absolute top-2 right-2 z-10 flex items-center gap-1 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow">
+                      <Star className="w-3 h-3 fill-white" />
+                      Key Dates
+                    </div>
+                  )}
+                  <CoinSubcategoryCard
+                    name={sub.name}
+                    years={sub.years}
+                    imageUrl={sub.imageUrl}
+                    onClick={() => handleSubcategoryClick(sub)}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -168,10 +179,11 @@ export function Explore() {
     )
   }
 
-  // Subcategory detail view (placeholder for now)
+  // ── Subcategory detail view ──────────────────────────────────────────────
+  const keyDateData = getKeyDatesForSeries(selectedSubcategory.id)
+
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      {/* Back Button */}
       <button
         onClick={handleBack}
         className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
@@ -195,55 +207,76 @@ export function Explore() {
               <Coins className="w-4 h-4" />
               <span>{selectedCategory.name}</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
               {selectedSubcategory.name}
             </h1>
-            <p className="text-lg text-gray-600 mb-4">{selectedSubcategory.years}</p>
-
-            {/* Placeholder content */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-blue-800 text-sm">
-                Detailed pricing and population data coming soon. This page will show:
-              </p>
-              <ul className="mt-2 text-sm text-blue-700 list-disc list-inside space-y-1">
-                <li>Price guide by grade (G-4 through MS-70)</li>
-                <li>PCGS & NGC population data</li>
-                <li>Historical price trends</li>
-                <li>Key dates and varieties</li>
-                <li>Coin specifications</li>
-              </ul>
-            </div>
+            <p className="text-lg text-gray-500 mb-3">{selectedSubcategory.years}</p>
+            {selectedSubcategory.hasKeyDates && (
+              <div className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-sm font-semibold px-3 py-1 rounded-full">
+                <Star className="w-4 h-4 fill-amber-600 text-amber-600" />
+                This series has notable key dates
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Placeholder for grade pricing table */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Price Guide</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 font-semibold text-gray-600">Grade</th>
-                <th className="text-right py-3 px-4 font-semibold text-gray-600">Price</th>
-                <th className="text-right py-3 px-4 font-semibold text-gray-600">Pop</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {['G-4', 'VG-8', 'F-12', 'VF-20', 'EF-40', 'AU-50', 'MS-60', 'MS-63', 'MS-65'].map(grade => (
-                <tr key={grade} className="hover:bg-gray-50">
-                  <td className="py-3 px-4 font-medium text-gray-900">{grade}</td>
-                  <td className="py-3 px-4 text-right text-gray-600">--</td>
-                  <td className="py-3 px-4 text-right text-gray-600">--</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Key Dates Section */}
+      {keyDateData && keyDateData.entries.length > 0 && (
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="flex items-center gap-2 mb-5">
+            <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+            <h2 className="text-xl font-bold text-gray-900">Key Dates & Varieties</h2>
+          </div>
+
+          <div className="space-y-3">
+            {keyDateData.entries.map(entry => {
+              const style = RARITY_STYLES[entry.rarity]
+              const displayId = entry.mintMark
+                ? `${entry.year}-${entry.mintMark}`
+                : `${entry.year}`
+              return (
+                <div
+                  key={entry.id}
+                  className="flex flex-col sm:flex-row sm:items-start gap-3 p-4 rounded-xl border border-gray-100 bg-gray-50 hover:bg-amber-50/30 transition-colors"
+                >
+                  <div className="flex items-center gap-3 sm:w-48 flex-shrink-0">
+                    <span className="text-lg font-bold text-gray-900 w-20">{displayId}</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${style.badge}`}>
+                      {style.label}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-gray-600">{entry.notes}</p>
+                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
+                      <span>Mintage: <strong className="text-gray-700">{formatMintage(entry.mintage)}</strong></span>
+                      {entry.estimatedSurvivors !== undefined && entry.estimatedSurvivors > 0 && (
+                        <span>Est. Survivors: <strong className="text-gray-700">{formatMintage(entry.estimatedSurvivors)}</strong></span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          <p className="mt-4 text-xs text-gray-400 text-center">
+            Mintage and survival data sourced from PCGS population reports and standard numismatic references.
+            For investment analysis see the Key Date Guide.
+          </p>
         </div>
-        <p className="mt-4 text-sm text-gray-500 text-center">
-          Price data integration coming soon
-        </p>
-      </div>
+      )}
+
+      {/* No key date data available - show simple info without placeholders */}
+      {!keyDateData && (
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-3">About This Series</h2>
+          <p className="text-gray-600">
+            Browse the <span className="font-semibold">{selectedSubcategory.name}</span> series ({selectedSubcategory.years}).
+            Select another series to view key dates, or use the Key Date Guide from the main navigation for a full investment-focused reference.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

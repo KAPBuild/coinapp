@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Target, LogOut, User, TrendingUp, Award, Database } from 'lucide-react'
+import { Search, ShoppingBag, BarChart3, Menu, X, LogIn, Info, Package, DollarSign, Target, LogOut, User, TrendingUp, Award, Database, Star } from 'lucide-react'
 import { DarkModeToggle } from './DarkModeToggle'
 import { SearchModal } from './SearchModal'
 import { GradeGuessingGame } from './GradeGuessingGame'
@@ -8,7 +8,7 @@ import { QuickPhotogradeModal } from './QuickPhotogradeModal'
 import { LogoDark } from './Logo'
 import { useAuth } from '../contexts/AuthContext'
 
-type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading' | 'stackIntel'
+type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading' | 'stackIntel' | 'keyDates'
 
 interface NavigationProps {
   currentPage: Page
@@ -28,6 +28,7 @@ const primaryNavItems: NavItem[] = [
   { id: 'meltValues', label: 'Melt Values', icon: TrendingUp },
   { id: 'stackIntel', label: 'Stack Intel', icon: Database },
   { id: 'explore', label: 'Coin Search', icon: Search },
+  { id: 'keyDates', label: 'Key Dates', icon: Star },
   { id: 'pcgsGrading', label: 'Grading', icon: Award },
   { id: 'shop', label: 'Shop', icon: ShoppingBag },
 ]

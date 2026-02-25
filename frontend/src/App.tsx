@@ -21,9 +21,10 @@ import { PriceAdmin } from './pages/PriceAdmin'
 import { MeltValues } from './pages/MeltValues'
 import { PCGSGrading } from './pages/PCGSGrading'
 import { StackIntel } from './pages/StackIntel'
+import { KeyDateGuide } from './pages/KeyDateGuide'
 import { Navigation } from './components/Navigation'
 
-type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading' | 'stackIntel'
+type Page = 'home' | 'dashboard' | 'inventory' | 'forSale' | 'lookup' | 'explore' | 'series' | 'shop' | 'showcase' | 'about' | 'contact' | 'faq' | 'settings' | 'login' | 'register' | 'priceAdmin' | 'meltValues' | 'pcgsGrading' | 'stackIntel' | 'keyDates'
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('home')
@@ -102,6 +103,7 @@ function AppContent() {
         {currentPage === 'meltValues' && <MeltValues />}
         {currentPage === 'pcgsGrading' && <PCGSGrading />}
         {currentPage === 'stackIntel' && <StackIntel />}
+        {currentPage === 'keyDates' && <KeyDateGuide />}
       </main>
     </div>
   )
