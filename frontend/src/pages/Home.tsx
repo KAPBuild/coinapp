@@ -1,7 +1,9 @@
-import { TrendingUp, Coins, ExternalLink, HelpCircle, Search, X, Calculator, Award, BarChart3, Package, LineChart, ArrowRight, Zap } from 'lucide-react'
+import { TrendingUp, Coins, ExternalLink, HelpCircle, Search, X, Calculator, Award, BarChart3, Package, LineChart, ArrowRight, Zap, GitBranch, Layers, TrendingDown } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { useScrollReveal } from '../hooks/useScrollReveal'
+import { MintLocationsMap } from '../components/MintLocationsMap'
 
 const PLATFORM_NAME = 'GradePoint'
-import { useEffect, useRef, useState } from 'react'
 
 // Morgan Dollar data for quick lookup
 const MORGAN_DOLLARS = [
@@ -225,6 +227,16 @@ export function Home({ onNavigate }: HomeProps) {
   const [showResults, setShowResults] = useState(false)
   const [selectedResult, setSelectedResult] = useState<typeof MORGAN_DOLLARS[0] | null>(null)
 
+  // Scroll reveal refs
+  const revealTeaser  = useScrollReveal()
+  const revealTools   = useScrollReveal()
+  const revealTiles   = useScrollReveal()
+  const revealPrices  = useScrollReveal()
+  const revealLookup  = useScrollReveal()
+  const revealMintMap = useScrollReveal()
+  const revealPhoto   = useScrollReveal()
+  const revealColl    = useScrollReveal()
+
   // Get current category and its coins
   const currentCategory = COIN_CATEGORIES.find(c => c.id === selectedCategory)
   const currentCoin = currentCategory?.coins.find(c => c.id === selectedCoin)
@@ -325,10 +337,10 @@ export function Home({ onNavigate }: HomeProps) {
 
   return (
     <div className="space-y-12">
-      {/* Hero Section */}
-      <div className="relative pt-8 pb-4">
-        {/* Subtle background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-transparent to-amber-950/20 rounded-3xl pointer-events-none" />
+      {/* Hero Section — mesh gradient background */}
+      <div className="mesh-gradient relative pt-12 pb-8 rounded-3xl overflow-hidden">
+        {/* Extra inner glow overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none" />
 
         <div className="relative text-center max-w-3xl mx-auto px-4">
           {/* Platform badge */}
@@ -337,8 +349,8 @@ export function Home({ onNavigate }: HomeProps) {
             {PLATFORM_NAME}
           </div>
 
-          {/* Main headline */}
-          <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-6">
+          {/* Main headline — gradient text */}
+          <h1 className="gradient-text text-3xl md:text-5xl font-bold leading-tight mb-6">
             The smartest place for serious coin collectors and investors.
           </h1>
 
@@ -373,7 +385,8 @@ export function Home({ onNavigate }: HomeProps) {
 
       {/* Rarity Intelligence Teaser Strip */}
       <div
-        className="bg-gradient-to-r from-slate-800 via-slate-800 to-slate-800 border border-amber-500/20 rounded-xl p-4 max-w-4xl mx-auto cursor-pointer hover:border-amber-500/40 transition-colors group"
+        ref={revealTeaser}
+        className="reveal bg-gradient-to-r from-slate-800 via-slate-800 to-slate-800 border border-amber-500/20 rounded-xl p-4 max-w-4xl mx-auto cursor-pointer hover:border-amber-500/40 transition-colors group"
         onClick={() => onNavigate?.('stackIntel')}
       >
         <div className="flex items-center justify-between gap-4">
@@ -391,46 +404,81 @@ export function Home({ onNavigate }: HomeProps) {
       </div>
 
       {/* Tools Grid */}
-      <div id="tools-grid" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 max-w-4xl mx-auto">
+      <div ref={revealTools} id="tools-grid" className="reveal grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 max-w-4xl mx-auto">
         <button
           onClick={handleViewMeltValues}
-          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800/60 backdrop-blur-sm hover:bg-slate-700/80 border border-slate-700/60 hover:border-amber-500/30 rounded-xl transition-all group"
         >
           <Calculator className="w-8 h-8 text-amber-400 group-hover:scale-110 transition-transform" />
           <span className="text-white font-medium text-sm">Melt Values</span>
         </button>
         <button
           onClick={handleViewPCGSGrading}
-          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800/60 backdrop-blur-sm hover:bg-slate-700/80 border border-slate-700/60 hover:border-blue-500/30 rounded-xl transition-all group"
         >
           <Award className="w-8 h-8 text-blue-400 group-hover:scale-110 transition-transform" />
           <span className="text-white font-medium text-sm">PCGS Grading</span>
         </button>
         <button
           onClick={() => onNavigate?.('stackIntel')}
-          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800/60 backdrop-blur-sm hover:bg-slate-700/80 border border-slate-700/60 hover:border-green-500/30 rounded-xl transition-all group"
         >
           <BarChart3 className="w-8 h-8 text-green-400 group-hover:scale-110 transition-transform" />
           <span className="text-white font-medium text-sm">Stack Intel</span>
         </button>
         <button
           onClick={handleStartTracking}
-          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800/60 backdrop-blur-sm hover:bg-slate-700/80 border border-slate-700/60 hover:border-purple-500/30 rounded-xl transition-all group"
         >
           <Package className="w-8 h-8 text-purple-400 group-hover:scale-110 transition-transform" />
           <span className="text-white font-medium text-sm">Inventory</span>
         </button>
         <button
           onClick={() => onNavigate?.('dashboard')}
-          className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group col-span-2 sm:col-span-1"
+          className="flex flex-col items-center gap-2 p-4 bg-slate-800/60 backdrop-blur-sm hover:bg-slate-700/80 border border-slate-700/60 hover:border-cyan-500/30 rounded-xl transition-all group col-span-2 sm:col-span-1"
         >
           <LineChart className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform" />
           <span className="text-white font-medium text-sm">Spot Charts</span>
         </button>
       </div>
 
+      {/* Dot-grid Feature Tiles — GradePoint Differentiators */}
+      <div ref={revealTiles} className="reveal grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        {[
+          {
+            icon: <TrendingDown className="w-6 h-6 text-amber-400" />,
+            title: 'Rarity vs. Price',
+            body: 'Surface coins where population data and survival rates don\'t match what the market is charging. Find undervalued opportunities before the crowd does.',
+            accent: 'border-amber-500/40',
+          },
+          {
+            icon: <Layers className="w-6 h-6 text-blue-400" />,
+            title: 'Population Data',
+            body: 'PCGS and NGC tell you the grade. We layer in grade population, survival percentages, and cross-series comparisons to show what rare really means.',
+            accent: 'border-blue-500/40',
+          },
+          {
+            icon: <GitBranch className="w-6 h-6 text-green-400" />,
+            title: 'Grade Intelligence',
+            body: 'Understand not just what grade a coin is, but how many exist at that grade — and whether the premium you\'re paying reflects true scarcity.',
+            accent: 'border-green-500/40',
+          },
+        ].map((tile, i) => (
+          <div
+            key={tile.title}
+            className={`dot-grid-bg relative bg-slate-800/80 border ${tile.accent} rounded-2xl p-6 overflow-hidden reveal reveal-delay-${i + 1}`}
+          >
+            {/* Bottom amber accent bar */}
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+            <div className="mb-3">{tile.icon}</div>
+            <h3 className="text-white font-bold text-lg mb-2">{tile.title}</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">{tile.body}</p>
+          </div>
+        ))}
+      </div>
+
       {/* Live Spot Prices - TradingView Ticker */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-4 max-w-4xl mx-auto overflow-hidden border border-slate-700">
+      <div ref={revealPrices} className="reveal bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-4 max-w-4xl mx-auto overflow-hidden border border-slate-700">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
           <span className="text-slate-400 text-sm font-medium">LIVE SPOT PRICES</span>
@@ -445,7 +493,7 @@ export function Home({ onNavigate }: HomeProps) {
       </div>
 
       {/* Quick Coin Lookup */}
-      <div className="bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8 max-w-4xl mx-auto border border-slate-700">
+      <div ref={revealLookup} className="reveal bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8 max-w-4xl mx-auto border border-slate-700/60">
         <div className="text-center mb-6">
           <h3 className="text-2xl md:text-3xl font-bold text-white">Quick Coin Lookup</h3>
           <p className="text-slate-400 mt-1">Search for Morgan Dollars by year and mint mark</p>
@@ -557,8 +605,17 @@ export function Home({ onNavigate }: HomeProps) {
         )}
       </div>
 
+      {/* US Mint Locations Map */}
+      <div ref={revealMintMap} className="reveal max-w-5xl mx-auto space-y-4">
+        <div className="text-center">
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-1">Where American Numismatic History Was Made</h3>
+          <p className="text-slate-400">Five historic mints. Every dot tells a story.</p>
+        </div>
+        <MintLocationsMap />
+      </div>
+
       {/* PCGS Photograde Quick Access */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-xl p-6 md:p-8 max-w-5xl mx-auto">
+      <div ref={revealPhoto} className="reveal bg-gradient-to-br from-slate-800/80 to-slate-900 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8 max-w-5xl mx-auto border border-slate-700/60">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h3 className="text-2xl md:text-3xl font-bold text-white">PCGS Photograde</h3>
@@ -639,7 +696,7 @@ export function Home({ onNavigate }: HomeProps) {
       </div>
 
       {/* Example Collection Visual */}
-      <div className="bg-slate-800 rounded-2xl shadow-xl p-8 max-w-4xl mx-auto border border-slate-700">
+      <div ref={revealColl} className="reveal bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 max-w-4xl mx-auto border border-slate-700/60">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-lg font-semibold text-white">My Collection</h3>
