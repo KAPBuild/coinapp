@@ -18,8 +18,8 @@ const faqItems: FAQItem[] = [
   {
     id: 'gettingstarted-2',
     category: 'Getting Started',
-    question: 'Is CoinApp free to use?',
-    answer: 'Yes! CoinApp is completely free to use. We offer all core features at no cost. There may be premium features in the future, but the basic inventory and tracking will always be free.',
+    question: 'Is GradePoint free to use?',
+    answer: 'GradePoint offers a free tier with core tools — inventory tracking, coin lookup, melt value calculator, grading references, and Key Dates. Premium features including advanced investment intelligence tools are available through a membership. The free tier will always remain genuinely useful for collectors at any level.',
   },
   {
     id: 'inventory-1',
@@ -31,7 +31,7 @@ const faqItems: FAQItem[] = [
     id: 'inventory-2',
     category: 'Inventory Management',
     question: 'Can I import coins from other apps?',
-    answer: 'We\'re working on import features for popular coin collecting apps. For now, you\'ll need to add coins manually. We apologize for any inconvenience!',
+    answer: 'Yes — GradePoint supports CSV import from the Inventory page. Click the Import button and upload a spreadsheet with your coin data. You can also export your inventory to CSV at any time. Direct import from other coin apps is on the roadmap.',
   },
   {
     id: 'inventory-3',
@@ -78,8 +78,8 @@ const faqItems: FAQItem[] = [
   {
     id: 'technical-1',
     category: 'Technical Support',
-    question: 'What browsers does CoinApp support?',
-    answer: 'CoinApp works best on modern browsers including Chrome, Firefox, Safari, and Edge. We recommend keeping your browser updated for the best experience.',
+    question: 'What browsers does GradePoint support?',
+    answer: 'GradePoint works best on modern browsers including Chrome, Firefox, Safari, and Edge. We recommend keeping your browser updated for the best experience.',
   },
   {
     id: 'technical-2',
@@ -111,10 +111,10 @@ export function FAQ() {
         <div className="flex justify-center mb-4">
           <HelpCircle className="w-12 h-12 text-blue-600" />
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Find answers to common questions about CoinApp. Can't find what you're looking for?{' '}
-          <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+        <h1 className="text-4xl font-bold text-white mb-4">Frequently Asked Questions</h1>
+        <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+          Find answers to common questions about GradePoint. Can't find what you're looking for?{' '}
+          <a href="#" className="text-blue-400 hover:text-blue-300 font-medium">
             Contact us
           </a>
           .
@@ -125,29 +125,29 @@ export function FAQ() {
       <section className="max-w-3xl mx-auto space-y-8">
         {categories.map(category => (
           <div key={category}>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">{category}</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">{category}</h2>
             <div className="space-y-3">
               {faqItems
                 .filter(item => item.category === category)
                 .map(item => (
                   <div
                     key={item.id}
-                    className="bg-white border border-gray-200 rounded-lg overflow-hidden transition-colors hover:border-gray-300"
+                    className="bg-slate-800 border border-slate-700 rounded-lg overflow-hidden transition-colors hover:border-slate-600"
                   >
                     <button
                       onClick={() => toggleExpanded(item.id)}
-                      className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-50 transition-colors"
+                      className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-slate-700/50 transition-colors"
                     >
-                      <h3 className="font-semibold text-gray-900">{item.question}</h3>
+                      <h3 className="font-semibold text-white">{item.question}</h3>
                       <ChevronDown
-                        className={`w-5 h-5 text-gray-600 flex-shrink-0 transition-transform ${
+                        className={`w-5 h-5 text-slate-400 flex-shrink-0 transition-transform ${
                           expandedId === item.id ? 'rotate-180' : ''
                         }`}
                       />
                     </button>
                     {expandedId === item.id && (
-                      <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
-                        <p className="text-gray-600 leading-relaxed">{item.answer}</p>
+                      <div className="border-t border-slate-700 px-6 py-4 bg-slate-700/30">
+                        <p className="text-slate-300 leading-relaxed">{item.answer}</p>
                       </div>
                     )}
                   </div>
@@ -158,12 +158,12 @@ export function FAQ() {
       </section>
 
       {/* Still Have Questions */}
-      <section className="bg-blue-50 rounded-lg p-8 text-center border border-blue-100">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Still Have Questions?</h2>
-        <p className="text-gray-600 mb-6">
-          Can't find the answer you're looking for? Our support team is here to help.
+      <section className="bg-slate-800 border border-slate-700 rounded-xl p-8 text-center">
+        <h2 className="text-2xl font-bold text-white mb-4">Still Have Questions?</h2>
+        <p className="text-slate-400 mb-6">
+          Can't find the answer you're looking for? Reach out and we'll get back to you.
         </p>
-        <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+        <button className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-colors">
           Contact Support
         </button>
       </section>

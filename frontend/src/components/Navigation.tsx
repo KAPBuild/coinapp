@@ -93,7 +93,7 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
               aria-label="Go to home"
             >
               <LogoDark size={32} />
-              <h1 className="text-xl font-bold text-white hidden sm:block">CoinApp</h1>
+              <h1 className="text-xl font-bold text-white hidden sm:block">GradePoint</h1>
             </button>
 
             {/* Center Section: Primary Navigation (Desktop Only) */}
@@ -110,8 +110,15 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                         : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
-                    {item.label}
+                    <Icon className="w-5 h-5 flex-shrink-0" />
+                    {item.id === 'shop' ? (
+                      <span className="flex flex-col items-start leading-tight">
+                        <span>{item.label}</span>
+                        <span className="text-[10px] font-normal opacity-70">Stoddard Numismatics</span>
+                      </span>
+                    ) : (
+                      item.label
+                    )}
                   </button>
                 )
               })}
@@ -242,8 +249,15 @@ export function Navigation({ currentPage, setCurrentPage }: NavigationProps) {
                         : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
-                    {item.label}
+                    <Icon className="w-5 h-5 flex-shrink-0" />
+                    {item.id === 'shop' ? (
+                      <span className="flex flex-col items-start leading-tight">
+                        <span>{item.label}</span>
+                        <span className="text-xs font-normal opacity-70">Stoddard Numismatics</span>
+                      </span>
+                    ) : (
+                      item.label
+                    )}
                   </button>
                 )
               })}

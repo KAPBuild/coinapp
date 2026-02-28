@@ -34,17 +34,17 @@ export function Logo({ size = 32, className = '' }: LogoProps) {
         opacity="0.6"
       />
 
-      {/* Dollar sign or "C" monogram */}
+      {/* GP monogram */}
       <text
         x="32"
-        y="42"
+        y="38"
         textAnchor="middle"
-        fontSize="28"
+        fontSize="20"
         fontWeight="bold"
         fontFamily="Georgia, serif"
         fill="url(#textGradient)"
       >
-        C
+        GP
       </text>
 
       {/* Small accent coins behind */}
@@ -158,17 +158,17 @@ export function LogoSimple({ size = 32, className = '' }: LogoProps) {
         opacity="0.4"
       />
 
-      {/* C monogram */}
+      {/* GP monogram */}
       <text
         x="32"
-        y="42"
+        y="38"
         textAnchor="middle"
-        fontSize="28"
+        fontSize="20"
         fontWeight="bold"
         fontFamily="Georgia, serif"
         fill="#78350f"
       >
-        C
+        GP
       </text>
 
       <defs>
@@ -235,17 +235,17 @@ export function LogoDark({ size = 32, className = '' }: LogoProps) {
         opacity="0.4"
       />
 
-      {/* C monogram */}
+      {/* GP monogram */}
       <text
         x="32"
-        y="40"
+        y="37"
         textAnchor="middle"
-        fontSize="26"
+        fontSize="19"
         fontWeight="bold"
         fontFamily="Georgia, serif"
         fill="url(#darkTextGradient)"
       >
-        C
+        GP
       </text>
 
       <defs>

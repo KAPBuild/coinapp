@@ -1,4 +1,6 @@
-import { TrendingUp, Coins, ExternalLink, HelpCircle, Search, X, Calculator, Award, BarChart3, Package, LineChart } from 'lucide-react'
+import { TrendingUp, Coins, ExternalLink, HelpCircle, Search, X, Calculator, Award, BarChart3, Package, LineChart, ArrowRight, Zap } from 'lucide-react'
+
+const PLATFORM_NAME = 'GradePoint'
 import { useEffect, useRef, useState } from 'react'
 
 // Morgan Dollar data for quick lookup
@@ -323,17 +325,73 @@ export function Home({ onNavigate }: HomeProps) {
 
   return (
     <div className="space-y-12">
-      {/* Welcome Header */}
-      <div className="pt-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-white text-center mb-2">
-          Coin Collector Tools
-        </h1>
-        <p className="text-slate-400 text-center mb-8">
-          Melt values, grading references, portfolio tracking, and more
-        </p>
+      {/* Hero Section */}
+      <div className="relative pt-8 pb-4">
+        {/* Subtle background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-950/30 via-transparent to-amber-950/20 rounded-3xl pointer-events-none" />
 
-        {/* Tools Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 max-w-4xl mx-auto">
+        <div className="relative text-center max-w-3xl mx-auto px-4">
+          {/* Platform badge */}
+          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
+            <Zap className="w-3.5 h-3.5" />
+            {PLATFORM_NAME}
+          </div>
+
+          {/* Main headline */}
+          <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-6">
+            The smartest place for serious coin collectors and investors.
+          </h1>
+
+          {/* Positioning quote */}
+          <blockquote className="relative mx-auto max-w-2xl mb-8">
+            <div className="border-l-4 border-amber-500 pl-4 text-left">
+              <p className="text-lg md:text-xl text-slate-300 italic leading-relaxed">
+                "PCGS and NGC tell you what a coin grades. We tell you what a coin is worth buying."
+              </p>
+            </div>
+          </blockquote>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => document.getElementById('tools-grid')?.scrollIntoView({ behavior: 'smooth' })}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-blue-500/25"
+            >
+              Explore the Tools
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => onNavigate?.('shop')}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 border border-slate-600 hover:border-slate-500 text-white rounded-xl font-semibold transition-all"
+            >
+              Browse the Shop
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Rarity Intelligence Teaser Strip */}
+      <div
+        className="bg-gradient-to-r from-slate-800 via-slate-800 to-slate-800 border border-amber-500/20 rounded-xl p-4 max-w-4xl mx-auto cursor-pointer hover:border-amber-500/40 transition-colors group"
+        onClick={() => onNavigate?.('stackIntel')}
+      >
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-amber-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <BarChart3 className="w-4 h-4 text-amber-400" />
+            </div>
+            <p className="text-slate-300 text-sm md:text-base">
+              <span className="text-amber-400 font-semibold">Investment Intelligence: </span>
+              The only platform that surfaces where rarity doesn't match market price — uncovering undervalued coins before the market does.
+            </p>
+          </div>
+          <ArrowRight className="w-5 h-5 text-amber-400 flex-shrink-0 group-hover:translate-x-1 transition-transform" />
+        </div>
+      </div>
+
+      {/* Tools Grid */}
+      <div id="tools-grid" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 max-w-4xl mx-auto">
         <button
           onClick={handleViewMeltValues}
           className="flex flex-col items-center gap-2 p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all group"
@@ -369,7 +427,6 @@ export function Home({ onNavigate }: HomeProps) {
           <LineChart className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform" />
           <span className="text-white font-medium text-sm">Spot Charts</span>
         </button>
-        </div>
       </div>
 
       {/* Live Spot Prices - TradingView Ticker */}
